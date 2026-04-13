@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta name="theme-color" content="#FFB800"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>Hardsaw · Governed Decision Engine</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&display=swap');
+
+:root {
+  --black:   #080808;
+  --panel:   #0E0E0E;
+  --panel2:  #121212;
+  --border:  #1E1E1E;
+  --border2: #2A2A2A;
+  --dim:     #333;
+  --muted:   #555;
+  --text:    #D8D0C0;
+  --amber:   #FFB800;
+  --amber2:  #CC9200;
+  --green:   #00E87A;
+  --red:     #FF3030;
+  --blue:    #4A9EFF;
+  --mono:    'Share Tech Mono', 'Courier New', monospace;
+  --sans:    'Barlow Condensed', 'Courier New', monospace;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--black);color:var(--text);font-family:var(--mono);min-height:100vh;display:flex;flex-direction:column;font-size:13px}
+input,textarea,button,select{font-family:var(--mono);font-size:12px}
+button{cursor:pointer;border:none;background:none}
+textarea,input{outline:none}
+
+/* ── SYSTEM RAIL ── */
+.sys-rail {
+  background:var(--panel);
+  border-bottom:1px solid var(--border);
+  display:flex;
+  overflow-x:auto;
+  scrollbar-width:none;
+  padding:0 12px;
+}
+.sys-rail::-webkit-scrollbar{display:none}
+.rail-step {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 12px;
+  white-space:nowrap;
+  border-bottom:2px solid transparent;
+  font-size:9px;
+  letter-spacing:2px;
+  color:var(--muted);
+  transition:color 0.2s;
+}
+.rail-step.active{color:var(--amber);border-bottom-color:var(--amber)}
+.rail-step.done{color:var(--green);border-bottom-color:var(--green)}
+.rail-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.rail-arrow{color:var(--border2);font-size:8px;margin:0 2px}
+
+/* ── HEADER ── */
+.hdr {
+  background:var(--panel);
+  border-bottom:2px solid var(--border2);
+  padding:10px 14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:200;
+}
+.brand { display:flex; align-items:baseline; gap:8px; }
+.logo { font-family:var(--sans); font-size:22px; font-weight:700; letter-spacing:6px; color:var(--amber); }
+.logo-sub { font-size:8px; color:var(--muted); letter-spacing:3px; }
+.hdr-right { display:flex; align-items:center; gap:10px; }
+.luna-chip {
+  display:flex;align-items:center;gap:5px;
+  font-size:8px;color:var(--muted);letter-spacing:2px;
+  padding:4px 8px;border:1px solid var(--border2);border-radius:1px;
+}
+.luna-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* ── GOVERNANCE PANEL ── */
+.gov-panel {
+  background:var(--panel);
+  border-bottom:1px solid var(--border);
+  padding:10px 14px;
+}
+.gov-grid {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+}
+.gov-cell {
+  background:var(--panel2);
+  padding:8px 10px;
+}
+.gov-k { font-size:7px; letter-spacing:2px; color:var(--muted); margin-bottom:3px; }
+.gov-v { font-size:10px; color:var(--text); letter-spacing:1px; font-weight:bold; }
+.gov-v.locked { color:var(--amber); }
+.gov-v.green  { color:var(--green); }
+.gov-v.red    { color:var(--red); }
+.gov-v.dim    { color:var(--dim); }
+
+/* ── BODY ── */
+.body { flex:1; overflow-y:auto; }
+
+/* ── INTAKE CANVAS ── */
+.intake { padding:12px 14px; }
+
+/* Evidence intake */
+.evidence-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:4px;
+  margin-bottom:12px;
+}
+.evidence-card {
+  background:var(--panel2);
+  border:1px solid var(--border2);
+  padding:10px;
+  position:relative;
+  cursor:pointer;
+  transition:border-color 0.15s;
+}
+.evidence-card:active{border-color:var(--amber)}
+.evidence-card.has-data{border-color:var(--green)44}
+.ev-type{font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
+.ev-status{font-size:10px;font-weight:bold;color:var(--dim)}
+.ev-status.parsed{color:var(--green)}
+.ev-status.conflict{color:var(--red)}
+.ev-facts{font-size:8px;color:var(--muted);margin-top:2px}
+.ev-icon{font-size:16px;margin-bottom:4px;display:block}
+
+/* Spec section */
+.section-hdr {
+  font-size:8px;letter-spacing:4px;color:var(--muted);
+  padding:8px 0 6px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:10px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.locked-badge {
+  font-size:7px;color:var(--amber);letter-spacing:1px;
+  padding:1px 5px;border:1px solid var(--amber)44;border-radius:1px;
+}
+.editable-badge {
+  font-size:7px;color:var(--blue);letter-spacing:1px;
+  padding:1px 5px;border:1px solid var(--blue)44;border-radius:1px;
+}
+
+.inp { width:100%;background:var(--panel2);border:1px solid var(--border2);color:var(--text);padding:9px 10px;border-radius:1px;font-size:13px;box-sizing:border-box; }
+.inp:focus{border-color:var(--amber)}
+.sel { width:100%;background:var(--panel2);border:1px solid var(--border2);color:var(--text);padding:9px 10px;border-radius:1px;font-size:12px;box-sizing:border-box;-webkit-appearance:none; }
+.lbl { font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px;display:block; }
+
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px}
+
+/* Style note */
+.style-note {
+  font-size:9px;color:var(--muted);
+  padding:6px 8px;
+  background:var(--black);
+  border-left:2px solid var(--amber);
+  margin-bottom:8px;
+  line-height:1.6;
+}
+
+/* Flag buttons */
+.flag-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+.flag-btn{background:var(--panel2);border:1px solid var(--border2);color:var(--dim);padding:7px 4px;font-size:8px;letter-spacing:1px;border-radius:1px;cursor:pointer;text-align:center;font-family:var(--mono);transition:all 0.15s}
+.flag-btn.on{background:#FFB80011;border-color:var(--amber);color:var(--amber)}
+
+/* Scene builder */
+.scene-hdr {
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:8px;
+}
+.lf-counter {
+  font-size:9px;
+  display:flex;gap:8px;align-items:center;
+}
+.lf-build{color:var(--amber);font-weight:bold}
+.lf-opening{color:var(--blue)}
+
+.edge-card {
+  background:var(--panel2);
+  border:1px solid var(--border2);
+  border-radius:1px;
+  padding:8px 10px;
+  margin-bottom:4px;
+}
+.edge-card.fence-edge{border-left:2px solid var(--amber)}
+.edge-card.opening-edge{border-left:2px solid var(--blue)}
+.edge-row{display:flex;align-items:center;gap:6px}
+.edge-label{font-size:8px;letter-spacing:2px;flex:1}
+.edge-label.fence-lbl{color:var(--amber)}
+.edge-label.opening-lbl{color:var(--blue)}
+.edge-derived{font-size:9px;color:var(--dim);margin-top:4px;padding-top:4px;border-top:1px solid var(--border)}
+
+/* Graph preview */
+.graph-preview {
+  background:var(--black);
+  border:1px solid var(--border);
+  padding:10px;
+  margin-bottom:8px;
+  font-size:9px;
+}
+.graph-title{font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:8px}
+.graph-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);color:var(--dim)}
+.graph-row .gv{color:var(--text);font-weight:bold}
+.graph-row.highlight .gv{color:var(--amber)}
+
+/* Truth bar */
+.truth-bar {
+  background:var(--black);
+  border:1px solid var(--border2);
+  border-top:2px solid var(--amber);
+  padding:10px 12px;
+  margin-bottom:8px;
+}
+.truth-title{font-size:7px;letter-spacing:4px;color:var(--amber);margin-bottom:8px}
+.truth-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.truth-item .tk{font-size:7px;color:var(--muted);letter-spacing:1px;margin-bottom:2px}
+.truth-item .tv{font-size:10px;color:var(--text)}
+.truth-item .tv.locked{color:var(--amber)}
+.unresolved{color:var(--red)!important}
+.resolved{color:var(--green)!important}
+
+.run-btn {
+  width:100%;
+  background:var(--amber);
+  color:var(--black);
+  padding:14px;
+  font-size:11px;
+  letter-spacing:4px;
+  font-weight:bold;
+  border-radius:1px;
+  margin-top:4px;
+  font-family:var(--sans);
+}
+.add-fence-btn{background:transparent;border:1px dashed var(--border2);color:var(--muted);padding:8px;font-size:8px;letter-spacing:2px;border-radius:1px;width:100%}
+.add-gate-btn{background:transparent;border:1px dashed var(--blue)44;color:var(--blue);padding:8px;font-size:8px;letter-spacing:2px;border-radius:1px;width:100%}
+.del-btn{background:transparent;border:1px solid var(--red)33;color:var(--red);padding:3px 7px;font-size:8px;border-radius:1px;cursor:pointer;flex-shrink:0}
+
+/* ── THINKING ── */
+.think {
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:60px 20px;min-height:60vh;
+}
+.think-engine {
+  font-family:var(--sans);font-size:28px;font-weight:700;
+  color:var(--amber);letter-spacing:6px;margin-bottom:20px;
+}
+.calc-list{list-style:none;text-align:left;width:100%;max-width:280px}
+.calc-item{
+  font-size:9px;letter-spacing:2px;color:var(--dim);
+  padding:4px 0;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.calc-item.running{color:var(--amber);animation:blink 0.8s infinite}
+.calc-item.done{color:var(--green)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.calc-dot{width:4px;height:4px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+/* ── RESULT ── */
+.result-hdr{
+  background:var(--panel);
+  border-bottom:1px solid var(--border2);
+  padding:10px 14px;
+  position:sticky;
+  top:0;
+  z-index:150;
+}
+.result-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.readiness-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:10px;letter-spacing:2px;font-weight:bold;
+  padding:5px 10px;border-radius:1px;
+}
+.rdot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.result-meta{font-size:8px;color:var(--muted);letter-spacing:1px}
+.hash-strip{font-size:8px;color:var(--dim);font-family:var(--mono)}
+
+/* Dual output header */
+.dual-hdr{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);
+  margin:10px 14px 0;
+}
+.dual-col{
+  background:var(--panel2);
+  padding:8px 10px;
+  text-align:center;
+}
+.dual-col-title{font-size:8px;letter-spacing:3px;color:var(--muted);margin-bottom:2px}
+.dual-col-val{font-size:11px;color:var(--text);font-weight:bold}
+.dual-col.material-col{border-bottom:2px solid var(--amber)}
+.dual-col.proof-col{border-bottom:2px solid var(--green)}
+
+/* Tabs */
+.tabs{display:flex;gap:1px;background:var(--border);margin:0 14px 12px;border:1px solid var(--border)}
+.tab{flex:1;padding:9px 2px;background:var(--panel2);color:var(--muted);font-size:8px;letter-spacing:2px;cursor:pointer;text-align:center;border-bottom:2px solid transparent}
+.tab.on{color:var(--amber);border-bottom-color:var(--amber)}
+
+/* Result content */
+.result-body{padding:0 14px 20px}
+
+/* BOM */
+.bom-head{display:grid;grid-template-columns:1fr 40px 50px;gap:4px;padding:5px 0 7px;border-bottom:1px solid var(--border2);font-size:7px;color:var(--dim);letter-spacing:2px}
+.bom-row{display:grid;grid-template-columns:1fr 40px 50px;gap:4px;padding:7px 0;border-bottom:1px solid var(--border);font-size:11px;align-items:start}
+.bom-sku{font-size:7px;color:var(--dim);margin-top:2px;letter-spacing:1px}
+.bom-grp{font-size:7px;letter-spacing:3px;color:var(--muted);padding:8px 0 4px;margin-top:6px}
+
+/* Proof */
+.proof-row{display:flex;justify-content:space-between;align-items:start;padding:7px 0;border-bottom:1px solid var(--border)}
+.proof-k{font-size:8px;color:var(--muted);letter-spacing:1px;flex:1}
+.proof-v{font-size:11px;color:var(--green);font-weight:bold;text-align:right}
+.proof-f{font-size:8px;color:var(--dim);margin-top:2px;text-align:right;word-break:break-word;max-width:180px}
+.invariant-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:9px}
+.inv-pass{color:var(--green)}
+.inv-fail{color:var(--red)}
+
+/* Alerts */
+.al-list{list-style:none;padding:0;margin:0}
+.al-b{padding:7px 0;border-bottom:1px solid var(--border);font-size:11px;color:var(--red)}
+.al-w{padding:7px 0;border-bottom:1px solid var(--border);font-size:11px;color:var(--amber)}
+
+/* Packets */
+.pkt-sec{margin-bottom:14px}
+.pkt-hdr{font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+.pkt-body{font-size:10px;line-height:1.9;color:var(--dim)}
+
+/* Assist */
+.assist-wrap{background:var(--panel2);border:1px solid var(--border2);border-left:2px solid var(--amber);margin-bottom:10px}
+.assist-hdr{padding:7px 10px;border-bottom:1px solid var(--border);font-size:7px;letter-spacing:3px;color:var(--muted);display:flex;justify-content:space-between}
+.assist-note{font-size:7px;color:var(--dim);font-style:italic}
+.assist-body{padding:10px;min-height:50px;max-height:160px;overflow-y:auto}
+.msg-a{margin-bottom:8px;font-size:12px;line-height:1.6;color:var(--text)}
+.msg-u{margin-bottom:8px;font-size:12px;line-height:1.6;color:var(--dim)}
+.role-a{font-size:7px;letter-spacing:2px;color:var(--amber);margin-bottom:2px}
+.role-u{font-size:7px;letter-spacing:2px;color:var(--dim);margin-bottom:2px}
+.assist-ir{display:flex;border-top:1px solid var(--border)}
+.assist-in{flex:1;background:transparent;border:none;color:var(--text);font-size:12px;padding:9px 10px}
+.assist-send{background:transparent;border:none;border-left:1px solid var(--border);color:var(--amber);font-size:18px;padding:0 12px;cursor:pointer}
+
+/* Version panel */
+.ver-panel{background:var(--black);border:1px solid var(--border);padding:10px;margin-bottom:10px}
+.ver-title{font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:8px}
+.ver-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);font-size:8px}
+.ver-k{color:var(--dim)}
+.ver-v{color:var(--text);font-size:8px}
+
+/* Vault */
+.vault-row{display:flex;gap:8px;padding:4px 0;border-bottom:1px solid var(--border);font-size:8px}
+
+/* New job */
+.new-job-btn{background:transparent;border:1px solid var(--border2);color:var(--muted);padding:8px 12px;font-size:8px;letter-spacing:2px;width:100%;margin-bottom:10px;border-radius:1px;cursor:pointer}
+
+/* Luna log */
+.luna-log-wrap{background:var(--black);border:1px solid var(--border);padding:10px;margin-top:10px}
+.luna-row{display:flex;gap:10px;padding:4px 0;border-bottom:1px solid var(--border);font-size:8px}
+
+.hidden{display:none!important}
+.sect{margin-bottom:12px}
+.hash-line{font-size:7px;color:var(--dim);margin-top:6px;word-break:break-all;line-height:1.6}
+.calib-tag{font-size:7px;color:var(--green);letter-spacing:1px;margin-top:6px;padding:2px 6px;border:1px solid var(--green)33;border-radius:1px;display:inline-block}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ─────────────────────────────────────────────────────────────────── -->
+<div class="hdr">
+  <div class="brand">
+    <div class="logo">HARDSAW</div>
+    <div class="logo-sub">GOVERNED DECISION ENGINE</div>
+  </div>
+  <div class="hdr-right">
+    <div class="luna-chip">
+      <div class="luna-dot"></div>
+      <span id="gc">LUNA · 0</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── SYSTEM RAIL ─────────────────────────────────────────────────────────────── -->
+<div class="sys-rail" id="sys-rail">
+  <div class="rail-step active" id="rail-capture">
+    <div class="rail-dot"></div>CAPTURE
+  </div>
+  <div class="rail-arrow">›</div>
+  <div class="rail-step" id="rail-normalize">
+    <div class="rail-dot"></div>NORMALIZE
+  </div>
+  <div class="rail-arrow">›</div>
+  <div class="rail-step" id="rail-compute">
+    <div class="rail-dot"></div>COMPUTE
+  </div>
+  <div class="rail-arrow">›</div>
+  <div class="rail-step" id="rail-prove">
+    <div class="rail-dot"></div>PROVE
+  </div>
+  <div class="rail-arrow">›</div>
+  <div class="rail-step" id="rail-export">
+    <div class="rail-dot"></div>EXPORT
+  </div>
+</div>
+
+<!-- ── GOVERNANCE PANEL ────────────────────────────────────────────────────────── -->
+<div class="gov-panel">
+  <div class="gov-grid">
+    <div class="gov-cell">
+      <div class="gov-k">RULESET</div>
+      <div class="gov-v locked" id="gv-ruleset">WP-TIGHT-v2.0</div>
+    </div>
+    <div class="gov-cell">
+      <div class="gov-k">VENDOR PROFILE</div>
+      <div class="gov-v locked" id="gv-vendor">AmeriFence</div>
+    </div>
+    <div class="gov-cell">
+      <div class="gov-k">PROOF STATE</div>
+      <div class="gov-v dim" id="gv-proof">AWAITING INPUT</div>
+    </div>
+    <div class="gov-cell">
+      <div class="gov-k">READINESS</div>
+      <div class="gov-v dim" id="gv-ready">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── BODY ───────────────────────────────────────────────────────────────────── -->
+<div class="body">
+
+<!-- ═══ IDLE STAGE ═══ -->
+<div id="s-idle">
+<div class="intake">
+
+  <!-- Evidence intake -->
+  <div class="section-hdr" style="margin-bottom:8px">
+    EVIDENCE INTAKE
+    <span class="editable-badge">EDITABLE</span>
+  </div>
+  <input id="fi" type="file" accept="image/*" class="hidden" onchange="handleImg(this.files[0],'file')">
+  <input id="fi-cam" type="file" accept="image/*" capture="environment" class="hidden" onchange="handleImg(this.files[0],'camera')">
+  <div class="evidence-grid">
+    <div class="evidence-card" id="ev-quote" onclick="document.getElementById('fi').click()">
+      <span class="ev-icon">📄</span>
+      <div class="ev-type">QUOTE</div>
+      <div class="ev-status" id="ev-quote-st">MISSING</div>
+      <div class="ev-facts" id="ev-quote-facts"></div>
+    </div>
+    <div class="evidence-card" id="ev-sketch" onclick="document.getElementById('fi-cam').click()">
+      <span class="ev-icon">✏️</span>
+      <div class="ev-type">LAYOUT SKETCH</div>
+      <div class="ev-status" id="ev-sketch-st">MISSING</div>
+      <div class="ev-facts" id="ev-sketch-facts"></div>
+    </div>
+    <div class="evidence-card" id="ev-blueprint" style="opacity:0.5">
+      <span class="ev-icon">📐</span>
+      <div class="ev-type">BLUEPRINT</div>
+      <div class="ev-status">MISSING</div>
+      <div class="ev-facts">Upload coming soon</div>
+    </div>
+    <div class="evidence-card" id="ev-site" onclick="document.getElementById('fi').click()">
+      <span class="ev-icon">📷</span>
+      <div class="ev-type">SITE PHOTO</div>
+      <div class="ev-status" id="ev-site-st">MISSING</div>
+      <div class="ev-facts" id="ev-site-facts"></div>
+    </div>
+  </div>
+
+  <!-- Upload preview -->
+  <div id="up-wrap" class="hidden" style="margin-bottom:12px">
+    <img id="up-img" style="width:100%;max-height:160px;object-fit:contain;background:var(--panel2);display:block;border:1px solid var(--border);margin-bottom:4px">
+    <div id="ext-box" class="hidden" style="background:var(--panel2);border:1px solid var(--border);padding:10px">
+      <div style="font-size:7px;letter-spacing:3px;color:var(--amber);margin-bottom:6px" id="ext-title">VISION EXTRACTED</div>
+      <div id="ext-cnt" style="font-size:10px;color:var(--dim);line-height:1.8"></div>
+      <button onclick="applyExtracted()" style="margin-top:8px;width:100%;background:transparent;border:1px solid var(--amber);color:var(--amber);padding:8px;font-size:8px;letter-spacing:2px;cursor:pointer">APPLY TO JOB ↗</button>
+    </div>
+  </div>
+
+  <!-- Material & Spec -->
+  <div class="section-hdr">
+    NORMALIZE — MATERIAL &amp; SPEC
+    <span class="editable-badge">EDITABLE</span>
+  </div>
+
+  <div class="sect">
+    <label class="lbl">FENCE FAMILY &amp; STYLE</label>
+    <select class="sel" id="fam" onchange="onStyleChange()">
+      <optgroup label="── WOOD PRIVACY ──">
+        <option value="wood.privacy.tight_cedar">Wood — Tight Cedar Privacy (6ft)</option>
+        <option value="wood.privacy.spaced_picket">Wood — Spaced Picket (4ft)</option>
+        <option value="wood.privacy.solid_board">Wood — Solid Board (6ft)</option>
+        <option value="wood.shadowbox.standard">Wood — Shadowbox Standard</option>
+      </optgroup>
+      <optgroup label="── CHAIN LINK ──">
+        <option value="chain_link.residential.galvanized">Chain Link — Residential Galvanized</option>
+        <option value="chain_link.residential.black">Chain Link — Residential Black</option>
+        <option value="chain_link.commercial.galvanized">Chain Link — Commercial Galvanized</option>
+        <option value="chain_link.commercial.black">Chain Link — Commercial Black</option>
+      </optgroup>
+      <optgroup label="── ORNAMENTAL ──">
+        <option value="ornamental.aluminum.flat_top_3rail">Ornamental — Aluminum Flat Top 3-Rail</option>
+        <option value="ornamental.aluminum.spear_top_3rail">Ornamental — Aluminum Spear Top 3-Rail</option>
+        <option value="ornamental.steel.flat_top_pool">Ornamental — Steel Pool (Pool Code)</option>
+      </optgroup>
+      <optgroup label="── VINYL ──">
+        <option value="vinyl.privacy.tongue_groove">Vinyl — Privacy Tongue &amp; Groove</option>
+        <option value="vinyl.picket.scalloped">Vinyl — Scalloped Picket</option>
+      </optgroup>
+      <optgroup label="── FARM &amp; RANCH ──">
+        <option value="farm.no_climb.horse">Farm — No-Climb Horse Fence</option>
+        <option value="farm.barbed.5strand">Farm — Barbed Wire 5-Strand</option>
+      </optgroup>
+    </select>
+    <div class="style-note" id="style-note" style="margin-top:6px">Tight cedar 6ft: 2.50 pickets/lf · 3 rails/section · 8ft O.C. · KAN004247 ✓</div>
+  </div>
+
+  <div class="row2">
+    <div>
+      <label class="lbl">HEIGHT (FT)</label>
+      <select class="sel" id="ht">
+        <option value="4">4ft</option><option value="5">5ft</option>
+        <option value="6" selected>6ft</option><option value="7">7ft</option><option value="8">8ft</option>
+      </select>
+    </div>
+    <div>
+      <label class="lbl">SITE FLAGS</label>
+      <div class="flag-grid">
+        <button class="flag-btn" data-flag="HOA" onclick="this.classList.toggle('on');updateGov()">HOA</button>
+        <button class="flag-btn" data-flag="rocky" onclick="this.classList.toggle('on');updateGov()">ROCKY</button>
+        <button class="flag-btn" data-flag="grade" onclick="this.classList.toggle('on');updateGov()">SLOPED</button>
+        <button class="flag-btn" data-flag="permit" onclick="this.classList.toggle('on');updateGov()">PERMIT</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene builder -->
+  <div class="section-hdr">
+    COMPUTE — FENCE SCENE
+    <div class="lf-counter">
+      <span class="lf-build" id="lf-build">0 LF</span>
+      <span style="color:var(--dim)">BUILD</span>
+      <span class="lf-opening" id="lf-open">+0</span>
+      <span style="color:var(--dim)">GATES</span>
+    </div>
+  </div>
+
+  <!-- Live graph preview -->
+  <div class="graph-preview" id="graph-preview">
+    <div class="graph-title">GEOMETRY GRAPH — LIVE PREVIEW</div>
+    <div id="graph-rows">
+      <div class="graph-row"><span>terminal_posts = |V|</span><span class="gv" id="gp-tp">—</span></div>
+      <div class="graph-row"><span>line_posts = Σ ceil(L/S)−1</span><span class="gv" id="gp-lp">—</span></div>
+      <div class="graph-row highlight"><span>total_posts</span><span class="gv" id="gp-posts">—</span></div>
+      <div class="graph-row"><span>hookups = 2×|E|</span><span class="gv" id="gp-hookups">—</span></div>
+      <div class="graph-row"><span>sections = Σ ceil(L/S)</span><span class="gv" id="gp-secs">—</span></div>
+      <div class="graph-row"><span>build_length_ft</span><span class="gv" id="gp-build">—</span></div>
+      <div class="graph-row"><span>opening_length_ft</span><span class="gv" id="gp-opening">—</span></div>
+    </div>
+  </div>
+
+  <div id="edges-container"></div>
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:4px;margin-bottom:10px">
+    <button class="add-fence-btn" onclick="addEdge('fence')">+ FENCE RUN</button>
+    <button class="add-gate-btn" onclick="addEdge('opening')">+ GATE OPENING</button>
+  </div>
+
+  <!-- Posts & terminals -->
+  <div class="section-hdr">TERMINALS &amp; GATES<span class="editable-badge">EDITABLE</span></div>
+  <div class="row3">
+    <div><label class="lbl">END POSTS</label><input class="inp" id="ends" type="number" min="0" value="2" oninput="liveUpdate()"></div>
+    <div><label class="lbl">CORNERS</label><input class="inp" id="corners" type="number" min="0" value="0" oninput="liveUpdate()"></div>
+    <div><label class="lbl">WALK GATES</label><input class="inp" id="wg" type="number" min="0" value="0" oninput="liveUpdate()"></div>
+  </div>
+  <div class="row2">
+    <div><label class="lbl">DRIVE GATES</label><input class="inp" id="dg" type="number" min="0" value="0" oninput="liveUpdate()"></div>
+    <div><label class="lbl">OTHER OPENINGS</label><input class="inp" id="og" type="number" min="0" value="0" oninput="liveUpdate()"></div>
+  </div>
+
+  <!-- Truth bar -->
+  <div class="truth-bar">
+    <div class="truth-title">GOVERNANCE — LOCKED TRUTH PARAMETERS</div>
+    <div class="truth-grid">
+      <div class="truth-item"><div class="tk">RULESET</div><div class="tv locked" id="tb-ruleset">WP-TIGHT-v2.0</div></div>
+      <div class="truth-item"><div class="tk">VENDOR</div><div class="tv locked" id="tb-vendor">AmeriFence</div></div>
+      <div class="truth-item"><div class="tk">POST SPACING</div><div class="tv locked" id="tb-spacing">8ft O.C.</div></div>
+      <div class="truth-item"><div class="tk">GATE SCHEMA</div><div class="tv locked" id="tb-gate">opening edge</div></div>
+      <div class="truth-item"><div class="tk">ROUNDING</div><div class="tv locked" id="tb-round">ceil / floor</div></div>
+      <div class="truth-item"><div class="tk">UNRESOLVED</div><div class="tv" id="tb-unresolved">—</div></div>
+    </div>
+  </div>
+
+  <button class="run-btn" onclick="runJob()">EXECUTE GOVERNED COMPUTE ↗</button>
+
+</div>
+</div>
+
+<!-- ═══ THINKING STAGE ═══ -->
+<div id="s-think" class="hidden">
+  <div class="think">
+    <div class="think-engine">⚙ HARDSAW</div>
+    <ul class="calc-list" id="calc-list">
+      <li class="calc-item" id="calc-A"><div class="calc-dot"></div>A — GEOMETRY CALCULATOR</li>
+      <li class="calc-item" id="calc-B"><div class="calc-dot"></div>B — POST LAYOUT CALCULATOR</li>
+      <li class="calc-item" id="calc-C"><div class="calc-dot"></div>C — GATE / OPENING CALCULATOR</li>
+      <li class="calc-item" id="calc-D"><div class="calc-dot"></div>D — MATERIAL QUANTITY CALCULATOR</li>
+      <li class="calc-item" id="calc-E"><div class="calc-dot"></div>E — HARDWARE CALCULATOR</li>
+      <li class="calc-item" id="calc-F"><div class="calc-dot"></div>F — CONCRETE / FOOTING CALCULATOR</li>
+      <li class="calc-item" id="calc-G"><div class="calc-dot"></div>G — COMPLIANCE CALCULATOR</li>
+      <li class="calc-item" id="calc-H"><div class="calc-dot"></div>H — PACKAGING CALCULATOR</li>
+      <li class="calc-item" id="calc-I"><div class="calc-dot"></div>I — BOM PACKET TRANSLATOR</li>
+      <li class="calc-item" id="calc-J"><div class="calc-dot"></div>J — READINESS CALCULATOR</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══ RESULT STAGE ═══ -->
+<div id="s-result" class="hidden">
+  <div class="result-hdr">
+    <div class="result-top">
+      <div id="readiness-badge" class="readiness-badge">
+        <div class="rdot"></div>
+        <span id="readiness-label">—</span>
+      </div>
+      <button class="new-job-btn" style="width:auto;margin:0" onclick="reset()">← NEW JOB</button>
+    </div>
+    <div class="result-meta" id="result-meta"></div>
+    <div class="hash-strip" id="hash-strip"></div>
+  </div>
+
+  <!-- Dual output header -->
+  <div class="dual-hdr">
+    <div class="dual-col material-col">
+      <div class="dual-col-title">MATERIAL OUTPUT</div>
+      <div class="dual-col-val" id="dual-mat">— items</div>
+    </div>
+    <div class="dual-col proof-col">
+      <div class="dual-col-title">PROOF OUTPUT</div>
+      <div class="dual-col-val" id="dual-proof">— invariants</div>
+    </div>
+  </div>
+
+  <!-- Assist (subordinate, constrained) -->
+  <div style="padding:10px 14px 0">
+    <div class="assist-wrap">
+      <div class="assist-hdr">
+        <span>ASSIST — ENGINE EXPLANATION LAYER</span>
+        <span class="assist-note">ENGINE DECIDES · ASSIST EXPLAINS</span>
+      </div>
+      <div class="assist-body" id="cb">
+        <div style="color:var(--muted);font-size:10px">Generating explanation...</div>
+      </div>
+      <div class="assist-ir">
+        <input class="assist-in" id="ci" placeholder="Explain result · Show derivation · Compare to quote..." onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="assist-send" onclick="sendChat()">↗</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab on"  id="t-BOM"     onclick="setTab('BOM')">BOM</button>
+    <button class="tab"     id="t-PROOF"   onclick="setTab('PROOF')">PROOF</button>
+    <button class="tab"     id="t-READY"   onclick="setTab('READY')">READY</button>
+    <button class="tab"     id="t-PACKETS" onclick="setTab('PACKETS')">PACKETS</button>
+  </div>
+  <div class="result-body">
+    <div id="tc"></div>
+    <div id="lc" class="hidden">
+      <div class="luna-log-wrap">
+        <div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:6px">LUNA GATE LOG</div>
+        <div id="ll"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /body -->
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+// HARDSAW v3.1 — GOVERNED DECISION ENGINE
+// Golden Key: All math is provable and replayable.
+// Golden Rule: Material accuracy 94–98% vs real AmeriFence quotes.
+// ══════════════════════════════════════════════════════════════════════════════
+
+var VERSIONS = {
+  coreEngine: 'core_engine_v3.1.0', protocol: 'ufbp_v1.0.0',
+  families: { wood:'wood_family_v2.0.0', chain_link:'chain_link_family_v2.1.0', ornamental:'ornamental_family_v1.0.0', vinyl:'vinyl_family_v1.0.0', farm:'farm_family_v1.0.0' },
+  styles: {
+    'wood.privacy.tight_cedar':          {v:'WP-TIGHT-v2.0',  cal:'KAN004247',  calDate:'2026-02-05'},
+    'wood.privacy.spaced_picket':        {v:'WP-SPACED-v1.0', cal:'KAN004304',  calDate:'2026-02-10'},
+    'wood.privacy.solid_board':          {v:'WP-SOLID-v1.0',  cal:null,         calDate:null},
+    'wood.shadowbox.standard':           {v:'WP-SHADOW-v1.0', cal:null,         calDate:null},
+    'chain_link.residential.galvanized': {v:'CL-RES-GL-v2.1', cal:null,         calDate:null},
+    'chain_link.residential.black':      {v:'CL-RES-BK-v2.1', cal:null,         calDate:null},
+    'chain_link.commercial.galvanized':  {v:'CL-COM-GL-v1.0', cal:null,         calDate:null},
+    'chain_link.commercial.black':       {v:'CL-COM-BK-v1.0', cal:null,         calDate:null},
+    'ornamental.aluminum.flat_top_3rail':{v:'OR-AL-FT3-v1.0', cal:'KAN004434',  calDate:'2026-02-18'},
+    'ornamental.aluminum.spear_top_3rail':{v:'OR-AL-ST3-v1.0',cal:null,         calDate:null},
+    'ornamental.steel.flat_top_pool':    {v:'OR-ST-FTP-v1.0', cal:null,         calDate:null},
+    'vinyl.privacy.tongue_groove':       {v:'VN-PRIV-TG-v1.0',cal:null,         calDate:null},
+    'vinyl.picket.scalloped':            {v:'VN-PICK-SC-v1.0',cal:null,         calDate:null},
+    'farm.no_climb.horse':               {v:'FM-NC-HR-v1.0',  cal:null,         calDate:null},
+    'farm.barbed.5strand':               {v:'FM-BR-5S-v1.0',  cal:null,         calDate:null},
+  },
+  vendor: 'amerifence_v3.0.0',
+};
+
+var STYLES = {
+  'wood.privacy.tight_cedar':   {family:'wood',note:'Tight cedar 6ft: 2.50 pickets/lf · 3 rails/section · 8ft O.C. · KAN004247 ✓',rp:{S:8,pickets_lf:2.50,picket_fn:'round',rails_sec:3,walk_rb:4,drive_rb:10,con_line:1,con_term:1},label:'Wood Privacy — Tight Cedar',skus:{picket:{s:'61563',u:'each',d:'Cedar Picket 5/8"×5-1/2"×6\''},post:{s:'64489',u:'each',d:'4×4×8 Green Treated Post'},rail:{s:'62486',u:'each',d:'2×4×8 Wrc Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Hinge Pair'},latch:{s:'10914',u:'each',d:'Gate Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod 48"'}}},
+  'wood.privacy.spaced_picket': {family:'wood',note:'Spaced picket 4in gap: floor(lf×2.5946) · 2 rails/section · KAN004304 ✓',rp:{S:8,pickets_lf:2.5946,picket_fn:'floor',rails_sec:2,walk_rb:3,drive_rb:6,con_line:1,con_term:1},label:'Wood Privacy — Spaced Picket',skus:{picket:{s:'61441',u:'each',d:'Cedar Picket 3/8"×5/8"×4\' Spaced'},post:{s:'63960',u:'each',d:'3-1/2×3-1/2×6 Treated Post'},rail:{s:'62486',u:'each',d:'2×4×8 Wrc Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Hinge Pair'},latch:{s:'10914',u:'each',d:'Gate Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod 48"'}}},
+  'wood.privacy.solid_board':   {family:'wood',note:'Solid board 6ft: 2.18 boards/lf · 3 rails/section · 8ft O.C.',rp:{S:8,pickets_lf:2.18,picket_fn:'ceil',rails_sec:3,walk_rb:4,drive_rb:10,con_line:1,con_term:1},label:'Wood Privacy — Solid Board',skus:{picket:{s:'63380',u:'each',d:'Solid Board'},post:{s:'64489',u:'each',d:'4×4×8 Green Treated Post'},rail:{s:'62486',u:'each',d:'2×4×8 Wrc Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Hinge Pair'},latch:{s:'10914',u:'each',d:'Gate Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod 48"'}}},
+  'wood.shadowbox.standard':    {family:'wood',note:'Shadowbox: double-sided pickets ~4.36/lf · 3 rails/section · 8ft O.C.',rp:{S:8,pickets_lf:4.36,picket_fn:'ceil',rails_sec:3,walk_rb:4,drive_rb:10,con_line:1,con_term:1},label:'Wood Shadowbox',skus:{picket:{s:'GEN-SHD',u:'each',d:'Shadowbox Picket'},post:{s:'64489',u:'each',d:'4×4×8 Post'},rail:{s:'62486',u:'each',d:'2×4×8 Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Hinge Pair'},latch:{s:'10914',u:'each',d:'Gate Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod'}}},
+  'chain_link.residential.galvanized': {family:'chain_link',note:'Residential galvanized: 10ft max · 50ft rolls · 21ft rail sticks',rp:{S:10,fab_roll:50,rail_stick:21,con_line:1,con_term:2,bands_end:4,bands_corner:8,bands_gate:4},label:'Chain Link Res. Galvanized',skus:{tp:{s:'AF-TP-6-237',u:'each',d:'Terminal Post 2-1/2" Galv'},lp:{s:'AF-LP-6-162',u:'each',d:'Line Post 1-5/8" Galv'},fab:{s:'AF-FAB-6-50',u:'roll',d:'Fabric 50ft Roll Galv'},rail:{s:'AF-TR-21',u:'each',d:'Top Rail 21ft'},tw:{s:'AF-TW-100',u:'roll',d:'Tension Wire 100ft'},tie:{s:'AF-TIE-250',u:'bag',d:'Tie Wire Bag'},tb:{s:'10406',u:'each',d:'Tension Band 2-1/2"'},re:{s:'10703',u:'each',d:'Rail End 1-3/8"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'AF-WG-4',u:'each',d:'Walk Gate'},dg:{s:'AF-DG-12',u:'each',d:'Drive Gate'}}},
+  'chain_link.residential.black': {family:'chain_link',note:'Residential black vinyl: 10ft max · 50ft rolls',rp:{S:10,fab_roll:50,rail_stick:21,con_line:1,con_term:2,bands_end:4,bands_corner:8,bands_gate:4},label:'Chain Link Res. Black',skus:{tp:{s:'AF-TP-6-BK',u:'each',d:'Terminal Post Black'},lp:{s:'AF-LP-6-BK',u:'each',d:'Line Post Black'},fab:{s:'AF-FAB-6-BK-50',u:'roll',d:'Fabric Black 50ft'},rail:{s:'AF-TR-21-BK',u:'each',d:'Top Rail Black 21ft'},tw:{s:'AF-TW-BK',u:'roll',d:'Tension Wire Black'},tie:{s:'AF-TIE-BK',u:'bag',d:'Tie Wire Black'},tb:{s:'10406-BK',u:'each',d:'Tension Band Black'},re:{s:'10703-BK',u:'each',d:'Rail End Black'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'AF-WG-4-BK',u:'each',d:'Walk Gate Black'},dg:{s:'AF-DG-12-BK',u:'each',d:'Drive Gate Black'}}},
+  'chain_link.commercial.galvanized': {family:'chain_link',note:'Commercial galvanized: heavier gauge · 2 bags/terminal',rp:{S:10,fab_roll:50,rail_stick:21,con_line:1,con_term:2,bands_end:4,bands_corner:8,bands_gate:4},label:'Chain Link Comm. Galv',skus:{tp:{s:'AF-TP-COM-GL',u:'each',d:'Terminal Post Commercial Galv'},lp:{s:'AF-LP-COM-GL',u:'each',d:'Line Post Commercial Galv'},fab:{s:'AF-FAB-6-50',u:'roll',d:'Fabric 50ft Roll'},rail:{s:'AF-TR-21',u:'each',d:'Top Rail 21ft'},tw:{s:'AF-TW-100',u:'roll',d:'Tension Wire'},tie:{s:'AF-TIE-250',u:'bag',d:'Tie Wire'},tb:{s:'10406',u:'each',d:'Tension Band'},re:{s:'10703',u:'each',d:'Rail End'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'AF-WG-COM',u:'each',d:'Walk Gate Commercial'},dg:{s:'AF-DG-COM',u:'each',d:'Drive Gate Commercial'}}},
+  'chain_link.commercial.black': {family:'chain_link',note:'Commercial black: heavier gauge · commercial hardware',rp:{S:10,fab_roll:50,rail_stick:21,con_line:1,con_term:2,bands_end:4,bands_corner:8,bands_gate:4},label:'Chain Link Comm. Black',skus:{tp:{s:'AF-TP-COM-BK',u:'each',d:'Terminal Post Commercial Black'},lp:{s:'AF-LP-COM-BK',u:'each',d:'Line Post Commercial Black'},fab:{s:'AF-FAB-6-BK-50',u:'roll',d:'Fabric Black 50ft'},rail:{s:'AF-TR-21-BK',u:'each',d:'Top Rail Black'},tw:{s:'AF-TW-BK',u:'roll',d:'Tension Wire Black'},tie:{s:'AF-TIE-BK',u:'bag',d:'Tie Wire Black'},tb:{s:'10406-BK',u:'each',d:'Tension Band Black'},re:{s:'10703-BK',u:'each',d:'Rail End Black'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'AF-WG-COM-BK',u:'each',d:'Walk Gate Commercial Black'},dg:{s:'AF-DG-COM-BK',u:'each',d:'Drive Gate Commercial Black'}}},
+  'ornamental.aluminum.flat_top_3rail': {family:'ornamental',note:'Aluminum panel 4×8: KAN004434 ✓',rp:{S:8,panel_w:8,con_line:1,con_term:2},label:'Ornamental Aluminum Flat Top',skus:{panel:{s:'8W14X83FT',u:'each',d:'Aluminum Panel 4×8 Flat Top'},post:{s:'8W12P69',u:'each',d:'Post 2"×16Ga×5\'9"'},bracket:{s:'8BB104',u:'each',d:'Line Bracket 2" Sq'},cap:{s:'8AB506',u:'each',d:'Flat Cap 2"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'DM4X4BLKFT',u:'each',d:'Walk Gate 4W×4H'},dg:{s:'DM5X4BLKFT',u:'each',d:'Drive Gate 5W×4H'}}},
+  'ornamental.aluminum.spear_top_3rail':{family:'ornamental',note:'Aluminum spear top: 8ft panels · 3-rail',rp:{S:8,panel_w:8,con_line:1,con_term:2},label:'Ornamental Aluminum Spear Top',skus:{panel:{s:'OR-ST3-PANEL',u:'each',d:'Aluminum Panel Spear Top 4×8'},post:{s:'8W12P69',u:'each',d:'Post 2"×16Ga'},bracket:{s:'8BB104',u:'each',d:'Line Bracket'},cap:{s:'8AB506',u:'each',d:'Post Cap'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'OR-WG',u:'each',d:'Walk Gate'},dg:{s:'OR-DG',u:'each',d:'Drive Gate'}}},
+  'ornamental.steel.flat_top_pool':     {family:'ornamental',note:'Steel pool panel: pool-code compliant',rp:{S:6,panel_w:6,con_line:1,con_term:2,pool:true},label:'Ornamental Steel Pool',skus:{panel:{s:'OR-POOL-PANEL',u:'each',d:'Steel Pool Panel'},post:{s:'OR-ST-POST',u:'each',d:'Steel Post'},bracket:{s:'OR-ST-BRK',u:'each',d:'Steel Bracket'},cap:{s:'OR-ST-CAP',u:'each',d:'Post Cap'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'OR-POOL-WG',u:'each',d:'Pool Walk Gate'},dg:{s:'OR-POOL-DG',u:'each',d:'Pool Drive Gate'}}},
+  'vinyl.privacy.tongue_groove':  {family:'vinyl',note:'Vinyl T&G: 8ft panels',rp:{S:8,panel_w:8,con_line:1,con_term:2},label:'Vinyl Privacy T&G',skus:{panel:{s:'VN-TG-8',u:'each',d:'Vinyl Panel T&G 8ft'},post:{s:'VN-POST-5x5',u:'each',d:'Vinyl Post 5×5'},cap:{s:'VN-CAP',u:'each',d:'Post Cap'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'VN-WG',u:'each',d:'Walk Gate'},dg:{s:'VN-DG',u:'each',d:'Drive Gate'}}},
+  'vinyl.picket.scalloped':       {family:'vinyl',note:'Vinyl scalloped picket: 8ft panels',rp:{S:8,panel_w:8,con_line:1,con_term:2},label:'Vinyl Scalloped Picket',skus:{panel:{s:'VN-SC-8',u:'each',d:'Vinyl Scalloped Panel 8ft'},post:{s:'VN-POST-4x4',u:'each',d:'Vinyl Post 4×4'},cap:{s:'VN-CAP-SQ',u:'each',d:'Post Cap Sq'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'VN-WG',u:'each',d:'Walk Gate'},dg:{s:'VN-DG',u:'each',d:'Drive Gate'}}},
+  'farm.no_climb.horse': {family:'farm',note:'No-climb horse: 12ft spacing · 100ft wire rolls',rp:{S:12,con_line:1,con_term:2},label:'Farm No-Climb Horse',skus:{wire:{s:'FM-NC-4060',u:'roll',d:'No-Climb Wire 4"×60" 100ft'},post:{s:'FM-POST',u:'each',d:'4×4×8 Treated Post'},staple:{s:'FM-STAPLE',u:'lb',d:'Fence Staples 1-3/4"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'FM-WG',u:'each',d:'Farm Walk Gate'},dg:{s:'FM-DG',u:'each',d:'Farm Drive Gate'}}},
+  'farm.barbed.5strand':  {family:'farm',note:'Barbed 5-strand: 12ft spacing · 1320ft rolls',rp:{S:12,strands:5,con_line:1,con_term:2},label:'Farm Barbed 5-Strand',skus:{wire:{s:'FM-BARB-1320',u:'roll',d:'Barbed Wire 1320ft Roll'},post:{s:'FM-POST',u:'each',d:'4×4×8 Treated Post'},staple:{s:'FM-STAPLE',u:'lb',d:'Fence Staples'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'FM-WG',u:'each',d:'Farm Walk Gate'},dg:{s:'FM-DG',u:'each',d:'Farm Drive Gate'}}},
+};
+
+function H(s){var h=0;for(var i=0;i<s.length;i++)h=Math.imul(31,h)+s.charCodeAt(i)|0;return Math.abs(h).toString(16).padStart(8,'0').toUpperCase();}
+
+// ── 10 CALCULATORS ────────────────────────────────────────────────────────────
+function calcA(edges){
+  var fe=edges.filter(function(e){return e.kind==='fence';});
+  var oe=edges.filter(function(e){return e.kind==='opening';});
+  var bL=fe.reduce(function(s,e){return s+e.length;},0);
+  var oL=oe.reduce(function(s,e){return s+e.length;},0);
+  return{fenceEdges:fe,openingEdges:oe,buildLft:bL,openingLft:oL,totalLft:bL+oL,geoHash:H(edges.map(function(e){return e.kind+':'+e.length;}).join('|')),F:{buildLft:fe.map(function(e){return e.length;}).join('+')||'0',openingLft:oe.map(function(e){return e.length;}).join('+')||'0'}};
+}
+function calcB(geo,ends,corners,walks,drives,others,S){
+  var gp=(walks+drives+others)*2;
+  var tp=ends+corners+gp;
+  var lpArr=geo.fenceEdges.map(function(e){return Math.max(0,Math.ceil(e.length/S)-1);});
+  var lp=lpArr.reduce(function(a,b){return a+b;},0);
+  var secsArr=geo.fenceEdges.map(function(e){return Math.ceil(e.length/S);});
+  var ts=secsArr.reduce(function(a,b){return a+b;},0);
+  var hookups=2*geo.fenceEdges.length;
+  return{terminalPosts:tp,linePosts:lp,gatePosts:gp,endPosts:ends,cornerPosts:corners,walkGates:walks,driveGates:drives,hookups:hookups,totalSecs:ts,lpArr:lpArr,secsArr:secsArr,S:S,totalPosts:tp+lp,F:{tp:ends+'(ends)+'+corners+'(corners)+'+(walks+drives+others)+'×2(gate)='+tp,lp:lpArr.map(function(v,i){return 'ceil('+geo.fenceEdges[i].length+'/'+S+')-1='+v;}).join(' + ')+'='+lp,hookups:'2×'+geo.fenceEdges.length+'='+hookups,secs:secsArr.map(function(v,i){return 'ceil('+geo.fenceEdges[i].length+'/'+S+')='+v;}).join(' + ')+'='+ts}};
+}
+function calcF(posts,rp,family){
+  if(family==='wood'){var b=posts.totalPosts*rp.con_line;return{totalBags:b,F:posts.totalPosts+'×'+rp.con_line+'='+b+' [wood: 1/post calibrated]'};}
+  var b=Math.ceil(posts.linePosts*rp.con_line+posts.terminalPosts*rp.con_term);
+  return{totalBags:b,F:posts.linePosts+'×'+rp.con_line+'(line)+'+posts.terminalPosts+'×'+rp.con_term+'(terminal)='+b+' [spec]'};
+}
+function calcDEH(styleId,geo,posts,conc,ht){
+  var style=STYLES[styleId],rp=style.rp,sk=style.skus,fam=style.family;
+  var bom=[],warn=[],proof=[];
+  function add(sku,qty,label,formula,grp){qty=Math.ceil(qty);if(qty<=0)return;bom.push({s:sku.s,u:sku.u,label:label||sku.d,qty:qty,formula:formula||'',group:grp||''});}
+  function pf(k,v,f){proof.push({k:k,v:v,f:f});}
+  var lf=geo.buildLft,tlf=geo.totalLft,tp=posts.terminalPosts,lp=posts.linePosts,ts=posts.totalSecs,walks=posts.walkGates,drives=posts.driveGates;
+
+  if(fam==='wood'){
+    var pk=rp.picket_fn==='floor'?Math.floor(tlf*rp.pickets_lf):rp.picket_fn==='round'?Math.round(tlf*rp.pickets_lf):Math.ceil(tlf*rp.pickets_lf);
+    add(sk.picket,pk,sk.picket.d+' ('+sk.picket.s+')',rp.picket_fn+'('+tlf+'×'+rp.pickets_lf+')='+pk,'PICKETS');
+    pf('Pickets',pk,rp.picket_fn+'('+tlf+'×'+rp.pickets_lf+')');
+    add(sk.post,tp+lp,sk.post.d+' ('+sk.post.s+')',tp+'(T)+'+lp+'(L)='+(tp+lp),'POSTS');
+    pf('Posts',tp+lp,tp+'T+'+lp+'L='+(tp+lp));
+    var rl=ts*rp.rails_sec+walks*rp.walk_rb+drives*rp.drive_rb;
+    add(sk.rail,rl,sk.rail.d+' ('+sk.rail.s+')',ts+'×'+rp.rails_sec+(walks?'+'+walks+'W×'+rp.walk_rb:'')+(drives?'+'+drives+'D×'+rp.drive_rb:'')+'='+rl,'RAILS');
+    pf('Rails',rl,ts+'×'+rp.rails_sec+' + gate bonus');
+    add(sk.con,conc.totalBags,'Concrete 60lb',conc.F,'CONCRETE');
+    pf('Concrete',conc.totalBags,conc.F);
+    if(walks>0){add(sk.hinge,walks,sk.hinge.d+' ('+sk.hinge.s+')',walks+'×1 pair','GATE HARDWARE');add(sk.latch,walks,sk.latch.d+' ('+sk.latch.s+')',walks+'×1 latch','GATE HARDWARE');}
+    if(drives>0){add(sk.hinge,drives*2,sk.hinge.d+' ('+sk.hinge.s+')',drives+'×2 pairs','GATE HARDWARE');add(sk.latch,drives,sk.latch.d+' ('+sk.latch.s+')',drives+'×1','GATE HARDWARE');add(sk.rod,drives,sk.rod.d+' ('+sk.rod.s+')',drives+'×1','GATE HARDWARE');}
+  } else if(fam==='chain_link'){
+    var fabQ=Math.ceil((lf*1.02)/rp.fab_roll),railQ=Math.ceil(lf/rp.rail_stick)+1,twQ=Math.ceil(lf/100)+1,tieQ=Math.ceil(lf/10*3/50)+1;
+    var bands=posts.endPosts*rp.bands_end+posts.cornerPosts*rp.bands_corner+posts.gatePosts*rp.bands_gate;
+    add(sk.tp,tp,sk.tp.d,tp+' terminal posts','POSTS');
+    add(sk.lp,lp,sk.lp.d,lp+' line posts','POSTS');
+    pf('Terminal posts',tp,posts.F.tp); pf('Line posts',lp,posts.F.lp);
+    add(sk.fab,fabQ,sk.fab.d,'ceil('+lf+'×1.02/'+rp.fab_roll+')='+fabQ+' rolls [build_length]','FABRIC');
+    add(sk.rail,railQ,sk.rail.d,'ceil('+lf+'/'+rp.rail_stick+')+1='+railQ,'RAILS');
+    add(sk.tw,twQ,sk.tw.d,'ceil('+lf+'/100)+1='+twQ,'WIRE');
+    add(sk.tie,tieQ,sk.tie.d,tieQ+' bags','WIRE');
+    add(sk.tb,bands,sk.tb.d,posts.endPosts+'×'+rp.bands_end+'(end)+'+posts.cornerPosts+'×'+rp.bands_corner+'(corner)+'+posts.gatePosts+'×'+rp.bands_gate+'(gate)='+bands,'HARDWARE');
+    add(sk.re,posts.hookups,sk.re.d,'hookups='+posts.hookups,'HARDWARE');
+    add(sk.con,conc.totalBags,'Concrete 60lb',conc.F,'CONCRETE');
+    pf('Fabric rolls',fabQ,'ceil(buildLft×1.02/'+rp.fab_roll+')'); pf('Tension bands',bands,'spec formula');
+    pf('Concrete',conc.totalBags,conc.F);
+    if(walks>0)add(sk.wg,walks,sk.wg.d,walks+' walk','GATES');
+    if(drives>0)add(sk.dg,drives,sk.dg.d,drives+' drive','GATES');
+  } else if(fam==='ornamental'){
+    var pnlQ=ts+1,pstQ=tp+lp,orCon=conc.totalBags;
+    add(sk.panel,pnlQ,sk.panel.d,ts+' sec+1','PANELS'); add(sk.post,pstQ,sk.post.d,pstQ+' posts','POSTS');
+    add(sk.bracket,pstQ*2,sk.bracket.d,pstQ+'×2','HARDWARE'); add(sk.cap,pstQ,sk.cap.d,pstQ+'caps','HARDWARE');
+    add(sk.con,orCon,'Concrete 60lb',conc.F,'CONCRETE');
+    if(walks>0)add(sk.wg,walks,sk.wg.d,walks+' walk','GATES');
+    if(drives>0)add(sk.dg,drives,sk.dg.d,drives+' drive','GATES');
+  } else if(fam==='vinyl'){
+    var vPnl=ts+1,vPst=tp+lp,vCon=conc.totalBags;
+    add(sk.panel,vPnl,sk.panel.d,ts+' sec+1','PANELS'); add(sk.post,vPst,sk.post.d,vPst+' posts','POSTS');
+    add(sk.cap,vPst,sk.cap.d,vPst+' caps','HARDWARE'); add(sk.con,vCon,'Concrete 60lb',conc.F,'CONCRETE');
+    if(walks>0)add(sk.wg,walks,sk.wg.d,walks+' walk','GATES');
+    if(drives>0)add(sk.dg,drives,sk.dg.d,drives+' drive','GATES');
+  } else if(fam==='farm'){
+    var fPst=tp+lp,fCon=conc.totalBags;
+    if(styleId==='farm.no_climb.horse'){add(sk.wire,Math.ceil(lf/100),sk.wire.d,'ceil('+lf+'/100)','WIRE');}
+    else{add(sk.wire,Math.ceil(lf*(rp.strands||5)/1320),sk.wire.d,(rp.strands||5)+' strands','WIRE');}
+    add(sk.post,fPst,sk.post.d,fPst+' posts','POSTS');
+    add(sk.staple,Math.ceil(fPst*0.25),sk.staple.d,fPst+'×0.25lb','HARDWARE');
+    add(sk.con,fCon,'Concrete 60lb',conc.F,'CONCRETE');
+    if(walks>0)add(sk.wg,walks,sk.wg.d,walks+' walk','GATES');
+    if(drives>0)add(sk.dg,drives,sk.dg.d,drives+' drive','GATES');
+  }
+  // Warnings
+  var flags=Array.from(document.querySelectorAll('.flag-btn.on')).map(function(b){return b.dataset.flag;});
+  if(flags.includes('HOA'))   warn.push('HOA — confirm approved style and color before ordering');
+  if(flags.includes('rocky')) warn.push('Rocky soil — auger rental or blasting likely');
+  if(flags.includes('grade')) warn.push('Sloped terrain — stepped or racked install required');
+  if(flags.includes('permit'))warn.push('Permit required — obtain before scheduling crew');
+  if(ht>8)                    warn.push('Height >8ft — permit likely required');
+  if(geo.totalLft>1000)       warn.push('Large job — confirm phased delivery');
+  if(STYLES[styleId].rp.pool) warn.push('Pool code compliant style — verify local AHJ requirements');
+  return{bom,warn,proof};
+}
+function calcJ(geo,posts,matR,flags){
+  var bl=[],warn=matR.warn.slice();
+  if(geo.buildLft<1)bl.push('No fence runs entered');
+  if(posts.totalPosts<2)bl.push('Post count error — check layout');
+  if(flags.includes('permit'))bl.push('Permit required — obtain before scheduling crew');
+  return{st:bl.length>0?'not_ready':warn.length>0?'needs_review':'ready',bl:bl,warn:warn};
+}
+
+// ── INVARIANT PROOF ──────────────────────────────────────────────────────────
+function buildProof(geo,posts,styleId){
+  return{
+    'hookups = 2×|E|':        posts.hookups===2*geo.fenceEdges.length,
+    'terminal_posts = |V|':   posts.terminalPosts>=2,
+    'line_posts ≥ 0':         posts.linePosts>=0,
+    'build_length > 0':       geo.buildLft>0,
+    'spacing locked':         posts.S===STYLES[styleId].rp.S,
+    'geo hash deterministic': geo.geoHash.length===8,
+  };
+}
+
+// ── LIVE GRAPH PREVIEW ───────────────────────────────────────────────────────
+function liveUpdate(){
+  var edges=getEdges();
+  var styleId=document.getElementById('fam').value;
+  var style=STYLES[styleId];
+  if(!style)return;
+  var S=style.rp.S;
+  var ends=parseInt(document.getElementById('ends').value)||2;
+  var corners=parseInt(document.getElementById('corners').value)||0;
+  var walks=parseInt(document.getElementById('wg').value)||0;
+  var drives=parseInt(document.getElementById('dg').value)||0;
+  var others=parseInt(document.getElementById('og').value)||0;
+  var geo=calcA(edges);
+  var posts=calcB(geo,ends,corners,walks,drives,others,S);
+  // Update graph preview
+  document.getElementById('gp-tp').textContent=posts.terminalPosts;
+  document.getElementById('gp-lp').textContent=posts.linePosts;
+  document.getElementById('gp-posts').textContent=posts.totalPosts;
+  document.getElementById('gp-hookups').textContent=posts.hookups;
+  document.getElementById('gp-secs').textContent=posts.totalSecs;
+  document.getElementById('gp-build').textContent=geo.buildLft+'ft';
+  document.getElementById('gp-opening').textContent=geo.openingLft+'ft';
+  // LF counters
+  document.getElementById('lf-build').textContent=geo.buildLft+'LF';
+  document.getElementById('lf-open').textContent='+'+geo.openingLft;
+  // Per-edge derived counts
+  document.querySelectorAll('.edge-card.fence-edge').forEach(function(card,i){
+    var lenInp=card.querySelector('.edge-len');
+    var L=parseFloat(lenInp?lenInp.value:0)||0;
+    var der=card.querySelector('.edge-derived');
+    if(der&&L>0){
+      var lp=Math.max(0,Math.ceil(L/S)-1);
+      var sec=Math.ceil(L/S);
+      der.textContent='→ '+lp+' line posts · '+sec+' sections · '+L+'ft';
+    }
+  });
+  updateGov();
+}
+
+function updateGov(){
+  var styleId=document.getElementById('fam').value;
+  var sv=VERSIONS.styles[styleId]||{v:'unknown'};
+  var flags=Array.from(document.querySelectorAll('.flag-btn.on')).map(function(b){return b.dataset.flag;});
+  var unresolved=flags.length;
+  document.getElementById('tb-unresolved').textContent=unresolved>0?unresolved+' FLAGS':'NONE';
+  document.getElementById('tb-unresolved').className='tv'+(unresolved>0?' unresolved':' resolved');
+  document.getElementById('gv-ruleset').textContent=sv.v;
+  document.getElementById('tb-ruleset').textContent=sv.v;
+}
+
+function onStyleChange(){
+  var styleId=document.getElementById('fam').value;
+  var style=STYLES[styleId];
+  if(!style)return;
+  var sv=VERSIONS.styles[styleId]||{v:'unknown'};
+  document.getElementById('style-note').textContent=style.note;
+  document.getElementById('gv-ruleset').textContent=sv.v;
+  document.getElementById('gv-vendor').textContent=style.skus.con?'AmeriFence':'Generic';
+  document.getElementById('tb-ruleset').textContent=sv.v;
+  document.getElementById('tb-vendor').textContent='AmeriFence';
+  document.getElementById('tb-spacing').textContent=style.rp.S+'ft O.C.';
+  liveUpdate();
+}
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+var S={result:null,log:[],chat:[],tab:'BOM',loading:false};
+var vault=[];
+var extracted=null;
+
+function gate(a){
+  var f=['mutate_rulepack','invent_sku','override_luna','bypass_gate'];
+  var al=['normalize_spec','run_calculator','check_readiness','generate_packets','assist_chat','vault_append','vision_parse'];
+  var r=f.includes(a)?'BLOCKED':al.includes(a)?'ALLOWED':'BLOCKED';
+  S.log.push({a:a,r:r});
+  var n=S.log.filter(function(l){return l.r==='ALLOWED';}).length;
+  document.getElementById('gc').textContent='LUNA · '+n;
+  renderLog();return r==='ALLOWED';
+}
+
+function vadd(t,d){var prev=vault.length>0?vault[vault.length-1].h:'GENESIS';var h=H(JSON.stringify({t:t,d:d,prev:prev,ts:Date.now()}));vault.push({t:t,h:h,prev:prev.slice(0,8)});}
+
+async function claude(sys,msg){
+  try{var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:[{role:'user',content:msg}]})});var d=await r.json();return d.content&&d.content[0]?d.content[0].text:'Assist unavailable.';}catch(e){return 'Assist offline — engine results valid.';}
+}
+
+// ── VISION ────────────────────────────────────────────────────────────────────
+async function handleImg(file,source){
+  if(!file)return;
+  document.getElementById('up-img').src='';
+  document.getElementById('up-wrap').classList.remove('hidden');
+  var reader=new FileReader();
+  reader.onload=async function(e){
+    var dataUrl=e.target.result;
+    document.getElementById('up-img').src=dataUrl;
+    gate('vision_parse');
+    var statusEl=source==='camera'?document.getElementById('ev-sketch-st'):document.getElementById('ev-quote-st');
+    var factsEl=source==='camera'?document.getElementById('ev-sketch-facts'):document.getElementById('ev-quote-facts');
+    if(statusEl)statusEl.textContent='PARSING...';
+    try{
+      var raw=await claude(
+        'You are the MIRE vision parser for Hardsaw. Extract fence layout. Return ONLY valid JSON: '
+        +'{"styleId":"wood.privacy.tight_cedar"|"wood.privacy.spaced_picket"|"chain_link.residential.galvanized"|"chain_link.residential.black"|"ornamental.aluminum.flat_top_3rail"|"vinyl.privacy.tongue_groove"|"farm.no_climb.horse"|null,'
+        +'"height_ft":number|null,"fenceEdges":[{"length":number,"note":"string"}],"openingEdges":[{"length":number,"note":"string"}],'
+        +'"ends":number|null,"corners":number|null,"walkGates":number|null,"driveGates":number|null,'
+        +'"vendor":string|null,"quoteNumber":string|null,"quoteTotal":number|null,'
+        +'"layoutDescription":"every dimension label you see","lineItems":[{"sku":string,"description":string,"qty":number,"unit":string}],'
+        +'"confidence":"high"|"medium"|"low","notes":string}. '
+        +'CRITICAL: For sketches, read EVERY number near a line as a run length ft. Separate fence runs (solid) from gate gaps (openings).',
+        [{type:'image',source:{type:'base64',media_type:file.type||'image/jpeg',data:dataUrl.split(',')[1]}},
+         {type:'text',text:'Extract fence layout. Return only JSON.'}]
+      );
+      var data=JSON.parse(raw.replace(/```json|```/g,'').trim());
+      extracted=data;
+      var total=(data.fenceEdges||[]).length+(data.lineItems||[]).length;
+      if(statusEl){statusEl.textContent='PARSED';statusEl.className='ev-status parsed';}
+      if(factsEl){factsEl.textContent=total+' extracted facts · '+data.confidence+' confidence';}
+      renderExtracted(data);
+    }catch(err){
+      if(statusEl){statusEl.textContent='PARSE ERROR';statusEl.className='ev-status conflict';}
+      if(factsEl){factsEl.textContent='Could not parse — enter layout below';}
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderExtracted(d){
+  var box=document.getElementById('ext-box'),ttl=document.getElementById('ext-title'),cnt=document.getElementById('ext-cnt');
+  ttl.textContent='VISION EXTRACTED'+(d.quoteNumber?' · '+d.quoteNumber:'')+(d.vendor?' · '+d.vendor:'');
+  var h='';
+  if(d.layoutDescription)h+='<div style="color:var(--text);margin-bottom:8px;font-size:10px">'+esc(d.layoutDescription)+'</div>';
+  if(d.fenceEdges&&d.fenceEdges.length)h+='<div style="color:var(--amber)">Fence runs: '+d.fenceEdges.map(function(e){return e.length+'ft';}).join(', ')+'</div>';
+  if(d.openingEdges&&d.openingEdges.length)h+='<div style="color:var(--blue)">Gate openings: '+d.openingEdges.map(function(e){return e.length+'ft';}).join(', ')+'</div>';
+  if(d.height_ft)h+='<div>Height: '+d.height_ft+'ft</div>';
+  if(d.quoteTotal)h+='<div style="color:var(--amber);margin-top:4px">Quote total: $'+d.quoteTotal.toLocaleString()+'</div>';
+  if(d.lineItems&&d.lineItems.length){h+='<div style="margin-top:6px;font-size:7px;color:var(--muted);letter-spacing:2px">LINE ITEMS ('+d.lineItems.length+')</div>';d.lineItems.forEach(function(i){h+='<div style="font-size:9px;color:var(--dim)">'+i.qty+'× '+esc(i.description)+(i.sku?' ('+esc(i.sku)+')':'')+'</div>';});}
+  cnt.innerHTML=h;
+  box.classList.remove('hidden');
+}
+
+function applyExtracted(){
+  if(!extracted)return;var d=extracted;
+  if(d.styleId){var s=document.getElementById('fam');for(var i=0;i<s.options.length;i++){if(s.options[i].value===d.styleId){s.selectedIndex=i;break;}}onStyleChange();}
+  if(d.height_ft){var h=document.getElementById('ht');for(var i=0;i<h.options.length;i++){if(parseInt(h.options[i].value)===d.height_ft){h.selectedIndex=i;break;}}}
+  if(d.fenceEdges&&d.fenceEdges.length){document.getElementById('edges-container').innerHTML='';edgeN=0;d.fenceEdges.forEach(function(e){addEdge('fence',e.length,e.note);});}
+  if(d.openingEdges&&d.openingEdges.length){d.openingEdges.forEach(function(e){addEdge('opening',e.length,e.note||'gate opening');});}
+  if(d.ends!=null)document.getElementById('ends').value=d.ends;
+  if(d.corners!=null)document.getElementById('corners').value=d.corners;
+  if(d.walkGates!=null)document.getElementById('wg').value=d.walkGates;
+  if(d.driveGates!=null)document.getElementById('dg').value=d.driveGates;
+  liveUpdate();
+}
+
+// ── EDGE CARDS ────────────────────────────────────────────────────────────────
+var edgeN=0;
+function addEdge(kind,len,note){
+  edgeN++;var id='e'+edgeN;
+  var div=document.createElement('div');
+  div.className='edge-card '+(kind==='fence'?'fence-edge':'opening-edge');div.id=id;
+  var lbl=kind==='fence'?'FENCE RUN':'GATE OPENING';
+  var color=kind==='fence'?'fence-lbl':'opening-lbl';
+  div.innerHTML='<div class="edge-row">'
+    +'<span class="edge-label '+color+'">'+lbl+'</span>'
+    +'<input type="hidden" class="edge-kind" value="'+kind+'">'
+    +'<input class="inp edge-len" type="number" min="0.1" max="5000" step="0.5" placeholder="ft" value="'+(len||'')+'" style="width:80px;text-align:right;padding:6px 8px" oninput="liveUpdate()">'
+    +'<input class="inp" type="text" placeholder="note" value="'+(note||'')+'" style="width:80px;font-size:11px;padding:6px 8px">'
+    +'<button class="del-btn" onclick="delEdge(\''+id+'\')">✕</button>'
+    +'</div>'
+    +(kind==='fence'?'<div class="edge-derived" id="der-'+id+'">—</div>':'');
+  document.getElementById('edges-container').appendChild(div);
+  liveUpdate();
+}
+function delEdge(id){var el=document.getElementById(id);if(el)el.remove();liveUpdate();}
+function getEdges(){
+  var out=[];
+  document.querySelectorAll('#edges-container .edge-card').forEach(function(c){
+    var kind=c.querySelector('.edge-kind').value;
+    var v=parseFloat(c.querySelector('.edge-len').value);
+    if(v>0)out.push({kind:kind,length:v});
+  });
+  return out;
+}
+
+// ── RUN JOB ───────────────────────────────────────────────────────────────────
+async function runJob(){
+  var edges=getEdges();
+  if(!edges.filter(function(e){return e.kind==='fence';}).length){alert('Add at least one fence run.');return;}
+  var styleId=document.getElementById('fam').value;
+  var ht=parseInt(document.getElementById('ht').value);
+  var ends=parseInt(document.getElementById('ends').value)||2;
+  var corners=parseInt(document.getElementById('corners').value)||0;
+  var walks=parseInt(document.getElementById('wg').value)||0;
+  var drives=parseInt(document.getElementById('dg').value)||0;
+  var others=parseInt(document.getElementById('og').value)||0;
+  var flags=Array.from(document.querySelectorAll('.flag-btn.on')).map(function(b){return b.dataset.flag;});
+  var style=STYLES[styleId];
+  var rp=style.rp;
+
+  // Set rail steps
+  setRailStep('capture','done');setRailStep('normalize','done');setRailStep('compute','active');
+  show('s-think');
+  S={result:null,log:[],chat:[],tab:'BOM',loading:false};vault=[];
+  document.getElementById('gc').textContent='LUNA · 0';
+
+  // Animate calculators
+  var calcs=['A','B','C','D','E','F','G','H','I','J'];
+  for(var ci=0;ci<calcs.length;ci++){
+    var el=document.getElementById('calc-'+calcs[ci]);
+    if(el)el.classList.add('running');
+    await sleep(80);
+    if(el)el.classList.remove('running');
+    if(el)el.classList.add('done');
+  }
+
+  gate('normalize_spec');
+  vadd('INTENT_CAPTURED',{styleId,ht,edges:edges.length,walks,drives});
+  gate('run_calculator');
+
+  var geo    = calcA(edges);
+  var posts  = calcB(geo,ends,corners,walks,drives,others,rp.S);
+  var conc   = calcF(posts,rp,style.family);
+  var matR   = calcDEH(styleId,geo,posts,conc,ht);
+  var rdy    = calcJ(geo,posts,matR,flags);
+  var invars = buildProof(geo,posts,styleId);
+  var invPass= Object.values(invars).every(Boolean);
+
+  gate('check_readiness');vadd('READINESS_CHECKED',{st:rdy.st});
+  gate('generate_packets');
+
+  var sv=VERSIONS.styles[styleId]||{v:'UNKNOWN',cal:null,calDate:null};
+  var famKey=style.family;
+  var versions={
+    coreEngineVersion: VERSIONS.coreEngine,
+    familyRulepackVersion: VERSIONS.families[famKey]||'unknown',
+    styleRulepackVersion:  sv.v,
+    vendorProfileVersion:  VERSIONS.vendor,
+    protocolVersion:       VERSIONS.protocol,
+  };
+  var outHash=H(JSON.stringify({geoHash:geo.geoHash,bom:matR.bom.map(function(i){return i.s+':'+i.qty;}),versions:versions}));
+  vadd('PACKETS_GENERATED',{decisionId:outHash});
+
+  S.result={geo,posts,conc,matR,rdy,invars,invPass,versions,styleId,style,sv,ht,flags,outHash};
+
+  // Update governance panel
+  document.getElementById('gv-ruleset').textContent=sv.v;
+  document.getElementById('gv-proof').textContent=invPass?'ALL PASS':'FAILED';
+  document.getElementById('gv-proof').className='gov-v '+(invPass?'green':'red');
+  document.getElementById('gv-ready').textContent=rdy.st.replace('_',' ').toUpperCase();
+  document.getElementById('gv-ready').className='gov-v '+(rdy.st==='ready'?'green':rdy.st==='needs_review'?'locked':'red');
+
+  setRailStep('compute','done');setRailStep('prove','done');setRailStep('export','active');
+  renderResultUI();show('s-result');
+
+  gate('assist_chat');
+  var sum=await claude(
+    'You are Assist inside Hardsaw v3.1, a governed construction decision engine. '
+    +'IMPORTANT: The engine computes and proves. You only explain. Never estimate. '
+    +'Response rules: 2-3 sentences max, contractor-grade language, cite calibration source if present. '
+    +'Assist actions available: explain result, explain warning, show derivation, compare to vendor quote.',
+    style.label+': '+geo.buildLft+'lf build, '+geo.openingLft+'lf openings, '+ht+'ft, '
+    +posts.totalPosts+' posts ('+posts.terminalPosts+' terminal, '+posts.linePosts+' line), '
+    +posts.totalSecs+' sections, readiness='+rdy.st+', proof='+invPass
+    +', calibration='+(sv.cal||'none')+', warnings='+(rdy.warn.length)
+  );
+  S.chat=[{role:'assist',text:sum}];renderChat();
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+var STC={ready:'var(--green)',needs_review:'var(--amber)',not_ready:'var(--red)'};
+var STL={ready:'READY TO EXECUTE',needs_review:'NEEDS REVIEW',not_ready:'NOT READY'};
+
+function renderResultUI(){
+  var r=S.result,rdy=r.rdy,st=rdy.st;
+  var badge=document.getElementById('readiness-badge');
+  badge.style.color=STC[st];badge.style.borderColor=STC[st];badge.style.border='1px solid';
+  document.getElementById('readiness-label').textContent=STL[st];
+  document.getElementById('result-meta').textContent=
+    r.style.label+' · '+r.ht+'ft · build '+r.geo.buildLft+'ft · openings '+r.geo.openingLft+'ft · '
+    +r.posts.totalPosts+' posts · '+r.posts.totalSecs+' sections';
+  document.getElementById('hash-strip').textContent='GEO: '+r.geo.geoHash+' · DECISION: '+r.outHash;
+  document.getElementById('dual-mat').textContent=r.matR.bom.length+' items';
+  var invCount=Object.values(r.invars).filter(Boolean).length+'/'+Object.values(r.invars).length;
+  document.getElementById('dual-proof').textContent=invCount+' pass';
+  setTab('BOM');renderLog();
+}
+
+function setTab(t){
+  S.tab=t;
+  ['BOM','PROOF','READY','PACKETS'].forEach(function(id){
+    var el=document.getElementById('t-'+id);
+    if(el)el.className='tab'+(id===t?' on':'');
+  });
+  renderTab();
+}
+
+function renderTab(){
+  var t=S.tab,r=S.result,el=document.getElementById('tc');
+  if(!el||!r)return;
+  var geo=r.geo,posts=r.posts,matR=r.matR,rdy=r.rdy;
+
+  if(t==='BOM'){
+    if(!matR.bom.length){el.innerHTML='<div style="color:var(--red)">'+rdy.bl.map(function(b){return'⛔ '+esc(b);}).join('<br>')+'</div>';return;}
+    var h='<div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">QUANTITIES ONLY — PRICING DEFERRED</div>';
+    var lastGrp='';
+    h+='<div class="bom-head"><span>ITEM / SKU</span><span style="text-align:right">QTY</span><span>UNIT</span></div>';
+    matR.bom.forEach(function(i){
+      if(i.group&&i.group!==lastGrp){h+='<div class="bom-grp">'+i.group+'</div>';lastGrp=i.group;}
+      h+='<div class="bom-row"><div><div>'+esc(i.label)+'</div><div class="bom-sku">'+esc(i.s)+'</div></div>'
+        +'<div style="color:var(--amber);font-weight:bold;text-align:right">'+i.qty+'</div>'
+        +'<div style="color:var(--dim)">'+i.u+'</div></div>';
+    });
+    // Geometry facts
+    h+='<div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border2)">'
+      +'<div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">GEOMETRY FACTS</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">';
+    [['BUILD LF',geo.buildLft+'ft'],['OPENING LF',geo.openingLft+'ft'],
+     ['TERMINAL POSTS',posts.terminalPosts],['LINE POSTS',posts.linePosts],
+     ['TOTAL POSTS',posts.totalPosts],['SECTIONS',posts.totalSecs],
+     ['HOOKUPS',posts.hookups],['POST SPACING',posts.S+'ft O.C.']
+    ].forEach(function(f){h+='<div><div style="font-size:7px;color:var(--muted);letter-spacing:1px">'+f[0]+'</div><div style="font-size:13px;font-weight:bold">'+f[1]+'</div></div>';});
+    h+='</div></div>';
+    // Version lineage
+    h+='<div class="ver-panel" style="margin-top:10px"><div class="ver-title">VERSION LINEAGE — RuleVersionSet</div>';
+    Object.entries(r.versions).forEach(function(e){h+='<div class="ver-row"><span class="ver-k">'+esc(e[0])+'</span><span class="ver-v">'+esc(e[1])+'</span></div>';});
+    h+='</div>';
+    if(r.sv.cal)h+='<div class="calib-tag">✓ CALIBRATED · AmeriFence '+r.sv.cal+' · '+r.sv.calDate+'</div>';
+    h+='<div class="hash-line">GEO: '+geo.geoHash+' · DECISION: '+r.outHash+'<br>PROOF: '+(r.invPass?'✓ ALL INVARIANTS PASS':'✗ PROOF FAILED')+'</div>';
+    el.innerHTML=h;
+
+  } else if(t==='PROOF'){
+    var h='<div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:10px">PROOF — EVERY VALUE TRACEABLE AND REPLAYABLE</div>';
+    h+='<div style="font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:6px">CALCULATOR A — GEOMETRY</div>';
+    [{k:'build_length_ft',v:geo.buildLft+'ft',f:geo.F.buildLft+' ft (fence edges)'},
+     {k:'opening_length_ft',v:geo.openingLft+'ft',f:geo.F.openingLft+' ft (gate edges)'},
+     {k:'total_length_ft',v:geo.totalLft+'ft',f:geo.buildLft+' + '+geo.openingLft},
+     {k:'geometry_hash',v:geo.geoHash,f:'H(edges)'},
+    ].forEach(function(p){h+='<div class="proof-row"><div class="proof-k">'+esc(p.k)+'</div><div><div class="proof-v">'+esc(String(p.v))+'</div><div class="proof-f">'+esc(p.f)+'</div></div></div>';});
+
+    h+='<div style="font-size:7px;letter-spacing:2px;color:var(--muted);margin:10px 0 6px">CALCULATOR B — POST LAYOUT</div>';
+    [{k:'terminal_posts = |V|',v:posts.terminalPosts,f:posts.F.tp},
+     {k:'line_posts = Σ ceil(L/S)−1',v:posts.linePosts,f:posts.F.lp},
+     {k:'hookups = 2×|E|',v:posts.hookups,f:posts.F.hookups},
+     {k:'total_sections',v:posts.totalSecs,f:posts.F.secs},
+     {k:'post_spacing (S)',v:posts.S+'ft O.C.',f:'Locked rulepack '+r.style.rp.S+'ft'},
+    ].forEach(function(p){h+='<div class="proof-row"><div class="proof-k">'+esc(p.k)+'</div><div><div class="proof-v">'+esc(String(p.v))+'</div><div class="proof-f">'+esc(p.f)+'</div></div></div>';});
+
+    h+='<div style="font-size:7px;letter-spacing:2px;color:var(--muted);margin:10px 0 6px">INVARIANT CHECKS</div>';
+    Object.entries(r.invars).forEach(function(e){
+      h+='<div class="invariant-row"><span style="color:var(--muted);font-size:9px">'+esc(e[0])+'</span><span class="'+(e[1]?'inv-pass':'inv-fail')+'">'+(e[1]?'PASS':'FAIL')+'</span></div>';
+    });
+
+    h+='<div style="font-size:7px;letter-spacing:2px;color:var(--muted);margin:10px 0 6px">MATERIAL FORMULA TRACE</div>';
+    matR.bom.forEach(function(i){
+      h+='<div style="padding:5px 0;border-bottom:1px solid var(--border)"><div style="font-size:10px;color:var(--dim)">'+esc(i.label)+'</div><div style="font-size:8px;color:var(--dim);margin-top:2px">'+esc(i.formula)+' → '+i.qty+' '+i.u+'</div></div>';
+    });
+    h+='<div class="hash-line" style="margin-top:10px">GEO HASH: '+geo.geoHash+'<br>DECISION HASH: '+r.outHash+'</div>';
+    el.innerHTML=h;
+
+  } else if(t==='READY'){
+    var st=rdy.st;
+    var h='<div style="color:'+STC[st].replace('var(','').replace(')','').replace('--','#').replace('green','00E87A').replace('amber','FFB800').replace('red','FF3030')+';font-size:14px;font-weight:bold;margin-bottom:12px">'+STL[st]+'</div>';
+    // Use CSS vars properly
+    h='<div style="font-size:14px;font-weight:bold;margin-bottom:12px;color:'+
+      (st==='ready'?'#00E87A':st==='needs_review'?'#FFB800':'#FF3030')+'">'+STL[st]+'</div>';
+    if(rdy.bl.length){h+='<div class="bom-grp">BLOCKERS</div><ul class="al-list">'+rdy.bl.map(function(b){return'<li class="al-b">⛔ '+esc(b)+'</li>';}).join('')+'</ul>';}
+    if(rdy.warn.length){h+='<div class="bom-grp">WARNINGS</div><ul class="al-list">'+rdy.warn.map(function(w){return'<li class="al-w">⚠ '+esc(w)+'</li>';}).join('')+'</ul>';}
+    if(!rdy.bl.length&&!rdy.warn.length)h+='<div style="color:#00E87A">All checks passed. Clear to execute.</div>';
+    h+='<div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border)">';
+    h+='<div class="bom-grp">LOCKED PARAMETERS</div>';
+    [['Rulepack',r.versions.styleRulepackVersion],['Vendor profile',r.versions.vendorProfileVersion],
+     ['Post spacing',posts.S+'ft O.C.'],['Gate schema','opening edge deduction'],['Proof state',r.invPass?'ALL PASS':'FAILED']
+    ].forEach(function(p){h+='<div class="proof-row"><div class="proof-k">'+p[0]+'</div><div class="proof-v" style="font-size:9px;color:var(--amber)">'+p[1]+'</div></div>';});
+    h+='</div>';
+    el.innerHTML=h;
+
+  } else if(t==='PACKETS'){
+    var oh=r.outHash;
+    var h='<div class="pkt-sec"><div class="pkt-hdr">CONTRACTOR PACKET</div><div class="pkt-body">'
+      +'Job: '+oh+'<br>'+r.style.label+' · '+r.ht+'ft<br>'
+      +'Build: '+geo.buildLft+'ft · Openings: '+geo.openingLft+'ft<br>'
+      +'Posts: '+posts.totalPosts+' ('+posts.terminalPosts+' terminal, '+posts.linePosts+' line)<br>'
+      +'Sections: '+posts.totalSecs+' · '+posts.S+'ft O.C. · Gates: '+posts.walkGates+'W/'+posts.driveGates+'D<br>'
+      +'Status: '+rdy.st.replace('_',' ').toUpperCase()
+      +'</div></div>';
+    h+='<div class="pkt-sec"><div class="pkt-hdr">SUPPLIER PACKET (PO DRAFT)</div><div class="pkt-body">'
+      +'PO: '+oh+'<br>'+matR.bom.map(function(i){return i.qty+'× '+i.s+' ('+i.u+')';}).join('<br>')+'</div></div>';
+    h+='<div class="pkt-sec"><div class="pkt-hdr">DECISION RECORD — DecisionResult</div><div class="pkt-body" style="font-size:9px">'
+      +'decisionId: '+oh+'<br>familyId: '+r.style.family+'<br>styleId: '+r.styleId+'<br>'
+      +Object.entries(r.versions).map(function(e){return esc(e[0])+': '+esc(e[1]);}).join('<br>')+'</div></div>';
+    h+='<div class="pkt-sec"><div class="pkt-hdr">LIFEVAULT — APPEND-ONLY CHAIN</div><div class="pkt-body" style="font-size:9px">'
+      +vault.map(function(e){return'<div style="display:flex;gap:8px;padding:2px 0;border-bottom:1px solid var(--border)"><span style="color:var(--amber);min-width:130px">'+e.t+'</span><span style="color:var(--dim)">'+e.h+'</span></div>';}).join('')+'</div></div>';
+    el.innerHTML=h;
+  }
+}
+
+function renderChat(){
+  var cb=document.getElementById('cb');if(!cb)return;
+  cb.innerHTML=S.chat.map(function(m){
+    return'<div class="'+(m.role==='assist'?'msg-a':'msg-u')+'"><div class="'+(m.role==='assist'?'role-a':'role-u')+'">'+(m.role==='assist'?'ASSIST — EXPLAIN RESULT':'YOU')+'</div>'+esc(m.text)+'</div>';
+  }).join('')+(S.loading?'<div class="msg-a"><div class="role-a">ASSIST</div><span style="color:var(--muted)">thinking...</span></div>':'');
+  cb.scrollTop=cb.scrollHeight;
+}
+
+function renderLog(){
+  var lc=document.getElementById('lc'),ll=document.getElementById('ll');if(!lc||!ll)return;
+  if(S.log.length){lc.classList.remove('hidden');ll.innerHTML=S.log.map(function(l){return'<div class="luna-row"><span style="color:'+(l.r==='ALLOWED'?'#00E87A':'#FF3030')+';min-width:60px">'+l.r+'</span><span style="color:var(--muted)">'+l.a+'</span></div>';}).join('');}
+}
+
+async function sendChat(){
+  var inp=document.getElementById('ci');var msg=inp.value.trim();if(!msg||S.loading)return;
+  inp.value='';S.loading=true;S.chat.push({role:'user',text:msg});renderChat();gate('assist_chat');
+  var r=S.result;
+  var reply=await claude('You are Assist in Hardsaw v3.1. Subordinate to compute. Explain, derive, compare — never estimate. 2-3 sentences. Contractor language.',
+    'Job: '+r.style.label+' '+r.geo.buildLft+'lf, posts='+r.posts.totalPosts+', readiness='+r.rdy.st+'. Q: '+msg);
+  S.loading=false;S.chat.push({role:'assist',text:reply});renderChat();
+}
+
+function setRailStep(id,state){
+  var el=document.getElementById('rail-'+id);
+  if(!el)return;
+  el.className='rail-step'+(state==='active'?' active':state==='done'?' done':'');
+}
+
+function reset(){
+  S={result:null,log:[],chat:[],tab:'BOM',loading:false};vault=[];extracted=null;
+  document.getElementById('gc').textContent='LUNA · 0';
+  document.getElementById('edges-container').innerHTML='';
+  ['ends','corners','wg','dg','og'].forEach(function(id){
+    var el=document.getElementById(id);if(el)el.value=id==='ends'?'2':'0';
+  });
+  document.querySelectorAll('.flag-btn.on').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('lc').classList.add('hidden');
+  document.getElementById('up-wrap').classList.add('hidden');
+  document.getElementById('ext-box').classList.add('hidden');
+  // Reset evidence cards
+  ['quote','sketch','site'].forEach(function(t){
+    var st=document.getElementById('ev-'+t+'-st');var ft=document.getElementById('ev-'+t+'-facts');
+    if(st){st.textContent='MISSING';st.className='ev-status';}if(ft)ft.textContent='';
+  });
+  // Reset rail
+  ['capture','normalize','compute','prove','export'].forEach(function(id){setRailStep(id,'');});
+  setRailStep('capture','active');
+  // Reset gov panel
+  document.getElementById('gv-proof').textContent='AWAITING INPUT';document.getElementById('gv-proof').className='gov-v dim';
+  document.getElementById('gv-ready').textContent='—';document.getElementById('gv-ready').className='gov-v dim';
+  edgeN=0;show('s-idle');addEdge('fence');liveUpdate();
+}
+
+function show(id){['s-idle','s-think','s-result'].forEach(function(s){var el=document.getElementById(s);if(el)el.classList.toggle('hidden',s!==id);});}
+function sleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// Init
+addEdge('fence');onStyleChange();
+</script>
+</body>
+</html>
