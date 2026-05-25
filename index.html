@@ -932,9 +932,30 @@ function gate(a){
 
 function vadd(t,d){var prev=vault.length>0?vault[vault.length-1].h:'GENESIS';var h=H(JSON.stringify({t:t,d:d,prev:prev,ts:Date.now()}));vault.push({t:t,h:h,prev:prev.slice(0,8)});}
 
-async function claude(sys,msg){
-  try{var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:[{role:'user',content:msg}]})});var d=await r.json();return d.content&&d.content[0]?d.content[0].text:'Assist unavailable.';}catch(e){return 'Assist offline — engine results valid.';}
-}
+window.HARDSAW_CONFIG = window.HARDSAW_CONFIG || {
+    ASSIST_URL: 'https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/assist',
+    SUPABASE_ANON_KEY: 'sb_publishable_xjc1UroCJV0j3PWGQfDHUA_rwaZ6h90'
+};
+  async function claude(sys,msg){
+      try{
+            var r=await fetch(window.HARDSAW_CONFIG.ASSIST_URL,{
+                    method:'POST',
+                    headers:{
+                              'Content-Type':'application/json',
+                              'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY
+                    },
+                    body:JSON.stringify({system:sys,message:msg})
+            });
+            if(!r.ok){
+                    var err=await r.json().catch(function(){return{error:'unknown'};});
+                    return 'Assist error: '+(err.error||('HTTP '+r.status));
+            }
+            var d=await r.json();
+            return d.content&&d.content[0]?d.content[0].text:'Assist unavailable.';
+      }catch(e){
+            return 'Assist offline — engine results valid.';
+      }
+  }
 
 // ── VISION ────────────────────────────────────────────────────────────────────
 async function handleImg(file,source){
