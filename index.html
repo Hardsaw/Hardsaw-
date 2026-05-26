@@ -949,6 +949,7 @@ const VAULT_EVENT_MAP = {
   'luna_denial':       'LUNA_DENIAL'
 };
 
+// LifeVault remote write — fire-and-forget. See commit 0c21d0a for full implementation.
 async function vaultRemote(localAction, data) {
   const eventType = VAULT_EVENT_MAP[localAction];
   if (!eventType) return;
