@@ -930,12 +930,59 @@ function gate(a){
   renderLog();return r==='ALLOWED';
 }
 
-function vadd(t,d){var prev=vault.length>0?vault[vault.length-1].h:'GENESIS';var h=H(JSON.stringify({t:t,d:d,prev:prev,ts:Date.now()}));vault.push({t:t,h:h,prev:prev.slice(0,8)});}
+function vadd(t,d){var prev=vault.length>0?vault[vault.length-1].h:'GENESIS';var h=H(JSON.stringify({t:t,d:d,prev:prev,ts:Date.now()}));vault.push({t:t,h:h,prev:prev.slice(0,8)});vaultRemote(t,d);}
 
 window.HARDSAW_CONFIG = window.HARDSAW_CONFIG || {
-    ASSIST_URL: 'https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/assist',
-    SUPABASE_ANON_KEY: 'sb_publishable_xjc1UroCJV0j3PWGQfDHUA_rwaZ6h90'
+  ASSIST_URL: 'https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/assist',
+  VAULT_URL: 'https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/vault',
+  SUPABASE_ANON_KEY: 'sb_publishable_xjc1UroCJV0j3PWGQfDHUA_rwaZ6h90',
+  CONTRACTOR_ID: 'ce43db8b-1bd1-44fd-aece-c4ad7c26efcd',
+  SESSION_JOB_ID: null
 };
+
+const VAULT_EVENT_MAP = {
+  'vision_parse':      'INTENT_CAPTURED',
+  'normalize_spec':    'INTENT_CAPTURED',
+  'run_calculator':    'GEOMETRY_COMPLETE',
+  'check_readiness':   'READINESS_CHECKED',
+  'generate_packets':  'PACKET_GENERATED',
+  'luna_denial':       'LUNA_DENIAL'
+};
+
+async function vaultRemote(localAction, data) {
+  const eventType = VAULT_EVENT_MAP[localAction];
+  if (!eventType) return;
+  const cfg = window.HARDSAW_CONFIG;
+  if (!cfg || !cfg.CONTRACTOR_ID || cfg.CONTRACTOR_ID.indexOf('PASTE_') === 0) {
+    console.warn('[vault] CONTRACTOR_ID not configured — skipping remote write');
+    return;
+  }
+  try {
+    const resp = await fetch(cfg.VAULT_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + cfg.SUPABASE_ANON_KEY
+      },
+      body: JSON.stringify({
+        contractor_id: cfg.CONTRACTOR_ID,
+        job_id: cfg.SESSION_JOB_ID,
+        event_type: eventType,
+        payload: { local_action: localAction, data: data },
+        version_manifest: { lifevault_protocol: '1.0', hardsaw_commit: 'session_4_step_5' }
+      })
+    });
+    if (!resp.ok) {
+      const errText = await resp.text().catch(function(){ return ''; });
+      console.warn('[vault] remote write failed:', resp.status, errText.slice(0, 200));
+      return;
+    }
+    const result = await resp.json();
+    console.log('[vault] appended', eventType, '→', result.event_id);
+  } catch (e) {
+    console.warn('[vault] remote write exception:', e && e.message ? e.message : e);
+  }
+}
   async function claude(sys,msg){
       try{
             var r=await fetch(window.HARDSAW_CONFIG.ASSIST_URL,{
