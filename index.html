@@ -994,9 +994,23 @@ const VAULT_EVENT_MAP = {
 };
 
 // LifeVault remote write — fire-and-forget. See commit 0c21d0a for full implementation.
-async function vaultRemote(localAction, data) {
-  const eventType = VAULT_EVENT_MAP[localAction];
-  if (!eventType) return;
+// Step 6.3: accept gate-action names (via VAULT_EVENT_MAP), aliases for legacy
+// typos, or event_type names passed through directly.
+async function vaultRemote(input, data) {
+  const ALIASES = { 'PACKETS_GENERATED': 'PACKET_GENERATED' };
+  const VALID_EVENT_TYPES = new Set([
+    'INTENT_CAPTURED','GEOMETRY_COMPLETE','READINESS_CHECKED',
+    'PACKET_GENERATED','LUNA_DENIAL','LUNA_FREEZE','LUNA_UNFREEZE',
+    'CLIF_VARIANCE','CLIF_PROMOTED','CLIF_CHANGE_REQUEST',
+    'MATERIALS_COMPLETE','CHECKPOINT_SAVED','CHECKPOINT_RESUMED',
+    'GAIA_PROOF_EMITTED','JOB_RECEIVED','STATE_TRANSITION'
+  ]);
+  let eventType = VAULT_EVENT_MAP[input] || ALIASES[input];
+  if (!eventType && VALID_EVENT_TYPES.has(input)) eventType = input;
+  if (!eventType) {
+    console.warn('[vault] unknown action/event, skipping:', input);
+    return;
+  }
   const cfg = window.HARDSAW_CONFIG;
   if (!cfg || !cfg.CONTRACTOR_ID || cfg.CONTRACTOR_ID.indexOf('PASTE_') === 0) {
     console.warn('[vault] CONTRACTOR_ID not configured — skipping remote write');
@@ -1013,8 +1027,8 @@ async function vaultRemote(localAction, data) {
         contractor_id: cfg.CONTRACTOR_ID,
         job_id: cfg.SESSION_JOB_ID,
         event_type: eventType,
-        payload: { local_action: localAction, data: data },
-        version_manifest: { lifevault_protocol: '1.0', hardsaw_commit: 'session_4_step_5' }
+        payload: { local_action: input, data: data },
+        version_manifest: { lifevault_protocol: '1.0', hardsaw_commit: 'step_6_3_bridge_fix' }
       })
     });
     if (!resp.ok) {
