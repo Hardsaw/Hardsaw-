@@ -737,6 +737,42 @@ var STYLES = {
 
 function H(s){var h=0;for(var i=0;i<s.length;i++)h=Math.imul(31,h)+s.charCodeAt(i)|0;return Math.abs(h).toString(16).padStart(8,'0').toUpperCase();}
 
+// ── TRUST GATE ────────────────────────────────────────────────────────────────
+// Mirrors hardsaw.severity_weights and hardsaw.trust_thresholds (verified 2026-05-26).
+// If DB values change, update these constants and the verification date above.
+var SEVERITY_WEIGHTS = { CRITICAL: 100, HIGH: 40, MEDIUM: 10, LOW: 2, INFO: 0 };
+var TRUST_THRESHOLDS = [
+  { level: 'CLEAR',             min_score: 0,   max_score: 20,       st: 'ready'          },
+  { level: 'HUMAN_RECOMMENDED', min_score: 21,  max_score: 60,       st: 'needs_review'   },
+  { level: 'HUMAN_REQUIRED',    min_score: 61,  max_score: 99,       st: 'human_required' },
+  { level: 'BLOCKED',           min_score: 100, max_score: Infinity, st: 'not_ready'      }
+];
+
+function trustLevelForScore(score) {
+  for (var i = 0; i < TRUST_THRESHOLDS.length; i++) {
+    var t = TRUST_THRESHOLDS[i];
+    if (score >= t.min_score && score <= t.max_score) return t;
+  }
+  return TRUST_THRESHOLDS[TRUST_THRESHOLDS.length - 1];
+}
+
+function collectFindings(geo, posts, flags, ht, styleId) {
+  var f = [];
+  // CRITICAL — engine math broken, BOM cannot be valid
+  if (geo.buildLft < 1)     f.push({code:'NO_FENCE_RUNS',    severity:'CRITICAL', message:'No fence runs entered',                                          source:'geometry'});
+  if (posts.totalPosts < 2) f.push({code:'POST_COUNT_ERROR', severity:'CRITICAL', message:'Post count error — check layout',                                source:'geometry'});
+  // HIGH — output valid, human action gates execution
+  if (flags.includes('permit'))                       f.push({code:'PERMIT_REQUIRED', severity:'HIGH',   message:'Permit required — obtain before scheduling crew',           source:'flag'});
+  if (ht > 8)                                         f.push({code:'HEIGHT_OVER_8FT', severity:'HIGH',   message:'Height >8ft — permit likely required',                       source:'spec'});
+  if (STYLES[styleId] && STYLES[styleId].rp.pool)     f.push({code:'POOL_CODE_STYLE', severity:'HIGH',   message:'Pool code compliant style — verify local AHJ requirements',  source:'spec'});
+  // MEDIUM — confirmation or planning impact
+  if (flags.includes('HOA'))                          f.push({code:'HOA_APPROVAL',    severity:'MEDIUM', message:'HOA — confirm approved style and color before ordering',     source:'flag'});
+  if (flags.includes('rocky'))                        f.push({code:'ROCKY_SOIL',      severity:'MEDIUM', message:'Rocky soil — auger rental or blasting likely',               source:'flag'});
+  if (flags.includes('grade'))                        f.push({code:'SLOPED_TERRAIN',  severity:'MEDIUM', message:'Sloped terrain — stepped or racked install required',        source:'flag'});
+  if (geo.totalLft > 1000)                            f.push({code:'LARGE_JOB',       severity:'MEDIUM', message:'Large job — confirm phased delivery',                        source:'geometry'});
+  return f;
+}
+
 // ── 10 CALCULATORS ────────────────────────────────────────────────────────────
 function calcA(edges){
   var fe=edges.filter(function(e){return e.kind==='fence';});
@@ -831,12 +867,20 @@ function calcDEH(styleId,geo,posts,conc,ht){
   if(STYLES[styleId].rp.pool) warn.push('Pool code compliant style — verify local AHJ requirements');
   return{bom,warn,proof};
 }
-function calcJ(geo,posts,matR,flags){
-  var bl=[],warn=matR.warn.slice();
-  if(geo.buildLft<1)bl.push('No fence runs entered');
-  if(posts.totalPosts<2)bl.push('Post count error — check layout');
-  if(flags.includes('permit'))bl.push('Permit required — obtain before scheduling crew');
-  return{st:bl.length>0?'not_ready':warn.length>0?'needs_review':'ready',bl:bl,warn:warn};
+function calcJ(geo, posts, matR, flags, ht, styleId) {
+  var findings = collectFindings(geo, posts, flags, ht, styleId);
+  var score = findings.reduce(function(s, f){ return s + (SEVERITY_WEIGHTS[f.severity] || 0); }, 0);
+  var threshold = trustLevelForScore(score);
+  var bl   = findings.filter(function(f){ return f.severity === 'CRITICAL'; }).map(function(f){ return f.message; });
+  var warn = findings.filter(function(f){ return f.severity !== 'CRITICAL'; }).map(function(f){ return f.message; });
+  return {
+    st:       threshold.st,        // legacy compat: ready | needs_review | human_required | not_ready
+    level:    threshold.level,     // CLEAR | HUMAN_RECOMMENDED | HUMAN_REQUIRED | BLOCKED
+    score:    score,
+    findings: findings,            // [{code, severity, message, source}, ...]
+    bl:       bl,                  // legacy compat — CRITICAL messages only
+    warn:     warn                 // legacy compat — non-CRITICAL messages
+  };
 }
 
 // ── INVARIANT PROOF ──────────────────────────────────────────────────────────
@@ -1141,11 +1185,11 @@ async function runJob(){
   var posts  = calcB(geo,ends,corners,walks,drives,others,rp.S);
   var conc   = calcF(posts,rp,style.family);
   var matR   = calcDEH(styleId,geo,posts,conc,ht);
-  var rdy    = calcJ(geo,posts,matR,flags);
+  var rdy    = calcJ(geo,posts,matR,flags,ht,styleId);
   var invars = buildProof(geo,posts,styleId);
   var invPass= Object.values(invars).every(Boolean);
 
-  gate('check_readiness');vadd('READINESS_CHECKED',{st:rdy.st});
+  gate('check_readiness');vadd('READINESS_CHECKED',{st:rdy.st,level:rdy.level,score:rdy.score,findings:rdy.findings});
   gate('generate_packets');
 
   var sv=VERSIONS.styles[styleId]||{v:'UNKNOWN',cal:null,calDate:null};
@@ -1167,7 +1211,7 @@ async function runJob(){
   document.getElementById('gv-proof').textContent=invPass?'ALL PASS':'FAILED';
   document.getElementById('gv-proof').className='gov-v '+(invPass?'green':'red');
   document.getElementById('gv-ready').textContent=rdy.st.replace('_',' ').toUpperCase();
-  document.getElementById('gv-ready').className='gov-v '+(rdy.st==='ready'?'green':rdy.st==='needs_review'?'locked':'red');
+  document.getElementById('gv-ready').className='gov-v '+(rdy.st==='ready'?'green':rdy.st==='not_ready'?'red':'locked');
 
   setRailStep('compute','done');setRailStep('prove','done');setRailStep('export','active');
   renderResultUI();show('s-result');
@@ -1187,8 +1231,8 @@ async function runJob(){
 }
 
 // ── RENDER ────────────────────────────────────────────────────────────────────
-var STC={ready:'var(--green)',needs_review:'var(--amber)',not_ready:'var(--red)'};
-var STL={ready:'READY TO EXECUTE',needs_review:'NEEDS REVIEW',not_ready:'NOT READY'};
+var STC={ready:'var(--green)',needs_review:'var(--amber)',human_required:'#FF8800',not_ready:'var(--red)'};
+var STL={ready:'READY TO EXECUTE',needs_review:'NEEDS REVIEW',human_required:'HUMAN APPROVAL REQUIRED',not_ready:'NOT READY'};
 
 function renderResultUI(){
   var r=S.result,rdy=r.rdy,st=rdy.st;
@@ -1279,13 +1323,32 @@ function renderTab(){
 
   } else if(t==='READY'){
     var st=rdy.st;
-    var h='<div style="color:'+STC[st].replace('var(','').replace(')','').replace('--','#').replace('green','00E87A').replace('amber','FFB800').replace('red','FF3030')+';font-size:14px;font-weight:bold;margin-bottom:12px">'+STL[st]+'</div>';
-    // Use CSS vars properly
-    h='<div style="font-size:14px;font-weight:bold;margin-bottom:12px;color:'+
-      (st==='ready'?'#00E87A':st==='needs_review'?'#FFB800':'#FF3030')+'">'+STL[st]+'</div>';
-    if(rdy.bl.length){h+='<div class="bom-grp">BLOCKERS</div><ul class="al-list">'+rdy.bl.map(function(b){return'<li class="al-b">⛔ '+esc(b)+'</li>';}).join('')+'</ul>';}
-    if(rdy.warn.length){h+='<div class="bom-grp">WARNINGS</div><ul class="al-list">'+rdy.warn.map(function(w){return'<li class="al-w">⚠ '+esc(w)+'</li>';}).join('')+'</ul>';}
-    if(!rdy.bl.length&&!rdy.warn.length)h+='<div style="color:#00E87A">All checks passed. Clear to execute.</div>';
+    var stateColor = st==='ready'?'#00E87A':st==='needs_review'?'#FFB800':st==='human_required'?'#FF8800':'#FF3030';
+    var h='<div style="font-size:14px;font-weight:bold;margin-bottom:12px;color:'+stateColor+'">'+STL[st]+'</div>';
+
+    // Trust gate summary
+    h+='<div class="bom-grp">TRUST GATE</div>';
+    h+='<div class="proof-row"><div class="proof-k">Trust level</div><div class="proof-v" style="color:'+stateColor+'">'+rdy.level+'</div></div>';
+    h+='<div class="proof-row"><div class="proof-k">Findings score</div><div class="proof-v">'+rdy.score+'</div></div>';
+    h+='<div class="proof-row"><div class="proof-k">Findings count</div><div class="proof-v">'+rdy.findings.length+'</div></div>';
+
+    // Unified findings list (sorted by severity descending)
+    if(rdy.findings.length){
+      h+='<div class="bom-grp">FINDINGS</div>';
+      var sortedF = rdy.findings.slice().sort(function(a,b){ return (SEVERITY_WEIGHTS[b.severity]||0) - (SEVERITY_WEIGHTS[a.severity]||0); });
+      h+='<ul class="al-list">';
+      sortedF.forEach(function(f){
+        var sevColor = f.severity==='CRITICAL'?'#FF3030':f.severity==='HIGH'?'#FF8800':f.severity==='MEDIUM'?'#FFB800':f.severity==='LOW'?'#888':'#555';
+        h+='<li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:11px;color:'+sevColor+';display:flex;justify-content:space-between;align-items:flex-start;gap:8px">'
+          +'<span><span style="font-weight:bold;letter-spacing:1px;font-size:9px;padding:1px 5px;border:1px solid '+sevColor+'44;border-radius:1px;margin-right:6px">'+f.severity+'</span>'+esc(f.message)+'</span>'
+          +'<span style="font-size:8px;color:var(--dim);letter-spacing:1px;white-space:nowrap;flex-shrink:0;margin-top:3px">['+esc(f.code)+']</span>'
+          +'</li>';
+      });
+      h+='</ul>';
+    } else {
+      h+='<div style="color:#00E87A;margin:10px 0;font-size:11px">All checks passed. No findings. Clear to execute.</div>';
+    }
+
     h+='<div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border)">';
     h+='<div class="bom-grp">LOCKED PARAMETERS</div>';
     [['Rulepack',r.versions.styleRulepackVersion],['Vendor profile',r.versions.vendorProfileVersion],
