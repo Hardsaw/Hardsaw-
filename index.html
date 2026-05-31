@@ -720,13 +720,13 @@ var VERSIONS = {
 var STYLES = {
   'wood.privacy.tight_cedar':   {family:'wood',note:'Tight cedar 6ft: 2.50 pickets/lf · 3 rails/section · 8ft O.C. · KAN004247 ✓',rp:{S:8,pickets_lf:2.50,picket_fn:'round',rails_sec:3,walk_rb:4,drive_rb:10,con_line:1,con_term:1},label:'Wood Privacy — Tight Cedar',skus:{picket:{s:'61563',u:'each',d:'Cedar Picket 5/8"×5-1/2"×6\''},post:{s:'64489',u:'each',d:'4×4×8 Green Treated Post'},rail:{s:'62486',u:'each',d:'2×4×8 Wrc Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Hinge Pair'},latch:{s:'10914',u:'each',d:'Gate Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod 48"'}}},
   'wood.privacy.spaced_picket': {family:'wood',note:'Spaced picket 4in gap: floor(lf×2.5946) · 2 rails/section · KAN004304 ✓',rp:{S:8,pickets_lf:2.5946,picket_fn:'floor',rails_sec:2,walk_rb:3,drive_rb:6,con_line:1,con_term:1},label:'Wood Privacy — Spaced Picket',skus:{picket:{s:'61441',u:'each',d:'Cedar Picket 3/8"×5/8"×4\' Spaced'},post:{s:'63960',u:'each',d:'3-1/2×3-1/2×6 Treated Post'},rail:{s:'62486',u:'each',d:'2×4×8 Wrc Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Hinge Pair'},latch:{s:'10914',u:'each',d:'Gate Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod 48"'}}},
-  'wood.privacy.solid_board':   {family:'wood',note:'Solid board 6ft: 2.18 boards/lf · 3 rails/section · 8ft O.C.',rp:{S:8,pickets_lf:2.18,picket_fn:'ceil',rails_sec:3,walk_rb:4,drive_rb:10,con_line:1,con_term:1},label:'Wood Privacy — Solid Board',skus:{picket:{s:'63380',u:'each',d:'Solid Board'},post:{s:'64489',u:'each',d:'4×4×8 Green Treated Post'},rail:{s:'62486',u:'each',d:'2×4×8 Wrc Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Hinge Pair'},latch:{s:'10914',u:'each',d:'Gate Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod 48"'}}},
-  'wood.shadowbox.standard':    {family:'wood',note:'Shadowbox: double-sided pickets ~4.36/lf · 3 rails/section · 8ft O.C.',rp:{S:8,pickets_lf:4.36,picket_fn:'ceil',rails_sec:3,walk_rb:4,drive_rb:10,con_line:1,con_term:1},label:'Wood Shadowbox',skus:{picket:{s:'GEN-SHD',u:'each',d:'Shadowbox Picket'},post:{s:'64489',u:'each',d:'4×4×8 Post'},rail:{s:'62486',u:'each',d:'2×4×8 Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Hinge Pair'},latch:{s:'10914',u:'each',d:'Gate Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod'}}},
+  'wood.privacy.solid_board':   {family:'wood',note:'Solid board 6ft: 2.619 boards/lf (61566 5.5in actual) · 3 rails/section · 8ft O.C.',rp:{S:8,pickets_lf:2.619,picket_fn:'ceil',rails_sec:3,walk_rb:4,drive_rb:10,con_line:1,con_term:1},cal:'AFC_BOM_SOLID_M4',calDate:'2026-05-30',label:'Wood Privacy — Solid Board',skus:{picket:{s:'61566',u:'each',d:'1×5-1/2×6 WRC Graham De Picket'},post:{s:'64489',u:'each',d:'4×4×8 Green Treated Post'},rail8:{s:'62486',u:'each',d:'2×4×8 Wrc Rail'},rail10:{s:'62487',u:'each',d:'2×4×10 Wrc Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Strap Hinge Pair'},latch:{s:'10914',u:'each',d:'Wood Gate Paddle Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod 48" Blk'}}},
+  'wood.shadowbox.standard':    {family:'wood',note:'Shadowbox 6ft: 4.127 boards/lf (61566 5.5in actual staggered) · 3 rails/section · 8ft O.C.',rp:{S:8,pickets_lf:4.127,picket_fn:'ceil',rails_sec:3,walk_rb:4,drive_rb:10,con_line:1,con_term:1},cal:'AFC_BOM_SHADOW_M5',calDate:'2026-05-30',label:'Wood Shadowbox',skus:{picket:{s:'61566',u:'each',d:'1×5-1/2×6 WRC Graham De Picket'},post:{s:'64489',u:'each',d:'4×4×8 Post'},rail8:{s:'62486',u:'each',d:'2×4×8 Wrc Rail'},rail10:{s:'62487',u:'each',d:'2×4×10 Wrc Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Strap Hinge Pair'},latch:{s:'10914',u:'each',d:'Wood Gate Paddle Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod 48" Blk'}}},
   'chain_link.residential.galvanized': {family:'chain_link',note:'Residential galvanized: 10ft max · 50ft rolls · 21ft rail sticks',rp:{S:10,fab_roll:50,rail_stick:21,con_line:1,con_term:2,bands_end:4,bands_corner:8,bands_gate:4},label:'Chain Link Res. Galvanized',skus:{tp:{s:'AF-TP-6-237',u:'each',d:'Terminal Post 2-1/2" Galv'},lp:{s:'AF-LP-6-162',u:'each',d:'Line Post 1-5/8" Galv'},fab:{s:'AF-FAB-6-50',u:'roll',d:'Fabric 50ft Roll Galv'},rail:{s:'AF-TR-21',u:'each',d:'Top Rail 21ft'},tw:{s:'AF-TW-100',u:'roll',d:'Tension Wire 100ft'},tie:{s:'AF-TIE-250',u:'bag',d:'Tie Wire Bag'},tb:{s:'10406',u:'each',d:'Tension Band 2-1/2"'},re:{s:'10703',u:'each',d:'Rail End 1-3/8"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'AF-WG-4',u:'each',d:'Walk Gate'},dg:{s:'AF-DG-12',u:'each',d:'Drive Gate'}}},
   'chain_link.residential.black': {family:'chain_link',note:'Residential black vinyl: 10ft max · 50ft rolls',rp:{S:10,fab_roll:50,rail_stick:21,con_line:1,con_term:2,bands_end:4,bands_corner:8,bands_gate:4},label:'Chain Link Res. Black',skus:{tp:{s:'AF-TP-6-BK',u:'each',d:'Terminal Post Black'},lp:{s:'AF-LP-6-BK',u:'each',d:'Line Post Black'},fab:{s:'AF-FAB-6-BK-50',u:'roll',d:'Fabric Black 50ft'},rail:{s:'AF-TR-21-BK',u:'each',d:'Top Rail Black 21ft'},tw:{s:'AF-TW-BK',u:'roll',d:'Tension Wire Black'},tie:{s:'AF-TIE-BK',u:'bag',d:'Tie Wire Black'},tb:{s:'10406-BK',u:'each',d:'Tension Band Black'},re:{s:'10703-BK',u:'each',d:'Rail End Black'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'AF-WG-4-BK',u:'each',d:'Walk Gate Black'},dg:{s:'AF-DG-12-BK',u:'each',d:'Drive Gate Black'}}},
   'chain_link.commercial.galvanized': {family:'chain_link',note:'Commercial galvanized: heavier gauge · 2 bags/terminal',rp:{S:10,fab_roll:50,rail_stick:21,con_line:1,con_term:2,bands_end:4,bands_corner:8,bands_gate:4},label:'Chain Link Comm. Galv',skus:{tp:{s:'AF-TP-COM-GL',u:'each',d:'Terminal Post Commercial Galv'},lp:{s:'AF-LP-COM-GL',u:'each',d:'Line Post Commercial Galv'},fab:{s:'AF-FAB-6-50',u:'roll',d:'Fabric 50ft Roll'},rail:{s:'AF-TR-21',u:'each',d:'Top Rail 21ft'},tw:{s:'AF-TW-100',u:'roll',d:'Tension Wire'},tie:{s:'AF-TIE-250',u:'bag',d:'Tie Wire'},tb:{s:'10406',u:'each',d:'Tension Band'},re:{s:'10703',u:'each',d:'Rail End'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'AF-WG-COM',u:'each',d:'Walk Gate Commercial'},dg:{s:'AF-DG-COM',u:'each',d:'Drive Gate Commercial'}}},
   'chain_link.commercial.black': {family:'chain_link',note:'Commercial black: heavier gauge · commercial hardware',rp:{S:10,fab_roll:50,rail_stick:21,con_line:1,con_term:2,bands_end:4,bands_corner:8,bands_gate:4},label:'Chain Link Comm. Black',skus:{tp:{s:'AF-TP-COM-BK',u:'each',d:'Terminal Post Commercial Black'},lp:{s:'AF-LP-COM-BK',u:'each',d:'Line Post Commercial Black'},fab:{s:'AF-FAB-6-BK-50',u:'roll',d:'Fabric Black 50ft'},rail:{s:'AF-TR-21-BK',u:'each',d:'Top Rail Black'},tw:{s:'AF-TW-BK',u:'roll',d:'Tension Wire Black'},tie:{s:'AF-TIE-BK',u:'bag',d:'Tie Wire Black'},tb:{s:'10406-BK',u:'each',d:'Tension Band Black'},re:{s:'10703-BK',u:'each',d:'Rail End Black'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'AF-WG-COM-BK',u:'each',d:'Walk Gate Commercial Black'},dg:{s:'AF-DG-COM-BK',u:'each',d:'Drive Gate Commercial Black'}}},
-  'ornamental.aluminum.flat_top_3rail': {family:'ornamental',note:'Aluminum panel 4×8: KAN004434 ✓',rp:{S:8,panel_w:8,con_line:1,con_term:2},label:'Ornamental Aluminum Flat Top',skus:{panel:{s:'8W14X83FT',u:'each',d:'Aluminum Panel 4×8 Flat Top'},post:{s:'8W12P69',u:'each',d:'Post 2"×16Ga×5\'9"'},bracket:{s:'8BB104',u:'each',d:'Line Bracket 2" Sq'},cap:{s:'8AB506',u:'each',d:'Flat Cap 2"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'DM4X4BLKFT',u:'each',d:'Walk Gate 4W×4H'},dg:{s:'DM5X4BLKFT',u:'each',d:'Drive Gate 5W×4H'}}},
+  'ornamental.aluminum.flat_top_3rail': {family:'ornamental',note:'Aluminum panel 4×8: KAN004434 ✓ · install=driven · no concrete',rp:{S:8,panel_w:8,install_method:'driven',con_line:0,con_term:0},label:'Ornamental Aluminum Flat Top',skus:{panel:{s:'8W14X83FT',u:'each',d:'Aluminum Panel 4×8 Flat Top'},post:{s:'8W12P69',u:'each',d:'Post 2"×16Ga×5\'9"'},bracket_line:{s:'8BB104',u:'each',d:'Line Bracket 2" Sq'},bracket_term:{s:'8BB102IWI',u:'each',d:'Universal Bracket'},cap:{s:'8AB506',u:'each',d:'Flat Cap 2"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'DM4X4BLKFT',u:'each',d:'Walk Gate 4W×4H'},dg:{s:'DM5X4BLKFT',u:'each',d:'Drive Gate 5W×4H'},gate_frame:{s:'8HB246',u:'ft',d:'Gate Frame Stock'},hinge_m:{s:'8HB403',u:'each',d:'Blk Hinge Male 2"'},hinge_f:{s:'8HB404',u:'each',d:'Blk Hinge Female 1-1/4"'},latch_hgr:{s:'8HB301',u:'each',d:'Blk Latch Hanger 1-1/4"'},latch_frk:{s:'8HB402',u:'each',d:'Blk Latch Fork 2" Orn Sq'}}},
   'ornamental.aluminum.spear_top_3rail':{family:'ornamental',note:'Aluminum spear top: 8ft panels · 3-rail',rp:{S:8,panel_w:8,con_line:1,con_term:2},label:'Ornamental Aluminum Spear Top',skus:{panel:{s:'OR-ST3-PANEL',u:'each',d:'Aluminum Panel Spear Top 4×8'},post:{s:'8W12P69',u:'each',d:'Post 2"×16Ga'},bracket:{s:'8BB104',u:'each',d:'Line Bracket'},cap:{s:'8AB506',u:'each',d:'Post Cap'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'OR-WG',u:'each',d:'Walk Gate'},dg:{s:'OR-DG',u:'each',d:'Drive Gate'}}},
   'ornamental.steel.flat_top_pool':     {family:'ornamental',note:'Steel pool panel: pool-code compliant',rp:{S:6,panel_w:6,con_line:1,con_term:2,pool:true},label:'Ornamental Steel Pool',skus:{panel:{s:'OR-POOL-PANEL',u:'each',d:'Steel Pool Panel'},post:{s:'OR-ST-POST',u:'each',d:'Steel Post'},bracket:{s:'OR-ST-BRK',u:'each',d:'Steel Bracket'},cap:{s:'OR-ST-CAP',u:'each',d:'Post Cap'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'OR-POOL-WG',u:'each',d:'Pool Walk Gate'},dg:{s:'OR-POOL-DG',u:'each',d:'Pool Drive Gate'}}},
   'vinyl.privacy.tongue_groove':  {family:'vinyl',note:'Vinyl T&G: 8ft panels',rp:{S:8,panel_w:8,con_line:1,con_term:2},label:'Vinyl Privacy T&G',skus:{panel:{s:'VN-TG-8',u:'each',d:'Vinyl Panel T&G 8ft'},post:{s:'VN-POST-5x5',u:'each',d:'Vinyl Post 5×5'},cap:{s:'VN-CAP',u:'each',d:'Post Cap'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'VN-WG',u:'each',d:'Walk Gate'},dg:{s:'VN-DG',u:'each',d:'Drive Gate'}}},
@@ -793,8 +793,9 @@ function calcB(geo,ends,corners,walks,drives,others,S){
 }
 function calcF(posts,rp,family){
   if(family==='wood'){var b=posts.totalPosts*rp.con_line;return{totalBags:b,F:posts.totalPosts+'×'+rp.con_line+'='+b+' [wood: 1/post calibrated]'};}
+  if(rp.install_method==='driven'){return{totalBags:0,F:'0 [driven/surface-mount: no concrete]'};}
   var b=Math.ceil(posts.linePosts*rp.con_line+posts.terminalPosts*rp.con_term);
-  return{totalBags:b,F:posts.linePosts+'×'+rp.con_line+'(line)+'+posts.terminalPosts+'×'+rp.con_term+'(terminal)='+b+' [spec]'};
+  return{totalBags:b,F:posts.linePosts+'×'+rp.con_line+'(line)+'+posts.terminalPosts+'×'+rp.con_term+'(term)'};
 }
 function calcDEH(styleId,geo,posts,conc,ht){
   var style=STYLES[styleId],rp=style.rp,sk=style.skus,fam=style.family;
@@ -809,8 +810,15 @@ function calcDEH(styleId,geo,posts,conc,ht){
     pf('Pickets',pk,rp.picket_fn+'('+tlf+'×'+rp.pickets_lf+')');
     add(sk.post,tp+lp,sk.post.d+' ('+sk.post.s+')',tp+'(T)+'+lp+'(L)='+(tp+lp),'POSTS');
     pf('Posts',tp+lp,tp+'T+'+lp+'L='+(tp+lp));
-    var rl=ts*rp.rails_sec+walks*rp.walk_rb+drives*rp.drive_rb;
-    add(sk.rail,rl,sk.rail.d+' ('+sk.rail.s+')',ts+'×'+rp.rails_sec+(walks?'+'+walks+'W×'+rp.walk_rb:'')+(drives?'+'+drives+'D×'+rp.drive_rb:'')+'='+rl,'RAILS');
+    var rlTotal=ts*rp.rails_sec+walks*rp.walk_rb+drives*rp.drive_rb;
+    var rl10=walks*rp.walk_rb+(drives?drives*rp.drive_rb:0);
+    var rl8=Math.max(0,rlTotal-rl10);
+    if(sk.rail8&&sk.rail10){
+      if(rl8>0)add(sk.rail8,rl8,sk.rail8.d+' ('+sk.rail8.s+')',ts+'×'+rp.rails_sec+'='+rl8,'RAILS');
+      if(rl10>0)add(sk.rail10,rl10,sk.rail10.d+' ('+sk.rail10.s+')',(walks?walks+'W×'+rp.walk_rb:'')+(drives?'+'+drives+'D×'+rp.drive_rb:'')+'='+rl10,'RAILS');
+    } else {
+      add(sk.rail,rlTotal,sk.rail.d+' ('+sk.rail.s+')',ts+'×'+rp.rails_sec+(walks?'+'+walks+'W×'+rp.walk_rb:'')+(drives?'+'+drives+'D×'+rp.drive_rb:'')+'='+rlTotal,'RAILS');
+    }
     pf('Rails',rl,ts+'×'+rp.rails_sec+' + gate bonus');
     add(sk.con,conc.totalBags,'Concrete 60lb',conc.F,'CONCRETE');
     pf('Concrete',conc.totalBags,conc.F);
@@ -835,11 +843,26 @@ function calcDEH(styleId,geo,posts,conc,ht){
     if(drives>0)add(sk.dg,drives,sk.dg.d,drives+' drive','GATES');
   } else if(fam==='ornamental'){
     var pnlQ=ts+1,pstQ=tp+lp,orCon=conc.totalBags;
+    var brkLineQ=lp*3,brkTermQ=tp*4;
     add(sk.panel,pnlQ,sk.panel.d,ts+' sec+1','PANELS'); add(sk.post,pstQ,sk.post.d,pstQ+' posts','POSTS');
-    add(sk.bracket,pstQ*2,sk.bracket.d,pstQ+'×2','HARDWARE'); add(sk.cap,pstQ,sk.cap.d,pstQ+'caps','HARDWARE');
-    add(sk.con,orCon,'Concrete 60lb',conc.F,'CONCRETE');
-    if(walks>0)add(sk.wg,walks,sk.wg.d,walks+' walk','GATES');
-    if(drives>0)add(sk.dg,drives,sk.dg.d,drives+' drive','GATES');
+    if(sk.bracket_line)add(sk.bracket_line,brkLineQ,sk.bracket_line.d,lp+'×3 line','HARDWARE');
+    if(sk.bracket_term)add(sk.bracket_term,brkTermQ,sk.bracket_term.d,tp+'×4 terminal','HARDWARE');
+    if(!sk.bracket_line&&sk.bracket)add(sk.bracket,pstQ*2,sk.bracket.d,pstQ+'×2','HARDWARE');
+    add(sk.cap,pstQ,sk.cap.d,pstQ+'caps','HARDWARE');
+    if(orCon>0)add(sk.con,orCon,'Concrete 60lb',conc.F,'CONCRETE');
+    if(walks>0){add(sk.wg,walks,sk.wg.d,walks+' walk','GATES');
+      if(sk.hinge_m)add(sk.hinge_m,walks*2,sk.hinge_m.d,walks+'×2','GATE HARDWARE');
+      if(sk.hinge_f)add(sk.hinge_f,walks*4,sk.hinge_f.d,walks+'×4','GATE HARDWARE');
+      if(sk.latch_hgr)add(sk.latch_hgr,walks,sk.latch_hgr.d,walks+'×1','GATE HARDWARE');
+      if(sk.latch_frk)add(sk.latch_frk,walks,sk.latch_frk.d,walks+'×1','GATE HARDWARE');
+      if(sk.gate_frame)add(sk.gate_frame,walks*12,sk.gate_frame.d,walks+'×12ft','GATE HARDWARE');}
+    if(drives>0){add(sk.dg,drives,sk.dg.d,drives+' drive','GATES');
+      if(sk.hinge_m)add(sk.hinge_m,drives*2,sk.hinge_m.d,drives+'×2','GATE HARDWARE');
+      if(sk.hinge_f)add(sk.hinge_f,drives*4,sk.hinge_f.d,drives+'×4','GATE HARDWARE');
+      if(sk.latch_hgr)add(sk.latch_hgr,drives,sk.latch_hgr.d,drives+'×1','GATE HARDWARE');
+      if(sk.latch_frk)add(sk.latch_frk,drives,sk.latch_frk.d,drives+'×1','GATE HARDWARE');
+      if(sk.gate_frame)add(sk.gate_frame,drives*12,sk.gate_frame.d,drives+'×12ft','GATE HARDWARE');
+      if(sk.rod)add(sk.rod,drives,sk.rod.d,drives+'×1 DD','GATE HARDWARE');}
   } else if(fam==='vinyl'){
     var vPnl=ts+1,vPst=tp+lp,vCon=conc.totalBags;
     add(sk.panel,vPnl,sk.panel.d,ts+' sec+1','PANELS'); add(sk.post,vPst,sk.post.d,vPst+' posts','POSTS');
