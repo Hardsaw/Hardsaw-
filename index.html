@@ -819,7 +819,7 @@ function calcDEH(styleId,geo,posts,conc,ht){
     } else {
       add(sk.rail,rlTotal,sk.rail.d+' ('+sk.rail.s+')',ts+'×'+rp.rails_sec+(walks?'+'+walks+'W×'+rp.walk_rb:'')+(drives?'+'+drives+'D×'+rp.drive_rb:'')+'='+rlTotal,'RAILS');
     }
-    pf('Rails',rl,ts+'×'+rp.rails_sec+' + gate bonus');
+    pf('Rails',rlTotal,ts+'×'+rp.rails_sec+' + gate bonus');
     add(sk.con,conc.totalBags,'Concrete 60lb',conc.F,'CONCRETE');
     pf('Concrete',conc.totalBags,conc.F);
     if(walks>0){add(sk.hinge,walks,sk.hinge.d+' ('+sk.hinge.s+')',walks+'×1 pair','GATE HARDWARE');add(sk.latch,walks,sk.latch.d+' ('+sk.latch.s+')',walks+'×1 latch','GATE HARDWARE');}
