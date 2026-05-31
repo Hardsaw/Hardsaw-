@@ -826,14 +826,14 @@ function calcDEH(styleId,geo,posts,conc,ht){
     if(drives>0){add(sk.hinge,drives*2,sk.hinge.d+' ('+sk.hinge.s+')',drives+'×2 pairs','GATE HARDWARE');add(sk.latch,drives,sk.latch.d+' ('+sk.latch.s+')',drives+'×1','GATE HARDWARE');add(sk.rod,drives,sk.rod.d+' ('+sk.rod.s+')',drives+'×1','GATE HARDWARE');}
   } else if(fam==='chain_link'){
     var fabQ=Math.ceil((lf*1.02)/rp.fab_roll);
-    var railQ=Math.ceil(lf/rp.rail_stick);
+    var railQ=Math.floor(lf/rp.rail_stick);
     var twQ=Math.ceil(lf/100)+1;
     var tieQ=Math.ceil(lf/10*3/50)+1;
-    var hookups=posts.hookups||posts.endPosts*2;
-    var bands=Math.ceil((ht-1)*hookups);
-    var endBands=posts.endPosts*2;
+    var termFaces=(posts.endPosts+posts.cornerPosts+posts.gatePosts)*2;
+    var bands=Math.ceil((ht-1)*termFaces);
+    var endBands=termFaces;
     var tenBarSku=ht>=6?sk.tb6:sk.tb4;
-    var tenBarQty=(posts.endPosts+posts.gatePosts)*2;
+    var tenBarQty=termFaces;
     add(sk.tp,tp,sk.tp.d,tp+' terminal posts','POSTS');
     add(sk.lp,lp,sk.lp.d,lp+' line posts','POSTS');
     pf('Terminal posts',tp,posts.F.tp); pf('Line posts',lp,posts.F.lp);
@@ -841,7 +841,7 @@ function calcDEH(styleId,geo,posts,conc,ht){
     add(sk.rail,railQ,sk.rail.d,'ceil('+lf+'/'+rp.rail_stick+')='+railQ+' [no +1]','RAILS');
     add(sk.tw,twQ,sk.tw.d,'ceil('+lf+'/100)+1='+twQ,'WIRE');
     add(sk.tie,tieQ,sk.tie.d,tieQ+' bags','WIRE');
-    add(sk.tb,bands,sk.tb.d,'('+ht+'-1)×'+hookups+'hookups='+bands+' [F567]','HARDWARE');
+    add(sk.tb,bands,sk.tb.d,'('+ht+'-1)×'+termFaces+'termFaces='+bands+' [F567]','HARDWARE');
     if(sk.eb)add(sk.eb,endBands,sk.eb.d,posts.endPosts+'×2='+endBands+' end bands','HARDWARE');
     if(tenBarSku)add(tenBarSku,tenBarQty,tenBarSku.d,(posts.endPosts+posts.gatePosts)+'×2='+tenBarQty+' tension bars','HARDWARE');
     add(sk.re,posts.hookups,sk.re.d,'hookups='+posts.hookups,'HARDWARE');
