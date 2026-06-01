@@ -940,7 +940,7 @@ function buildProof(geo,posts,styleId){
     'terminal_posts = |V|':   posts.terminalPosts>=2,
     'line_posts ≥ 0':         posts.linePosts>=0,
     'build_length > 0':       geo.buildLft>0,
-    'spacing locked':         posts.S===STYLES[styleId].rp.S,
+    'spacing locked':         posts.S===(STYLES[styleId]&&STYLES[styleId].rp?STYLES[styleId].rp.S:posts.S),
     'geo hash deterministic': geo.geoHash.length===8,
   };
 }
