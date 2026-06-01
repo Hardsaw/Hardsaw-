@@ -830,7 +830,9 @@ function calcDEH(styleId,geo,posts,conc,ht){
     add(sk.con,conc.totalBags,'Concrete 60lb',conc.F,'CONCRETE');
     pf('Concrete',conc.totalBags,conc.F);
     if(walks>0){add(sk.hinge,walks,sk.hinge.d+' ('+sk.hinge.s+')',walks+'×1 pair','GATE HARDWARE');add(sk.latch,walks,sk.latch.d+' ('+sk.latch.s+')',walks+'×1 latch','GATE HARDWARE');}
-    if(drives>0){add(sk.hinge,drives*2,sk.hinge.d+' ('+sk.hinge.s+')',drives+'×2 pairs','GATE HARDWARE');add(sk.latch,drives,sk.latch.d+' ('+sk.latch.s+')',drives+'×1','GATE HARDWARE');add(sk.rod,drives,sk.rod.d+' ('+sk.rod.s+')',drives+'×1','GATE HARDWARE');}
+    if(drives>0){add(sk.hinge,drives*2,sk.hinge.d+' ('+sk.hinge.s+')',drives+'×2 pairs','GATE HARDWARE');add(sk.latch,drives,sk.latch.d+' ('+sk.latch.s+')',drives+'×1','GATE HARDWARE');add(sk.rod,drives,sk.rod.d+' ('+sk.rod.s+')',drives+'×1','GATE HARDWARE');if(sk.dg)add(sk.dg,drives,sk.dg.d,drives+' drive','GATES');}
+    if(walks>0&&sk.wg)add(sk.wg,walks,sk.wg.d,walks+' walk','GATES');
+    if(others>0){if(sk.cant_roller)add(sk.cant_roller,others*4,sk.cant_roller.d,others+'x4 rollers','CANTILEVER HARDWARE');if(sk.cant_cover)add(sk.cant_cover,others*4,sk.cant_cover.d,others+'x4 covers','CANTILEVER HARDWARE');if(sk.cant_latch)add(sk.cant_latch,others,sk.cant_latch.d,others+'x1 latch','CANTILEVER HARDWARE');if(sk.cant_gate)add(sk.cant_gate,others,sk.cant_gate.d,others+'x1 cantilever gate','CANTILEVER HARDWARE');}
   } else if(fam==='chain_link'){
     var fabQ=Math.ceil((lf*1.02)/rp.fab_roll);
     var railQ=Math.floor(lf/rp.rail_stick);
