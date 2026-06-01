@@ -891,11 +891,15 @@ function calcDEH(styleId,geo,posts,conc,ht){
       if(sk.latch_frk_dd)add(sk.latch_frk_dd,drives,sk.latch_frk_dd.d,drives+'×1 DD','GATE HARDWARE');
       if(sk.cane_bolt)add(sk.cane_bolt,drives,sk.cane_bolt.d,drives+'×1 DD','GATE HARDWARE');
       if(sk.gate_frame)add(sk.gate_frame,drives*12,sk.gate_frame.d,drives+'×12ft','GATE HARDWARE');}     if(others>0){if(sk.cant_roller)add(sk.cant_roller,others*4,sk.cant_roller.d,others+'x4 rollers','CANTILEVER HARDWARE');if(sk.cant_cover)add(sk.cant_cover,others*4,sk.cant_cover.d,others+'x4 covers','CANTILEVER HARDWARE');if(sk.cant_latch)add(sk.cant_latch,others,sk.cant_latch.d,others+'x1 latch','CANTILEVER HARDWARE');if(sk.cant_gate)add(sk.cant_gate,others,sk.cant_gate.d,others+'x1 cantilever gate','CANTILEVER HARDWARE');}   } else if(fam==='vinyl'){
-    var vPnl=ts+1,vPst=tp+lp,vCon=conc.totalBags;
-    add(sk.panel,vPnl,sk.panel.d,ts+' sec+1','PANELS'); add(sk.post,vPst,sk.post.d,vPst+' posts','POSTS');
-    add(sk.cap,vPst,sk.cap.d,vPst+' caps','HARDWARE'); add(sk.con,vCon,'Concrete 60lb',conc.F,'CONCRETE');
+    var vPnl=ts+1,vCon=conc.totalBags;
+    add(sk.panel,vPnl,sk.panel.d,ts+' sec+1','PANELS');
+    if(tp>0&&sk.post_end)add(sk.post_end,tp,sk.post_end.d,tp+' end posts','POSTS');
+    if(lp>0)add(sk.post,lp,sk.post.d,lp+' line posts','POSTS');
+    add(sk.cap,tp+lp,sk.cap.d,(tp+lp)+' caps','HARDWARE');
+    add(sk.con,vCon,'Concrete 60lb',conc.F,'CONCRETE');
     if(walks>0)add(sk.wg,walks,sk.wg.d,walks+' walk','GATES');
     if(drives>0)add(sk.dg,drives,sk.dg.d,drives+' drive','GATES');
+    if(others>0&&sk.cant_roller){add(sk.cant_roller,others*4,sk.cant_roller.d,others*4+' rollers','CANTILEVER HARDWARE');add(sk.cant_cover,others*4,sk.cant_cover.d,others*4+' covers','CANTILEVER HARDWARE');add(sk.cant_latch,others,sk.cant_latch.d,others+' latches','CANTILEVER HARDWARE');add(sk.cant_gate,others,sk.cant_gate.d,others+' gates','CANTILEVER HARDWARE');}
   } else if(fam==='farm'){
     var fPst=tp+lp,fCon=conc.totalBags;
     if(styleId==='farm.no_climb.horse'){add(sk.wire,Math.ceil(lf/100),sk.wire.d,'ceil('+lf+'/100)','WIRE');}
