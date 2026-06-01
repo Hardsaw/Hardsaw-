@@ -914,7 +914,7 @@ function calcDEH(styleId,geo,posts,conc,ht){
   if(flags.includes('permit'))warn.push('Permit required — obtain before scheduling crew');
   if(ht>8)                    warn.push('Height >8ft — permit likely required');
   if(geo.totalLft>1000)       warn.push('Large job — confirm phased delivery');
-  if(STYLES[styleId].rp.pool) warn.push('Pool code compliant style — verify local AHJ requirements');
+  if(rp&&rp.pool) warn.push('Pool code compliant style — verify local AHJ requirements');
   return{bom,warn,proof};
 }
 function calcJ(geo, posts, matR, flags, ht, styleId) {
