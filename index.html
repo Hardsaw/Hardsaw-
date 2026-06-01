@@ -585,7 +585,15 @@ textarea,input{outline:none}
   <div class="row2">
     <div><label class="lbl">DRIVE GATES</label><input class="inp" id="dg" type="number" min="0" value="0" oninput="liveUpdate()"></div>
     <div><label class="lbl">OTHER OPENINGS</label><input class="inp" id="og" type="number" min="0" value="0" oninput="liveUpdate()"></div>
-  </div>`n    <div class="row2" style="margin-top:4px">`n      <div><label class="lbl" style="color:var(--amber)">SHARED POSTS</label><input class="inp" id="sp" type="number" min="0" value="0" oninput="liveUpdate()" title="Gate posts that share a location with a corner or end post"></div>`n      <div style="font-size:9px;color:var(--dim);padding:4px 0;line-height:1.4">Gate at corner? Each shared node = 1 shared post</div>`n    </div>`n    <div class="row2" style="margin-top:4px">`n      <div><label class="lbl" style="color:var(--amber)">SHARED POSTS</label><input class="inp" id="sp" type="number" min="0" value="0" oninput="liveUpdate()" title="Gate posts that share a location with a corner or end post"></div>`n      <div style="font-size:9px;color:var(--dim);padding:4px 0;line-height:1.4">Gate at corner? Each shared node = 1 shared post</div>`n    </div>
+  </div>
+    <div class="row2" style="margin-top:4px">
+      <div><label class="lbl" style="color:var(--amber)">SHARED POSTS</label><input class="inp" id="sp" type="number" min="0" value="0" oninput="liveUpdate()" title="Gate posts that share a location with a corner or end post"></div>
+      <div style="font-size:9px;color:var(--dim);padding:4px 0;line-height:1.4">Gate at corner? Each shared node = 1 shared post</div>
+    </div>
+    <div class="row2" style="margin-top:4px">
+      <div><label class="lbl" style="color:var(--amber)">SHARED POSTS</label><input class="inp" id="sp" type="number" min="0" value="0" oninput="liveUpdate()" title="Gate posts that share a location with a corner or end post"></div>
+      <div style="font-size:9px;color:var(--dim);padding:4px 0;line-height:1.4">Gate at corner? Each shared node = 1 shared post</div>
+    </div>
 
   <!-- Truth bar -->
   <div class="truth-bar">
@@ -781,7 +789,8 @@ function calcA(edges){
   var oL=oe.reduce(function(s,e){return s+e.length;},0);
   return{fenceEdges:fe,openingEdges:oe,buildLft:bL,openingLft:oL,totalLft:bL+oL,geoHash:H(edges.map(function(e){return e.kind+':'+e.length;}).join('|')),F:{buildLft:fe.map(function(e){return e.length;}).join('+')||'0',openingLft:oe.map(function(e){return e.length;}).join('+')||'0'}};
 }
-function calcB(geo,ends,corners,walks,drives,others,S,shared){`n  shared=shared||0;
+function calcB(geo,ends,corners,walks,drives,others,S,shared){
+  shared=shared||0;
   var gp=(walks+drives+others)*2;
   var tp=Math.max(ends,ends+corners+gp-shared);
   var lpArr=geo.fenceEdges.map(function(e){return Math.max(0,Math.ceil(e.length/S)-1);});
@@ -951,7 +960,9 @@ function liveUpdate(){
   var corners=parseInt(document.getElementById('corners').value)||0;
   var walks=parseInt(document.getElementById('wg').value)||0;
   var drives=parseInt(document.getElementById('dg').value)||0;
-  var others=parseInt(document.getElementById('og').value)||0;`n  var shared=parseInt(document.getElementById('sp').value)||0;`n  var geo=calcA(edges);
+  var others=parseInt(document.getElementById('og').value)||0;
+  var shared=parseInt(document.getElementById('sp').value)||0;
+  var geo=calcA(edges);
   var posts=calcB(geo,ends,corners,walks,drives,others,S,shared);
   // Update graph preview
   document.getElementById('gp-tp').textContent=posts.terminalPosts;
@@ -1215,7 +1226,9 @@ async function runJob(){
   var corners=parseInt(document.getElementById('corners').value)||0;
   var walks=parseInt(document.getElementById('wg').value)||0;
   var drives=parseInt(document.getElementById('dg').value)||0;
-  var others=parseInt(document.getElementById('og').value)||0;`n  var shared=parseInt(document.getElementById('sp').value)||0;`n  var flags=Array.from(document.querySelectorAll('.flag-btn.on')).map(function(b){return b.dataset.flag;});
+  var others=parseInt(document.getElementById('og').value)||0;
+  var shared=parseInt(document.getElementById('sp').value)||0;
+  var flags=Array.from(document.querySelectorAll('.flag-btn.on')).map(function(b){return b.dataset.flag;});
   var style=STYLES[styleId];
   var rp=style.rp;
 
@@ -1497,6 +1510,7 @@ addEdge('fence');onStyleChange();
 </script>
 </body>
 </html>
+
 
 
 
