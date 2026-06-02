@@ -812,9 +812,9 @@ function calcDEH(styleId,geo,posts,conc,ht){
   var lf=geo.buildLft,tlf=geo.totalLft,tp=posts.terminalPosts,lp=posts.linePosts,ts=posts.totalSecs,walks=posts.walkGates,drives=posts.driveGates,others=posts.otherGates||0;
 
   if(fam==='wood'){
-    var pk=rp.picket_fn==='floor'?Math.floor(tlf*rp.pickets_lf):rp.picket_fn==='round'?Math.round(tlf*rp.pickets_lf):Math.ceil(tlf*rp.pickets_lf);
-    add(sk.picket,pk,sk.picket.d+' ('+sk.picket.s+')',rp.picket_fn+'('+tlf+'×'+rp.pickets_lf+')='+pk,'PICKETS');
-    pf('Pickets',pk,rp.picket_fn+'('+tlf+'×'+rp.pickets_lf+')');
+    var pk=rp.picket_fn==='floor'?Math.floor(lf*rp.pickets_lf):rp.picket_fn==='round'?Math.round(lf*rp.pickets_lf):Math.ceil(lf*rp.pickets_lf);
+    add(sk.picket,pk,sk.picket.d+' ('+sk.picket.s+')',rp.picket_fn+'('+lf+'×'+rp.pickets_lf+')='+pk,'PICKETS');
+    pf('Pickets',pk,rp.picket_fn+'('+lf+'×'+rp.pickets_lf+')');
     add(sk.post,tp+lp,sk.post.d+' ('+sk.post.s+')',tp+'(T)+'+lp+'(L)='+(tp+lp),'POSTS');
     pf('Posts',tp+lp,tp+'T+'+lp+'L='+(tp+lp));
     var rlTotal=ts*rp.rails_sec+walks*rp.walk_rb+drives*rp.drive_rb;
