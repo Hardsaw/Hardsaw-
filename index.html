@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 <meta name="theme-color" content="#FFB800"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>h
+<meta name="apple-mobile-web-app-capable" content="yes"/>hh
 <title>Hardsaw · Governed Decision Engine</title>
 <style>hh
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&display=swap');
@@ -1506,6 +1506,46 @@ async function sendChat(){
           +' | FOOTER DEPTH: '+(pl.concrete_depth_in||36)+'in'
           +' | COLORS: '+(pl.colors_standard||[]).join(', ')
           +' | MFR NOTES: '+(pl.notes||'');
+      }
+    }
+  }catch(_){}
+  try{
+    var skus=(r.matR&&r.matR.bom?r.matR.bom:[]).map(function(b){return b.s;}).filter(Boolean);
+    if(skus.length>0){
+      var skuResp=await fetch(
+        'https://unddklhbrmqvyqagomtn.supabase.co/rest/v1/product_skus'
+        +'?select=sku,description,retail_price,contractor_price,pricing_model'
+        +'&sku=in.('+skus.map(function(s){return encodeURIComponent(s);}).join(',')+')',
+        {headers:{'apikey':window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,'Accept-Profile':'hardsaw'}}
+      );
+      if(skuResp.ok){
+        var skuData=await skuResp.json();
+        if(skuData&&skuData.length>0){
+          var priceMap={};
+          skuData.forEach(function(row){priceMap[row.sku]=row;});
+          var bomLines=[];var totalRetail=0;var totalContractor=0;var hasQuote=false;
+          r.matR.bom.forEach(function(b){
+            var pd=priceMap[b.s];
+            if(pd){
+              var rp=pd.retail_price?parseFloat(pd.retail_price):null;
+              var cp=pd.contractor_price?parseFloat(pd.contractor_price):null;
+              var pm=pd.pricing_model||'unknown';
+              if(pm==='quote_required'){hasQuote=true;}
+              var lineR=rp?Math.round(rp*b.qty*100)/100:null;
+              var lineC=cp?Math.round(cp*b.qty*100)/100:null;
+              if(lineR)totalRetail+=lineR;
+              if(lineC)totalContractor+=lineC;
+              bomLines.push(b.s+' x'+b.qty+(lineC?' =$'+lineC:(lineR?' =retail$'+lineR:' =quote_required')));
+            }
+          });
+          if(bomLines.length>0){
+            jctx+=' | MATERIAL COST ESTIMATE:'
+              +(totalContractor>0?' contractor=$'+Math.round(totalContractor*100)/100:'')
+              +(totalRetail>0?' retail=$'+Math.round(totalRetail*100)/100:'')
+              +(hasQuote?' (some items quote_required)':'')
+              +' | BOM_LINES: '+bomLines.join(' | ');
+          }
+        }
       }
     }
   }catch(_){}
