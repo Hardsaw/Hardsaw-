@@ -588,7 +588,7 @@ textarea,input{outline:none}
   </div>
     <div class="row2" style="margin-top:4px">
       <div><label class="lbl" style="color:var(--amber)">SHARED POSTS</label><input class="inp" id="sp" type="number" min="0" value="0" oninput="liveUpdate()" title="Gate posts that share a location with a corner or end post"></div>
-      <div style="font-size:9px;color:var(--dim);padding:4px 0;line-height:1.4">Gate at corner? Each shared node = 1 shared post</div>
+      <div style="font-size:9px;color:var(--dim);padding:4px 0;line-height:1.4">Gate post shares location with a corner or end post? Enter that count here</div>
     </div>
 
   <!-- Truth bar -->
@@ -1304,6 +1304,7 @@ async function runJob(){
     +'CANTILEVER GATES: 4 rollers + 4 covers + 1 latch per gate. Post sizing: up to 10ft opening = 3in OD, up to 20ft = 4in OD, up to 32ft = 6-5/8in OD. Footer: 18in dia x 42in deep for 3-4in posts. Counterbalance = 50% of opening width minimum. Install bottom rollers first, hang gate horizontal onto rollers, install top rollers last. '
     +'SLOPED TERRAIN: Rake up to 12in per 6ft panel (aluminum). Beyond that = stair-step. Stair-step = end posts (not line posts) at every grade break. Field-route second hole set after first panel set. Add 6in depth per 10% grade. '
     +'GATE SAG: Check hinge post plumb first. If leaning — reset in concrete. If plumb — tighten turnbuckle cable diagonal from bottom hinge to top latch corner. Vinyl gate sag — check for post insert (steel angle inside vinyl post required for gate posts). '
+          +'SHARED POSTS: When a gate opening sits at a corner or end of a run, the gate post and corner/end post are the same physical post. Enter the count of these shared locations in the SHARED POSTS field — engine deducts them from terminal post total. Example: gate at corner = 1 shared post. Gate at end of run = 1 shared post. Gate between two runs with no corner = 0 shared posts. '
     +'ROCKY SOIL: Surface rock = breaker bar or electric jack hammer. Deep rock = towable auger with carbide bit. Solid ledge = drill + epoxy anchor system.',
     style.label+': '+geo.buildLft+'lf build, '+geo.openingLft+'lf openings, '+ht+'ft, '
     +posts.totalPosts+' posts ('+posts.terminalPosts+' terminal, '+posts.linePosts+' line), '
