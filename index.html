@@ -1489,7 +1489,7 @@ async function sendChat(){
       'https://unddklhbrmqvyqagomtn.supabase.co/rest/v1/vendor_product_mappings'
       +'?select=rulepack_id,notes,product_lines(name,family,grade,coating,warranty_years,concrete_depth_in,colors_standard,notes),manufacturers(name,website)'
       +'&rulepack_id=eq.'+encodeURIComponent(r.versions.styleRulepackVersion||r.versions.familyRulepackVersion||''),
-      {headers:{'apikey':window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY}}
+      {headers:{'apikey':window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,'Accept-Profile':'hardsaw'}}
     );
     if(mapResp.ok){
       var mapData=await mapResp.json();
