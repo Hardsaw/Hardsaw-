@@ -1484,6 +1484,30 @@ async function sendChat(){
     +'concrete: '+(r.conc&&r.conc.totalBags?r.conc.totalBags:'0')+' bags | '
     +'sections: '+r.geo.totalLft+'lf total | '
     +'readiness: '+r.rdy.st+' | decision: '+r.outHash;
+  try{
+    var mapResp=await fetch(
+      'https://unddklhbrmqvyqagomtn.supabase.co/rest/v1/vendor_product_mappings'
+      +'?select=rulepack_id,notes,product_lines(name,family,grade,coating,warranty_years,concrete_depth_in,colors_standard,notes),manufacturers(name,website)'
+      +'&rulepack_id=eq.'+encodeURIComponent(r.versions.styleRulepackVersion||r.versions.familyRulepackVersion||''),
+      {headers:{'apikey':window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY}}
+    );
+    if(mapResp.ok){
+      var mapData=await mapResp.json();
+      if(mapData&&mapData[0]){
+        var pl=mapData[0].product_lines||{};
+        var mfr=mapData[0].manufacturers||{};
+        jctx+=' | MANUFACTURER: '+mfr.name
+          +' ('+mfr.website+')'
+          +' | PRODUCT LINE: '+pl.name
+          +' | GRADE: '+(pl.grade||'residential')
+          +' | COATING: '+(pl.coating||'standard')
+          +' | WARRANTY: '+(pl.warranty_years===99?'lifetime':pl.warranty_years+'yr')
+          +' | FOOTER DEPTH: '+(pl.concrete_depth_in||36)+'in'
+          +' | COLORS: '+(pl.colors_standard||[]).join(', ')
+          +' | MFR NOTES: '+(pl.notes||'');
+      }
+    }
+  }catch(_){}
   var reply=await claude('You are Assist in Hardsaw v3.1 — field AI for Hardsaw Fence LLC, KC Metro premium fence contractor. Subordinate to the engine — never re-estimate, trust engine output. Answer field questions from install doctrine: KC frost line 36in, bell-shaped holes, concrete 3-4in below grade, gate posts 42-48in deep, CL tension bands = height minus 1 minimum 3, ornamental rack limit 12in per panel, cantilever posts 3-4-6in OD by opening size, stair-step needs end posts not line posts, gate sag check post plumb first. Contractor language. Direct answers.',
     jctx+' | Q: '+msg);
   S.loading=false;S.chat.push({role:'assist',text:reply});renderChat();
