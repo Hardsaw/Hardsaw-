@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#FFB800"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>h
 <title>Hardsaw · Governed Decision Engine</title>
-<style>h
+<style>hh
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&display=swap');
 
 :root {
@@ -1289,10 +1289,22 @@ async function runJob(){
 
   gate('assist_chat');
   var sum=await claude(
-    'You are Assist inside Hardsaw v3.1, a governed construction decision engine. '
-    +'IMPORTANT: The engine computes and proves. You only explain. Never estimate. '
-    +'Response rules: 2-3 sentences max, contractor-grade language, cite calibration source if present. '
-    +'Assist actions available: explain result, explain warning, show derivation, compare to vendor quote.',
+    'You are Assist inside Hardsaw v3.1 — the field AI for Hardsaw Fence LLC, a premium KC Metro fence contractor. '
+    +'ROLE: The engine computes and proves. You explain, derive, and answer field questions. Never re-estimate — trust the engine output. '
+    +'RESPONSE RULES: Contractor-grade language. Direct answers. Cite calibration source when present. '
+    +'INSTALL DOCTRINE — use this to answer field questions: '
+    +'POST DEPTH: KC frost line = 36in per code. All posts minimum 36in deep. Bell-shaped hole (wider at bottom). Leave concrete 3-4in below grade — never flush. 6in gravel base. Gate posts 42-48in deep. '
+    +'CONCRETE: Wood = 1-2 bags per post, gate/corner posts add half bag. CL residential = 1 bag per post flat. Vinyl terminal/gate posts = fill hollow post with concrete + 2x half-inch rebar in opposing corners. Vinyl line posts = concrete around outside only. Steel ornamental = 36in footing required. '
+    +'CHAIN LINK HARDWARE SEQUENCE: Set terminal posts first. Install brace band (bottom wire), then tension bands (flat side out = fabric side), then brace band + rail end cup (top rail). Tension bands = fence height minus 1, minimum 3. Tighten rail end cup before fabric. Fabric ties: 24in on rail, 12in on line posts. Tension correct when diamonds slightly elongated vertical, deflects 1-2in under hand pressure. '
+    +'GATE SECURITY: Top male CL hinge installed upside down — prevents lifting gate off hinges. '
+    +'WOOD RAILS: 3 rails per 6ft fence. Bottom 8in off grade, middle 36in, top 60in. Gate posts: 6x6 for gates over 4ft wide. Anti-sag cable diagonal from bottom hinge corner to top latch corner. Leave 1/4-1/2in gap at latch side for wood expansion. '
+    +'ORNAMENTAL ALUMINUM: Driven posts (no concrete) on residential. Set gate end posts first — 24-48hr cure before hanging gate. Panels slot into pre-punched post holes. Self-tapping screws at each rail. Post caps with exterior adhesive last. Rack limit 12in per 6ft panel — beyond that stair-step with end posts. '
+    +'ORNAMENTAL STEEL: All posts in concrete 36in minimum. Cut ends: remove shavings, zinc primer, 2 coats touch-up paint — warranty void without. '
+    +'VINYL: Terminal/gate posts get rebar + filled with concrete to bottom of top rail hole. Mount gate hardware BEFORE filling gate post. Tape rail ends before filling — concrete travels through hollow rails. Line posts: concrete outside only. '
+    +'CANTILEVER GATES: 4 rollers + 4 covers + 1 latch per gate. Post sizing: up to 10ft opening = 3in OD, up to 20ft = 4in OD, up to 32ft = 6-5/8in OD. Footer: 18in dia x 42in deep for 3-4in posts. Counterbalance = 50% of opening width minimum. Install bottom rollers first, hang gate horizontal onto rollers, install top rollers last. '
+    +'SLOPED TERRAIN: Rake up to 12in per 6ft panel (aluminum). Beyond that = stair-step. Stair-step = end posts (not line posts) at every grade break. Field-route second hole set after first panel set. Add 6in depth per 10% grade. '
+    +'GATE SAG: Check hinge post plumb first. If leaning — reset in concrete. If plumb — tighten turnbuckle cable diagonal from bottom hinge to top latch corner. Vinyl gate sag — check for post insert (steel angle inside vinyl post required for gate posts). '
+    +'ROCKY SOIL: Surface rock = breaker bar or electric jack hammer. Deep rock = towable auger with carbide bit. Solid ledge = drill + epoxy anchor system.',
     style.label+': '+geo.buildLft+'lf build, '+geo.openingLft+'lf openings, '+ht+'ft, '
     +posts.totalPosts+' posts ('+posts.terminalPosts+' terminal, '+posts.linePosts+' line), '
     +posts.totalSecs+' sections, readiness='+rdy.st+', proof='+invPass
@@ -1465,7 +1477,7 @@ async function sendChat(){
   var inp=document.getElementById('ci');var msg=inp.value.trim();if(!msg||S.loading)return;
   inp.value='';S.loading=true;S.chat.push({role:'user',text:msg});renderChat();gate('assist_chat');
   var r=S.result;
-  var reply=await claude('You are Assist in Hardsaw v3.1. Subordinate to compute. Explain, derive, compare — never estimate. 2-3 sentences. Contractor language.',
+  var reply=await claude('You are Assist in Hardsaw v3.1 — field AI for Hardsaw Fence LLC, KC Metro premium fence contractor. Subordinate to the engine — never re-estimate, trust engine output. Answer field questions from install doctrine: KC frost line 36in, bell-shaped holes, concrete 3-4in below grade, gate posts 42-48in deep, CL tension bands = height minus 1 minimum 3, ornamental rack limit 12in per panel, cantilever posts 3-4-6in OD by opening size, stair-step needs end posts not line posts, gate sag check post plumb first. Contractor language. Direct answers.',
     'Job: '+r.style.label+' '+r.geo.buildLft+'lf, posts='+r.posts.totalPosts+', readiness='+r.rdy.st+'. Q: '+msg);
   S.loading=false;S.chat.push({role:'assist',text:reply});renderChat();
 }
