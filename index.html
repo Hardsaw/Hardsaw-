@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 <meta name="theme-color" content="#FFB800"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>hh
+<meta name="apple-mobile-web-app-capable" content="yes"/>hhh
 <title>Hardsaw · Governed Decision Engine</title>
 <style>hh
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&display=swap');
@@ -1539,10 +1539,20 @@ async function sendChat(){
             }
           });
           if(bomLines.length>0){
+            var today=new Date();
+            var staleSkus=[];
+            skuData.forEach(function(row){
+              if(row.verified_date){
+                var vd=new Date(row.verified_date);
+                var daysDiff=Math.floor((today-vd)/(1000*60*60*24));
+                if(daysDiff>30) staleSkus.push(row.sku+'('+daysDiff+'d)');
+              }
+            });
             jctx+=' | MATERIAL COST ESTIMATE:'
               +(totalContractor>0?' contractor=$'+Math.round(totalContractor*100)/100:'')
               +(totalRetail>0?' retail=$'+Math.round(totalRetail*100)/100:'')
               +(hasQuote?' (some items quote_required)':'')
+              +(staleSkus.length>0?' PRICE_WARNING: '+staleSkus.length+' SKUs unverified >30 days: '+staleSkus.join(','):'')
               +' | BOM_LINES: '+bomLines.join(' | ');
           }
         }
