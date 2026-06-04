@@ -604,7 +604,7 @@ textarea,input{outline:none}
     </div>
   </div>
 
-  <button class="run-btn" onclick="runJob()">EXECUTE GOVERNED COMPUTE ↗</button>
+  <button class="run-btn" onclick="runJob()">EXECUTE GOVERNED COMPUTE ↗</button> <button class="run-btn" id="btn-save-job" onclick="saveJob()" style="display:none;background:#217346;margin-left:8px;">SAVE JOB ↓</button> ↗</button>
 
 </div>
 </div>
@@ -1279,7 +1279,7 @@ async function runJob(){
   var outHash=H(JSON.stringify({geoHash:geo.geoHash,bom:matR.bom.map(function(i){return i.s+':'+i.qty;}),versions:versions}));
   vadd('PACKETS_GENERATED',{decisionId:outHash});
 
-  S.result={geo,posts,conc,matR,rdy,invars,invPass,versions,styleId,style,sv,ht,flags,outHash};
+  S.result={geo,posts,conc,matR,rdy,invars,invPass,versions,styleId,style,sv,ht,flags,outHash}; // Show save button after job runs document.getElementById('btn-save-job').style.display='inline-block';
 
   // Update governance panel
   document.getElementById('gv-ruleset').textContent=sv.v;
@@ -1478,7 +1478,8 @@ function renderLog(){
   if(S.log.length){lc.classList.remove('hidden');ll.innerHTML=S.log.map(function(l){return'<div class="luna-row"><span style="color:'+(l.r==='ALLOWED'?'#00E87A':'#FF3030')+';min-width:60px">'+l.r+'</span><span style="color:var(--muted)">'+l.a+'</span></div>';}).join('');}
 }
 
-async function sendChat(){
+async function saveJob(){ var customerName=prompt('Customer name or job reference (e.g. "Smith - Oak Grove"):'); if(!customerName||!customerName.trim())return; var r=S.result; if(!r){alert('Run a job first.');return;} var spec={ decision_hash:r.outHash, geometry_hash:r.geo.geoHash, style:r.styleId, height_ft:r.ht, build_lf:r.geo.buildLft, opening_lf:r.geo.openingLft, total_lf:r.geo.totalLft, sections:r.posts.totalSecs, terminal_posts:r.posts.terminalPosts, line_posts:r.posts.linePosts, total_posts:r.posts.totalPosts, walk_gates:r.posts.walkGates, drive_gates:r.posts.driveGates, other_gates:r.posts.otherGates, concrete_bags:r.conc&&r.conc.totalBags?r.conc.totalBags:0, readiness:r.rdy.st, customer_ref:customerName.trim(), versions:r.versions, bom_items:r.matR.bom.length, saved_at:new Date().toISOString() }; var payload={ id:crypto.randomUUID(), contractor_id:'ce43db8b-1bd1-44fd-aece-c4ad7c26efcd', intent_id:'HARDSAW_JOB_'+r.outHash, trace_id:r.outHash.substring(0,8), state:'PACKETS_READY', canonical_spec:spec, ruleset_version:r.versions.styleRulepackVersion||'unknown', vendor_profile_version:r.versions.vendorProfileVersion||'unknown', core_engine_version:r.versions.coreEngineVersion||'unknown' }; try{ var resp=await fetch( 'https://unddklhbrmqvyqagomtn.supabase.co/rest/v1/jobs', { method:'POST', headers:{ 'apikey':window.HARDSAW_CONFIG.SUPABASE_ANON_KEY, 'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY, 'Content-Type':'application/json', 'Accept-Profile':'hardsaw', 'Content-Profile':'hardsaw', 'Prefer':'return=minimal' }, body:JSON.stringify(payload) } ); if(resp.ok||resp.status===201){ alert('Job saved. Decision: '+r.outHash+'
+Customer: '+customerName.trim()); document.getElementById('btn-save-job').textContent='JOB SAVED \u2713'; document.getElementById('btn-save-job').disabled=true; } else { var err=await resp.text(); alert('Save failed: '+err); } }catch(e){ alert('Save error: '+e.message); } } async function sendChat(){
   var inp=document.getElementById('ci');var msg=inp.value.trim();if(!msg||S.loading)return;
   inp.value='';S.loading=true;S.chat.push({role:'user',text:msg});renderChat();gate('assist_chat');
   var r=S.result;
