@@ -853,6 +853,19 @@ textarea,input{outline:none}
 <!-- ═══ RESULT STAGE ═══ -->
 <div id="s-result" class="hidden">
   <div class="result-hdr">
+    <div id="result-hero" style="display:none;background:var(--panel2);border:1px solid var(--border2);border-left:3px solid var(--green);padding:10px 14px;margin-bottom:8px">
+      <div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:4px">JOB READY</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:22px;font-weight:bold;font-family:var(--sans);color:var(--amber)" id="hero-total">—</div>
+          <div style="font-size:8px;color:var(--muted);margin-top:2px" id="hero-meta">—</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:14px;font-weight:bold;letter-spacing:2px" id="hero-badge">—</div>
+          <div style="font-size:7px;color:var(--muted);margin-top:2px" id="hero-hash">—</div>
+        </div>
+      </div>
+    </div>
     <div class="result-top">
       <div id="readiness-badge" class="readiness-badge">
         <div class="rdot"></div>
@@ -1765,8 +1778,10 @@ document.getElementById('btn-save-job').style.display='inline-block';
   document.getElementById('gv-ready').className='gov-v '+(rdy.st==='ready'?'green':rdy.st==='not_ready'?'red':'locked');
 
   setRailStep('BUILD IT','done');setRailStep('REVIEW','done');setRailStep('SAVE','active');
-  renderResultUI();if (SUPPLIER_MODE) {
+  renderResultUI();
+  if (SUPPLIER_MODE) {
     show('s-supplier');
+    setTimeout(function(){ renderSupplierView(); }, 0);
   } else {
     show('s-result');
     showAssistFab();
@@ -1812,6 +1827,20 @@ function renderResultUI(){
     r.style.label+' · '+r.ht+'ft · build '+r.geo.buildLft+'ft · openings '+r.geo.openingLft+'ft · '
     +r.posts.totalPosts+' posts · '+r.posts.totalSecs+' sections';
   document.getElementById('hash-strip').textContent='GEO: '+r.geo.geoHash+' · DECISION: '+r.outHash;
+  var heroEl = document.getElementById('result-hero');
+  if(heroEl) {
+    var prTotal = (r.pricingResult && r.pricingResult.total)
+      ? '$' + r.pricingResult.total.toLocaleString() + ' materials'
+      : r.matR.bom.length + ' items · pricing off';
+    document.getElementById('hero-total').textContent = prTotal;
+    document.getElementById('hero-meta').textContent  = r.style.label + ' · ' + r.ht + 'ft · ' + r.geo.buildLft + 'ft · ' + r.posts.totalPosts + ' posts';
+    var tl2 = (r.rdy && (r.rdy.trustLevel || r.rdy.level)) || '—';
+    var heroBadgeEl = document.getElementById('hero-badge');
+    heroBadgeEl.textContent = tl2;
+    heroBadgeEl.style.color = tl2==='CLEAR' ? 'var(--green)' : tl2.includes('HUMAN') ? 'var(--amber)' : 'var(--red)';
+    document.getElementById('hero-hash').textContent = 'DECISION: ' + r.outHash.slice(0,8);
+    heroEl.style.display = 'block';
+  }
   document.getElementById('dual-mat').textContent=r.matR.bom.length+' items';
   var invCount=Object.values(r.invars).filter(Boolean).length+'/'+Object.values(r.invars).length;
   document.getElementById('dual-proof').textContent=invCount+' pass';
