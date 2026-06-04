@@ -1020,7 +1020,7 @@ function calcDEH(styleId,geo,posts,conc,ht){
   var bom=[],warn=[],proof=[];
   function add(sku,qty,label,formula,grp){qty=Math.ceil(qty);if(qty<=0)return;bom.push({s:sku.s,u:sku.u,label:label||sku.d,qty:qty,formula:formula||'',group:grp||''});}
   function pf(k,v,f){proof.push({k:k,v:v,f:f});}
-  var lf=geo.buildLft,tlf=geo.totalLft,tp=posts.terminalPosts,lp=poshts.linePosts,ts=posts.totalSecs,walks=posts.walkGates,drives=posts.driveGates,others=posts.otherGates||0;
+  var lf=geo.buildLft,tlf=geo.totalLft,tp=posts.terminalPosts,lp=posts.linePosts,ts=posts.totalSecs,walks=posts.walkGates,drives=posts.driveGates,others=posts.otherGates||0;
 
   if(fam==='wood'){
     var pk=rp.picket_fn==='floor'?Math.floor(lf*rp.pickets_lf):rp.picket_fn==='round'?Math.round(lf*rp.pickets_lf):Math.ceil(lf*rp.pickets_lf);
