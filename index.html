@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 <meta name="theme-color" content="#FFB800"/>
-<meta namhe="apple-mobile-web-app-capable" content="yes"/>hhh
+<meta namhe="apple-mobile-web-app-capable" content="yes"/>hhhh
 <title>Hardsaw · Governed Decision Engine</title>
 <style>hhh
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&display=swap');
@@ -393,24 +393,24 @@ textarea,input{outline:none}
 
 <!-- ── SYSTEM RAIL ─────────────────────────────────────────────────────────────── -->
 <div class="sys-rail" id="sys-rail">
-  <div class="rail-step active" id="rail-capture">
-    <div class="rail-dot"></div>CAPTURE
+  <div class="rail-step active" id="rail-JOB INFO">
+    <div class="rail-dot"></div>JOB INFO
   </div>
   <div class="rail-arrow">›</div>
-  <div class="rail-step" id="rail-normalize">
-    <div class="rail-dot"></div>NORMALIZE
+  <div class="rail-step" id="rail-FENCE STYLE">
+    <div class="rail-dot"></div>FENCE STYLE
   </div>
   <div class="rail-arrow">›</div>
-  <div class="rail-step" id="rail-compute">
-    <div class="rail-dot"></div>COMPUTE
+  <div class="rail-step" id="rail-BUILD IT">
+    <div class="rail-dot"></div>BUILD IT
   </div>
   <div class="rail-arrow">›</div>
-  <div class="rail-step" id="rail-prove">
-    <div class="rail-dot"></div>PROVE
+  <div class="rail-step" id="rail-REVIEW">
+    <div class="rail-dot"></div>REVIEW
   </div>
   <div class="rail-arrow">›</div>
-  <div class="rail-step" id="rail-export">
-    <div class="rail-dot"></div>EXPORT
+  <div class="rail-step" id="rail-SAVE">
+    <div class="rail-dot"></div>SAVE
   </div>
 </div>
 
@@ -449,7 +449,7 @@ textarea,input{outline:none}
     <span class="editable-badge">EDITABLE</span>
   </div>
   <input id="fi" type="file" accept="image/*" class="hidden" onchange="handleImg(this.files[0],'file')">
-  <input id="fi-cam" type="file" accept="image/*" capture="environment" class="hidden" onchange="handleImg(this.files[0],'camera')">
+  <input id="fi-cam" type="file" accept="image/*" JOB INFO="environment" class="hidden" onchange="handleImg(this.files[0],'camera')">
   <div class="evidence-grid">
     <div class="evidence-card" id="ev-quote" onclick="document.getElementById('fi').click()">
       <span class="ev-icon">📄</span>
@@ -489,7 +489,7 @@ textarea,input{outline:none}
 
   <!-- Material & Spec -->
   <div class="section-hdr">
-    NORMALIZE — MATERIAL &amp; SPEC
+    FENCE STYLE — MATERIAL &amp; SPEC
     <span class="editable-badge">EDITABLE</span>
   </div>
 
@@ -546,7 +546,7 @@ textarea,input{outline:none}
 
   <!-- Scene builder -->
   <div class="section-hdr">
-    COMPUTE — FENCE SCENE
+    BUILD IT — FENCE SCENE
     <div class="lf-counter">
       <span class="lf-build" id="lf-build">0 LF</span>
       <span style="color:var(--dim)">BUILD</span>
@@ -604,7 +604,7 @@ textarea,input{outline:none}
     </div>
   </div>
 
-  <button class="run-btn" onclick="runJob()">EXECUTE GOVERNED COMPUTE ↗</button>
+  <button class="run-btn" onclick="runJob()">EXECUTE GOVERNED BUILD IT ↗</button>
 
 </div>
 </div>
@@ -771,7 +771,7 @@ function collectFindings(geo, posts, flags, ht, styleId) {
   if (ht > 8)                                         f.push({code:'HEIGHT_OVER_8FT', severity:'HIGH',   message:'Height >8ft — permit likely required',                       source:'spec'});
   if (STYLES[styleId] && STYLES[styleId].rp.pool)     f.push({code:'POOL_CODE_STYLE', severity:'HIGH',   message:'Pool code compliant style — verify local AHJ requirements',  source:'spec'});
   // MEDIUM — confirmation or planning impact
-  if (flags.includes('HOA'))                          f.push({code:'HOA_APPROVAL',    severity:'MEDIUM', message:'HOA — confirm approved style and color before ordering',     source:'flag'});
+  if (flags.includes('HOA'))                          f.push({code:'HOA_APPROVAL',    severity:'MEDIUM', message:'HOA — confirm apREVIEWd style and color before ordering',     source:'flag'});
   if (flags.includes('rocky'))                        f.push({code:'ROCKY_SOIL',      severity:'MEDIUM', message:'Rocky soil — auger rental or blasting likely',               source:'flag'});
   if (flags.includes('grade'))                        f.push({code:'SLOPED_TERRAIN',  severity:'MEDIUM', message:'Sloped terrain — stepped or racked install required',        source:'flag'});
   if (geo.totalLft > 1000)                            f.push({code:'LARGE_JOB',       severity:'MEDIUM', message:'Large job — confirm phased delivery',                        source:'geometry'});
@@ -810,7 +810,7 @@ function calcDEH(styleId,geo,posts,conc,ht){
   var bom=[],warn=[],proof=[];
   function add(sku,qty,label,formula,grp){qty=Math.ceil(qty);if(qty<=0)return;bom.push({s:sku.s,u:sku.u,label:label||sku.d,qty:qty,formula:formula||'',group:grp||''});}
   function pf(k,v,f){proof.push({k:k,v:v,f:f});}
-  var lf=geo.buildLft,tlf=geo.totalLft,tp=posts.terminalPosts,lp=posts.linePosts,ts=posts.totalSecs,walks=posts.walkGates,drives=posts.driveGates,others=posts.otherGates||0;
+  var lf=geo.buildLft,tlf=geo.totalLft,tp=posts.terminalPosts,lp=poshts.linePosts,ts=posts.totalSecs,walks=posts.walkGates,drives=posts.driveGates,others=posts.otherGates||0;
 
   if(fam==='wood'){
     var pk=rp.picket_fn==='floor'?Math.floor(lf*rp.pickets_lf):rp.picket_fn==='round'?Math.round(lf*rp.pickets_lf):Math.ceil(lf*rp.pickets_lf);
@@ -917,7 +917,7 @@ function calcDEH(styleId,geo,posts,conc,ht){
   }
   // Warnings
   var flags=Array.from(document.querySelectorAll('.flag-btn.on')).map(function(b){return b.dataset.flag;});
-  if(flags.includes('HOA'))   warn.push('HOA — confirm approved style and color before ordering');
+  if(flags.includes('HOA'))   warn.push('HOA — confirm apREVIEWd style and color before ordering');
   if(flags.includes('rocky')) warn.push('Rocky soil — auger rental or blasting likely');
   if(flags.includes('grade')) warn.push('Sloped terrain — stepped or racked install required');
   if(flags.includes('permit'))warn.push('Permit required — obtain before scheduling crew');
@@ -1026,7 +1026,7 @@ var extracted=null;
 
 function gate(a){
   var f=['mutate_rulepack','invent_sku','override_luna','bypass_gate'];
-  var al=['normalize_spec','run_calculator','check_readiness','generate_packets','assist_chat','vault_append','vision_parse'];
+  var al=['FENCE STYLE_spec','run_calculator','check_readiness','generate_packets','assist_chat','vault_append','vision_parse'];
   var r=f.includes(a)?'BLOCKED':al.includes(a)?'ALLOWED':'BLOCKED';
   S.log.push({a:a,r:r});
   var n=S.log.filter(function(l){return l.r==='ALLOWED';}).length;
@@ -1045,8 +1045,8 @@ window.HARDSAW_CONFIG = window.HARDSAW_CONFIG || {
 };
 
 const VAULT_EVENT_MAP = {
-  'vision_parse':      'INTENT_CAPTURED',
-  'normalize_spec':    'INTENT_CAPTURED',
+  'vision_parse':      'INTENT_JOB INFOD',
+  'FENCE STYLE_spec':    'INTENT_JOB INFOD',
   'run_calculator':    'GEOMETRY_COMPLETE',
   'check_readiness':   'READINESS_CHECKED',
   'generate_packets':  'PACKET_GENERATED',
@@ -1059,7 +1059,7 @@ const VAULT_EVENT_MAP = {
 async function vaultRemote(input, data) {
   const ALIASES = { 'PACKETS_GENERATED': 'PACKET_GENERATED' };
   const VALID_EVENT_TYPES = new Set([
-    'INTENT_CAPTURED','GEOMETRY_COMPLETE','READINESS_CHECKED',
+    'INTENT_JOB INFOD','GEOMETRY_COMPLETE','READINESS_CHECKED',
     'PACKET_GENERATED','LUNA_DENIAL','LUNA_FREEZE','LUNA_UNFREEZE',
     'CLIF_VARIANCE','CLIF_PROMOTED','CLIF_CHANGE_REQUEST',
     'MATERIALS_COMPLETE','CHECKPOINT_SAVED','CHECKPOINT_RESUMED',
@@ -1238,7 +1238,7 @@ async function runJob(){
   var rp=style.rp;
 
   // Set rail steps
-  setRailStep('capture','done');setRailStep('normalize','done');setRailStep('compute','active');
+  setRailStep('JOB INFO','done');setRailStep('FENCE STYLE','done');setRailStep('BUILD IT','active');
   show('s-think');
   S={result:null,log:[],chat:[],tab:'BOM',loading:false};vault=[];
   document.getElementById('gc').textContent='LUNA · 0';
@@ -1253,8 +1253,8 @@ async function runJob(){
     if(el)el.classList.add('done');
   }
 
-  gate('normalize_spec');
-  vadd('INTENT_CAPTURED',{styleId,ht,edges:edges.length,walks,drives});
+  gate('FENCE STYLE_spec');
+  vadd('INTENT_JOB INFOD',{styleId,ht,edges:edges.length,walks,drives});
   gate('run_calculator');
 
   var geo    = calcA(edges);
@@ -1290,13 +1290,13 @@ document.getElementById('btn-save-job').style.display='inline-block';
   document.getElementById('gv-ready').textContent=rdy.st.replace('_',' ').toUpperCase();
   document.getElementById('gv-ready').className='gov-v '+(rdy.st==='ready'?'green':rdy.st==='not_ready'?'red':'locked');
 
-  setRailStep('compute','done');setRailStep('prove','done');setRailStep('export','active');
+  setRailStep('BUILD IT','done');setRailStep('REVIEW','done');setRailStep('SAVE','active');
   renderResultUI();show('s-result');
 
   gate('assist_chat');
   var sum=await claude(
     'You are Assist inside Hardsaw v3.1 — the field AI for Hardsaw Fence LLC, a premium KC Metro fence contractor. '
-    +'ROLE: The engine computes and proves. You explain, derive, and answer field questions. Never re-estimate — trust the engine output. '
+    +'ROLE: The engine BUILD ITs and REVIEWs. You explain, derive, and answer field questions. Never re-estimate — trust the engine output. '
     +'RESPONSE RULES: Contractor-grade language. Direct answers. Cite calibration source when present. '
     +'INSTALL DOCTRINE — use this to answer field questions: '
     +'POST DEPTH: KC frost line = 36in per code. All posts minimum 36in deep. Bell-shaped hole (wider at bottom). Leave concrete 3-4in below grade — never flush. 6in gravel base. Gate posts 42-48in deep. '
@@ -1593,8 +1593,8 @@ function reset(){
     if(st){st.textContent='MISSING';st.className='ev-status';}if(ft)ft.textContent='';
   });
   // Reset rail
-  ['capture','normalize','compute','prove','export'].forEach(function(id){setRailStep(id,'');});
-  setRailStep('capture','active');
+  ['JOB INFO','FENCE STYLE','BUILD IT','REVIEW','SAVE'].forEach(function(id){setRailStep(id,'');});
+  setRailStep('JOB INFO','active');
   // Reset gov panel
   document.getElementById('gv-proof').textContent='AWAITING INPUT';document.getElementById('gv-proof').className='gov-v dim';
   document.getElementById('gv-ready').textContent='—';document.getElementById('gv-ready').className='gov-v dim';
