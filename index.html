@@ -174,9 +174,35 @@ textarea,input{outline:none}
 }
 
 /* Flag buttons */
-.flag-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px}
-.flag-btn{background:var(--panel2);border:1px solid var(--border2);color:var(--dim);padding:7px 4px;font-size:8px;letter-spacing:1px;border-radius:1px;cursor:pointer;text-align:center;font-family:var(--mono);transition:all 0.15s}
-.flag-btn.on{background:#FFB80011;border-color:var(--amber);color:var(--amber)}
+.flag-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.flag-btn{
+  background:var(--panel2);
+  border:1px solid var(--border2);
+  color:var(--dim);
+  padding:14px 8px 12px;
+  font-size:9px;
+  letter-spacing:2px;
+  border-radius:2px;
+  cursor:pointer;
+  text-align:center;
+  font-family:var(--mono);
+  transition:all 0.15s;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  min-height:64px;
+  justify-content:center;
+}
+.flag-btn:active{opacity:0.7}
+.flag-btn.on{
+  background:#FFB80014;
+  border-color:var(--amber);
+  border-left:3px solid var(--amber);
+  color:var(--amber);
+}
+.flag-icon{font-size:20px;line-height:1}
+.flag-label{font-size:8px;letter-spacing:2px}
 
 /* Scene builder */
 .scene-hdr {
@@ -681,10 +707,22 @@ textarea,input{outline:none}
     <div>
       <label class="lbl">SITE FLAGS</label>
       <div class="flag-grid">
-        <button class="flag-btn" data-flag="HOA" onclick="this.classList.toggle('on');updateGov()">HOA</button>
-        <button class="flag-btn" data-flag="rocky" onclick="this.classList.toggle('on');updateGov()">ROCKY</button>
-        <button class="flag-btn" data-flag="grade" onclick="this.classList.toggle('on');updateGov()">SLOPED</button>
-        <button class="flag-btn" data-flag="permit" onclick="this.classList.toggle('on');updateGov()">PERMIT</button>
+        <button class="flag-btn" data-flag="HOA"    onclick="this.classList.toggle('on');updateGov()">
+          <span class="flag-icon">🏘️</span>
+          <span class="flag-label">HOA</span>
+        </button>
+        <button class="flag-btn" data-flag="rocky"  onclick="this.classList.toggle('on');updateGov()">
+          <span class="flag-icon">🪨</span>
+          <span class="flag-label">ROCKY</span>
+        </button>
+        <button class="flag-btn" data-flag="grade"  onclick="this.classList.toggle('on');updateGov()">
+          <span class="flag-icon">📐</span>
+          <span class="flag-label">SLOPED</span>
+        </button>
+        <button class="flag-btn" data-flag="permit" onclick="this.classList.toggle('on');updateGov()">
+          <span class="flag-icon">📋</span>
+          <span class="flag-label">PERMIT</span>
+        </button>
       </div>
     </div>
   </div>
