@@ -976,7 +976,7 @@ function renderSupplierView() {
   var style = r.style || {};
   document.getElementById('sup-subtitle').textContent =
     (style.label || '').toUpperCase() + ' · ' + r.ht + 'FT · ' + geo.buildLft + 'LF BUILD';
-  var tl = (r.rdy && r.rdy.trustLevel) || '—';
+  var tl = (r.rdy && (r.rdy.trustLevel || r.rdy.level)) || '—';
   var trustEl = document.getElementById('sup-trust-badge');
   trustEl.textContent = tl;
   trustEl.style.color = tl === 'CLEAR' ? 'var(--green)' : tl.indexOf('HUMAN') !== -1 ? 'var(--amber)' : 'var(--red)';
@@ -2003,7 +2003,7 @@ function reset(){
   edgeN=0;show('s-idle');addEdge('fence');liveUpdate();
 }
 
-function show(id){['s-idle','s-think','s-result'].forEach(function(s){var el=document.getElementById(s);if(el)el.classList.toggle('hidden',s!==id);});}
+function show(id){['s-idle','s-think','s-result','s-supplier'].forEach(function(s){var el=document.getElementById(s);if(el)el.classList.toggle('hidden',s!==id);});}
 function sleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
 function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
