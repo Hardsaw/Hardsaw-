@@ -604,7 +604,7 @@ textarea,input{outline:none}
     </div>
   </div>
 
-  <button class="run-btn" onclick="runJob()">EXECUTE GOVERNED COMPUTE ↗</button> <button class="run-btn" id="btn-save-job" onclick="saveJob()" style="display:none;background:#217346;margin-left:8px;">SAVE JOB ↓</button> ↗</button>
+  <button class="run-btn" onclick="runJob()">EXECUTE GOVERNED COMPUTE ↗</button>
 
 </div>
 </div>
@@ -636,7 +636,8 @@ textarea,input{outline:none}
         <div class="rdot"></div>
         <span id="readiness-label">—</span>
       </div>
-      <button class="new-job-btn" style="width:auto;margin:0" onclick="reset()">← NEW JOB</button>
+      <button class="run-btn" id="btn-save-job" onclick="saveJob()" style="display:none;background:#217346;margin-left:8px;">SAVE JOB ↓</button>
+<button class="new-job-btn" style="width:auto;margin:0" onclick="reset()">← NEW JOB</button>
     </div>
     <div class="result-meta" id="result-meta"></div>
     <div class="hash-strip" id="hash-strip"></div>
