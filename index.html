@@ -418,6 +418,106 @@ textarea,input{outline:none}
   font-size:9px;
 }
 .graph-collapsible.open { display:block; }
+
+/* ── FLOATING ASSIST ── */
+.assist-fab {
+  position:fixed;
+  bottom:22px;
+  right:16px;
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  background:var(--amber);
+  color:var(--black);
+  font-size:22px;
+  font-weight:bold;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  z-index:500;
+  box-shadow:0 4px 20px rgba(255,184,0,0.4);
+  border:none;
+  font-family:var(--mono);
+  transition:transform 0.15s, box-shadow 0.15s;
+}
+.assist-fab:active { transform:scale(0.93); }
+.assist-fab.fab-open {
+  background:var(--panel2);
+  color:var(--amber);
+  border:1px solid var(--amber);
+}
+.assist-drawer {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  max-height:72vh;
+  background:var(--panel);
+  border-top:2px solid var(--amber);
+  z-index:490;
+  display:flex;
+  flex-direction:column;
+  transform:translateY(100%);
+  transition:transform 0.25s ease;
+}
+.assist-drawer.open { transform:translateY(0); }
+.assist-drawer-hdr {
+  padding:10px 14px 8px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.assist-drawer-title {
+  font-size:8px;
+  letter-spacing:3px;
+  color:var(--amber);
+}
+.assist-drawer-sub {
+  font-size:7px;
+  color:var(--dim);
+  letter-spacing:1px;
+}
+.assist-close {
+  background:none;
+  border:none;
+  color:var(--muted);
+  font-size:18px;
+  cursor:pointer;
+  padding:0 4px;
+}
+.assist-drawer-body {
+  flex:1;
+  overflow-y:auto;
+  padding:10px 14px;
+  min-height:80px;
+}
+.assist-drawer-ir {
+  display:flex;
+  border-top:1px solid var(--border);
+  flex-shrink:0;
+}
+.assist-drawer-in {
+  flex:1;
+  background:transparent;
+  border:none;
+  color:var(--text);
+  font-size:13px;
+  padding:12px 14px;
+  font-family:var(--mono);
+  outline:none;
+}
+.assist-drawer-send {
+  background:transparent;
+  border:none;
+  border-left:1px solid var(--border);
+  color:var(--amber);
+  font-size:20px;
+  padding:0 16px;
+  cursor:pointer;
+}
 </style>
 </head>
 <body>
@@ -707,22 +807,7 @@ textarea,input{outline:none}
     </div>
   </div>
 
-  <!-- Assist (subordinate, constrained) -->
-  <div style="padding:10px 14px 0">
-    <div class="assist-wrap">
-      <div class="assist-hdr">
-        <span>ASSIST — ENGINE EXPLANATION LAYER</span>
-        <span class="assist-note">ENGINE DECIDES · ASSIST EXPLAINS</span>
-      </div>
-      <div class="assist-body" id="cb">
-        <div style="color:var(--muted);font-size:10px">Generating explanation...</div>
-      </div>
-      <div class="assist-ir">
-        <input class="assist-in" id="ci" placeholder="Explain result · Show derivation · Compare to quote..." onkeydown="if(event.key==='Enter')sendChat()">
-        <button class="assist-send" onclick="sendChat()">↗</button>
-      </div>
-    </div>
-  </div>
+  
 
   <!-- Tabs -->
   <div class="tabs">
@@ -743,8 +828,60 @@ textarea,input{outline:none}
 </div>
 
 </div><!-- /body -->
+<!-- ── FLOATING ASSIST BUTTON ── -->
+<button class="assist-fab" id="assist-fab" onclick="toggleAssistDrawer()">?</button>
+
+<!-- ── ASSIST DRAWER ── -->
+<div class="assist-drawer" id="assist-drawer">
+  <div class="assist-drawer-hdr">
+    <div>
+      <div class="assist-drawer-title">ASSIST — AI EXPLANATION LAYER</div>
+      <div class="assist-drawer-sub">ENGINE DECIDES · ASSIST EXPLAINS</div>
+    </div>
+    <button class="assist-close" onclick="toggleAssistDrawer()">✕</button>
+  </div>
+  <div class="assist-drawer-body" id="cb">
+    <div style="color:var(--muted);font-size:10px">Run a job first — then tap here to ask questions about the result.</div>
+  </div>
+  <div class="assist-drawer-ir">
+    <input class="assist-drawer-in" id="ci"
+      placeholder="Explain the BOM · Show formula · Compare to quote..."
+      onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="assist-drawer-send" onclick="sendChat()">↗</button>
+  </div>
+</div>
 
 <script>
+function toggleAssistDrawer() {
+  var fab    = document.getElementById('assist-fab');
+  var drawer = document.getElementById('assist-drawer');
+  var isOpen = drawer.classList.contains('open');
+  if (isOpen) {
+    drawer.classList.remove('open');
+    fab.classList.remove('fab-open');
+    fab.textContent = '?';
+  } else {
+    drawer.classList.add('open');
+    fab.classList.add('fab-open');
+    fab.textContent = '✕';
+    var body = document.getElementById('cb');
+    if (body) body.scrollTop = body.scrollHeight;
+  }
+}
+
+function showAssistFab() {
+  var fab = document.getElementById('assist-fab');
+  if (fab) fab.style.display = 'flex';
+}
+
+function hideAssistFab() {
+  var fab = document.getElementById('assist-fab');
+  if (fab) fab.style.display = 'none';
+  var drawer = document.getElementById('assist-drawer');
+  if (drawer) drawer.classList.remove('open');
+}
+
+
 function toggleGraph() {
   var btn = document.getElementById('graph-toggle');
   var panel = document.getElementById('graph-preview');
@@ -1366,6 +1503,7 @@ document.getElementById('btn-save-job').style.display='inline-block';
 
   setRailStep('BUILD IT','done');setRailStep('REVIEW','done');setRailStep('SAVE','active');
   renderResultUI();show('s-result');
+  showAssistFab();
 
   gate('assist_chat');
   var sum=await claude(
@@ -1651,6 +1789,7 @@ function setRailStep(id,state){
 }
 
 function reset(){
+  hideAssistFab();
   S={result:null,log:[],chat:[],tab:'BOM',loading:false};vault=[];extracted=null;
   document.getElementById('gc').textContent='LUNA · 0';
   document.getElementById('edges-container').innerHTML='';
