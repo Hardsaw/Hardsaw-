@@ -544,6 +544,36 @@ textarea,input{outline:none}
   padding:0 16px;
   cursor:pointer;
 }
+
+/* ── SUPPLIER VIEW ── */
+.sup-bar{background:var(--panel);border-bottom:2px solid var(--blue);padding:8px 14px;display:flex;justify-content:space-between;align-items:center}
+.sup-bar-title{font-family:var(--sans);font-size:14px;font-weight:700;letter-spacing:4px;color:var(--blue)}
+.sup-bar-sub{font-size:7px;letter-spacing:2px;color:var(--muted)}
+.sup-badge{font-size:7px;letter-spacing:2px;color:var(--blue);border:1px solid var(--blue)44;padding:3px 8px;border-radius:1px}
+.sup-body{padding:12px 14px 40px}
+.sup-section{margin-bottom:18px}
+.sup-section-title{font-size:7px;letter-spacing:4px;color:var(--muted);padding:6px 0 8px;border-bottom:1px solid var(--border2);margin-bottom:8px}
+.sup-hero{background:var(--panel2);border:1px solid var(--border2);border-left:3px solid var(--blue);padding:12px 14px;margin-bottom:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.sup-hero-item .sh-k{font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:3px}
+.sup-hero-item .sh-v{font-size:16px;font-weight:bold;font-family:var(--sans);color:var(--text)}
+.sup-hero-item .sh-v.blue{color:var(--blue)}
+.sup-hero-item .sh-v.amber{color:var(--amber)}
+.sup-bom-head{display:grid;grid-template-columns:2fr 50px 60px 70px 80px;gap:4px;padding:5px 0 7px;border-bottom:1px solid var(--border2);font-size:7px;color:var(--dim);letter-spacing:2px}
+.sup-bom-row{display:grid;grid-template-columns:2fr 50px 60px 70px 80px;gap:4px;padding:7px 0;border-bottom:1px solid var(--border);font-size:11px;align-items:start}
+.sup-bom-sku{font-size:7px;color:var(--dim);margin-top:2px;letter-spacing:1px}
+.sup-bom-grp{font-size:7px;letter-spacing:3px;color:var(--muted);padding:8px 0 4px;margin-top:4px}
+.sup-vendor-row{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid var(--border2);margin-bottom:4px;background:var(--panel2)}
+.sup-vendor-name{font-size:11px;color:var(--text)}
+.sup-vendor-role{font-size:8px;color:var(--muted);letter-spacing:1px}
+.sup-vendor-status{font-size:8px;letter-spacing:1px;padding:2px 8px;border-radius:1px}
+.sup-vendor-status.primary{color:var(--amber);border:1px solid var(--amber)44}
+.sup-vendor-status.alt{color:var(--blue);border:1px solid var(--blue)44}
+.sup-total-bar{background:var(--panel2);border:1px solid var(--blue)44;border-top:2px solid var(--blue);padding:12px 14px;margin-top:8px;display:flex;justify-content:space-between;align-items:center}
+.sup-total-label{font-size:8px;letter-spacing:3px;color:var(--muted)}
+.sup-total-val{font-size:22px;font-weight:bold;font-family:var(--sans);color:var(--blue)}
+.sup-total-coverage{font-size:8px;color:var(--dim);margin-top:2px;text-align:right}
+.sup-hash-line{font-size:7px;color:var(--dim);margin-top:14px;padding-top:10px;border-top:1px solid var(--border);line-height:1.8;word-break:break-all}
+.sup-watermark{text-align:center;font-size:7px;letter-spacing:3px;color:var(--border2);margin-top:20px;padding-top:10px}
 </style>
 </head>
 <body>
@@ -865,6 +895,40 @@ textarea,input{outline:none}
   </div>
 </div>
 
+
+<!-- ═══ SUPPLIER VIEW ═══ -->
+<div id="s-supplier" class="hidden">
+  <div class="sup-bar">
+    <div>
+      <div class="sup-bar-title">HARDSAW · SUPPLIER VIEW</div>
+      <div class="sup-bar-sub" id="sup-subtitle">MATERIAL PULL SHEET · PENDING JOB</div>
+    </div>
+    <div class="sup-badge" id="sup-trust-badge">—</div>
+  </div>
+  <div class="sup-body">
+    <div class="sup-hero">
+      <div class="sup-hero-item"><div class="sh-k">BUILD LENGTH</div><div class="sh-v blue" id="sup-build-lf">—</div></div>
+      <div class="sup-hero-item"><div class="sh-k">TOTAL POSTS</div><div class="sh-v" id="sup-posts">—</div></div>
+      <div class="sup-hero-item"><div class="sh-k">MATERIAL TOTAL</div><div class="sh-v amber" id="sup-total-hero">—</div></div>
+    </div>
+    <div class="sup-section">
+      <div class="sup-section-title">MATERIAL PULL SHEET — SKU · QTY · UNIT COST · EXTENDED</div>
+      <div class="sup-bom-head"><span>ITEM / SKU</span><span style="text-align:right">QTY</span><span style="text-align:right">UNIT</span><span style="text-align:right">UNIT $</span><span style="text-align:right">EXT $</span></div>
+      <div id="sup-bom-rows"></div>
+      <div class="sup-total-bar">
+        <div><div class="sup-total-label">ESTIMATED MATERIAL TOTAL</div></div>
+        <div style="text-align:right">
+          <div class="sup-total-val" id="sup-total-val">—</div>
+          <div class="sup-total-coverage" id="sup-coverage">— SKU coverage</div>
+        </div>
+      </div>
+    </div>
+    <div class="sup-section"><div class="sup-section-title">VENDOR ROUTING</div><div id="sup-vendor-rows"></div></div>
+    <div class="sup-section"><div class="sup-section-title">JOB GEOMETRY</div><div id="sup-geo-rows" style="display:grid;grid-template-columns:1fr 1fr;gap:6px"></div></div>
+    <div class="sup-hash-line" id="sup-hash-line">—</div>
+    <div class="sup-watermark">HARDSAW GOVERNED DECISION ENGINE · READ ONLY · POWERED BY LUNA</div>
+  </div>
+</div>
 </div><!-- /body -->
 <!-- ── FLOATING ASSIST BUTTON ── -->
 <button class="assist-fab" id="assist-fab" onclick="toggleAssistDrawer()">?</button>
@@ -890,6 +954,89 @@ textarea,input{outline:none}
 </div>
 
 <script>
+// ── SUPPLIER VIEW ────────────────────────────────────────────────────────────────────
+var SUPPLIER_MODE = false;
+
+function checkSupplierMode() {
+  var params = new URLSearchParams(window.location.search);
+  SUPPLIER_MODE = params.get('view') === 'supplier';
+  if (SUPPLIER_MODE) {
+    var chip = document.getElementById('gc');
+    if (chip) chip.textContent = 'SUPPLIER VIEW';
+  }
+}
+
+function renderSupplierView() {
+  var r = S.result;
+  if (!r) return;
+  var geo   = r.geo;
+  var posts = r.posts;
+  var bom   = r.matR.bom;
+  var pr    = r.pricingResult || null;
+  var style = r.style || {};
+  document.getElementById('sup-subtitle').textContent =
+    (style.label || '').toUpperCase() + ' · ' + r.ht + 'FT · ' + geo.buildLft + 'LF BUILD';
+  var tl = (r.rdy && r.rdy.trustLevel) || '—';
+  var trustEl = document.getElementById('sup-trust-badge');
+  trustEl.textContent = tl;
+  trustEl.style.color = tl === 'CLEAR' ? 'var(--green)' : tl.indexOf('HUMAN') !== -1 ? 'var(--amber)' : 'var(--red)';
+  trustEl.style.borderColor = trustEl.style.color;
+  document.getElementById('sup-build-lf').textContent = geo.buildLft + 'ft';
+  document.getElementById('sup-posts').textContent    = posts.totalPosts;
+  document.getElementById('sup-total-hero').textContent =
+    (pr && pr.total) ? '$' + pr.total.toLocaleString() : 'Pricing off';
+  var lastGrp = '';
+  var rowsHtml = '';
+  bom.forEach(function(item) {
+    if (item.group && item.group !== lastGrp) {
+      rowsHtml += '<div class="sup-bom-grp">' + item.group + '</div>';
+      lastGrp = item.group;
+    }
+    var up = '—'; var ep = '—';
+    rowsHtml +=
+      '<div class="sup-bom-row">'
+      + '<div><div>' + esc(item.label) + '</div>'
+      + '<div class="sup-bom-sku">' + esc(item.s) + ' · ' + esc(item.u) + '</div></div>'
+      + '<div style="text-align:right;color:var(--amber);font-weight:bold">' + item.qty + '</div>'
+      + '<div style="text-align:right;color:var(--dim);font-size:9px">' + esc(item.u) + '</div>'
+      + '<div style="text-align:right;color:var(--text);font-size:10px">' + up + '</div>'
+      + '<div style="text-align:right;color:var(--amber);font-weight:bold;font-size:10px">' + ep + '</div>'
+      + '</div>';
+  });
+  document.getElementById('sup-bom-rows').innerHTML = rowsHtml;
+  if (pr && pr.total) {
+    document.getElementById('sup-total-val').textContent = '$' + pr.total.toLocaleString();
+    document.getElementById('sup-coverage').textContent = pr.priced_items + '/' + bom.length + ' items priced · ' + pr.coverage + '% SKU coverage';
+  } else {
+    document.getElementById('sup-total-val').textContent = 'Enable pricing';
+    document.getElementById('sup-coverage').textContent = 'Tap $ PRICING in main view first';
+  }
+  var styleId = r.styleId || '';
+  var vendors = [];
+  if (styleId.indexOf('ornamental') === 0) {
+    vendors = [{name:'AmeriFence KC',role:'PANELS · POSTS · HARDWARE',status:'primary'},{name:'Master Halco KC',role:'ALUMINUM GATES (Princeton line)',status:'alt'}];
+  } else if (styleId.indexOf('chain_link') === 0) {
+    vendors = [{name:'AmeriFence KC',role:'FABRIC · POSTS · HARDWARE · GATES',status:'primary'}];
+  } else if (styleId.indexOf('wood') === 0) {
+    vendors = [{name:'AmeriFence KC',role:'PICKETS · POSTS · RAILS · HARDWARE · GATES',status:'primary'}];
+  } else if (styleId.indexOf('vinyl') === 0) {
+    vendors = [{name:'AmeriFence KC',role:'PANELS · POSTS · HARDWARE · GATES',status:'primary'}];
+  } else {
+    vendors = [{name:'AmeriFence KC',role:'ALL MATERIALS',status:'primary'}];
+  }
+  var vHtml = '';
+  vendors.forEach(function(v) {
+    vHtml += '<div class="sup-vendor-row"><div><div class="sup-vendor-name">' + esc(v.name) + '</div><div class="sup-vendor-role">' + esc(v.role) + '</div></div><div class="sup-vendor-status ' + v.status + '">' + (v.status === 'primary' ? 'PRIMARY' : 'ALT SOURCE') + '</div></div>';
+  });
+  document.getElementById('sup-vendor-rows').innerHTML = vHtml;
+  var geoData = [['BUILD LF',geo.buildLft+'ft'],['OPENING LF',geo.openingLft+'ft'],['TERMINAL POSTS',posts.terminalPosts],['LINE POSTS',posts.linePosts],['TOTAL POSTS',posts.totalPosts],['SECTIONS',posts.totalSecs],['POST SPACING',posts.S+'ft O.C.'],['HOOKUPS',posts.hookups]];
+  var gHtml = geoData.map(function(f){return '<div style="background:var(--panel2);border:1px solid var(--border2);padding:8px 10px"><div style="font-size:7px;color:var(--muted);letter-spacing:1px;margin-bottom:3px">'+f[0]+'</div><div style="font-size:14px;font-weight:bold;font-family:var(--sans)">'+f[1]+'</div></div>';}).join('');
+  document.getElementById('sup-geo-rows').innerHTML = gHtml;
+  document.getElementById('sup-hash-line').innerHTML =
+    'DECISION HASH: ' + r.outHash + '<br>GEO HASH: ' + geo.geoHash + '<br>CALIBRATION: ' + (r.sv && r.sv.cal ? 'AmeriFence ' + r.sv.cal + ' · ' + r.sv.calDate : 'UNCALIBRATED') + '<br>RULESET: ' + (r.sv ? r.sv.v : '—') + ' · VENDOR: amerifence_v3.2.0';
+  show('s-supplier');
+}
+
 function toggleAssistDrawer() {
   var fab    = document.getElementById('assist-fab');
   var drawer = document.getElementById('assist-drawer');
@@ -1540,8 +1687,12 @@ document.getElementById('btn-save-job').style.display='inline-block';
   document.getElementById('gv-ready').className='gov-v '+(rdy.st==='ready'?'green':rdy.st==='not_ready'?'red':'locked');
 
   setRailStep('BUILD IT','done');setRailStep('REVIEW','done');setRailStep('SAVE','active');
-  renderResultUI();show('s-result');
-  showAssistFab();
+  renderResultUI();if (SUPPLIER_MODE) {
+    show('s-supplier');
+  } else {
+    show('s-result');
+    showAssistFab();
+  }
 
   gate('assist_chat');
   var sum=await claude(
@@ -1856,6 +2007,7 @@ function show(id){['s-idle','s-think','s-result'].forEach(function(s){var el=doc
 function sleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
 function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
+checkSupplierMode();
 // Init
 addEdge('fence');onStyleChange();
 </script>
