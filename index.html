@@ -1169,7 +1169,7 @@ function showAssistFab() {
     'What does ' + (r.rdy.trustLevel||r.rdy.level||'CLEAR') + ' mean for this job?',
   ];
   var cb = document.getElementById('cb');
-  if (cb && cb.children.length <= 1) {
+  if (cb) {
     cb.innerHTML = '<div style="color:var(--muted);font-size:8px;letter-spacing:2px;margin-bottom:8px">TAP TO ASK</div>'
       + suggestions.map(function(q) {
         return '<button onclick="askSuggested(this)" style="display:block;width:100%;text-align:left;'
@@ -1464,7 +1464,7 @@ function calcDEH(styleId,geo,posts,conc,ht){
     pf('Tension bands',bands,'(height-1)×(endPosts+gatePosts) F567');
     pf('Concrete',conc.totalBags,conc.F);
     if(walks>0)add(sk.wg,walks,sk.wg.d,walks+' walk','GATES');
-    if(drives>0)add(sk.dg,drives,sk.dg.d,drives+' drive','GATES');     if(others>0){if(sk.cant_roller)add(sk.cant_roller,others*4,sk.cant_roller.d,others+'x4 rollers','CANTILEVER HARDWARE');if(sk.cant_cover)add(sk.cant_cover,others*4,sk.cant_cover.d,others+'x4 covers','CANTILEVER HARDWARE');if(sk.cant_latch)add(sk.cant_latch,others,sk.cant_latch.d,others+'x1 latch','CANTILEVER HARDWARE');if(sk.cant_gate)add(sk.cant_gate,others,sk.cant_gate.d,others+'x1 cantilever gate','CANTILEVER HARDWARE');}   } else if(fam==='ornamental'){
+    if(drives>0)add(sk.dg,drives,sk.dg.d,drives+' drive','GATES');     if(others>0){if(sk.cant_roller)add(sk.cant_roller,others*4,sk.cant_roller.d,others+'x4 rollers','CANTILEVER HARDWARE');if(sk.cant_cover)add(sk.cant_cover,others*4,sk.cant_cover.d,others+'x4 covers','CANTILEVER HARDWARE');if(sk.cant_latch)add(sk.cant_latch,others,sk.cant_latch.d,others+'x1 latch','CANTILEVER HARDWARE');if(sk.cant_gate)add(sk.cant_gate,others,sk.cant_gate.d,others+'x1 cantilever gate','CANTILEVER HARDWARE');}   } else if(fam==='ornamental'||fam==='ornamental_pool'){
     var orHt=ht||4;
     var skPanel=rp.height_keyed&&sk.panel[orHt]?sk.panel[orHt]:sk.panel;
     var skPost=rp.height_keyed&&sk.post[orHt]?sk.post[orHt]:sk.post;
