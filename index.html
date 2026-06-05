@@ -741,6 +741,7 @@ textarea,input{outline:none}
         <div id="mat-toggle-chips" style="display:flex;flex-wrap:wrap;gap:4px"></div>
         <div id="mat-toggle-note" style="font-size:8px;color:var(--dim);margin-top:4px"></div>
       </div>
+      <div id="version-grid" style="margin-top:12px"></div>
   </div>
 
   <div class="row2">
@@ -1160,8 +1161,32 @@ function toggleAssistDrawer() {
 function showAssistFab() {
   var fab = document.getElementById('assist-fab');
   if (fab) fab.style.display = 'flex';
+  if (!S.result) return;
+  var r = S.result;
+  var suggestions = [
+    'Why ' + r.posts.totalPosts + ' posts for ' + r.geo.buildLft + ' feet?',
+    'Explain the bracket count',
+    'What does ' + (r.rdy.trustLevel||r.rdy.level||'CLEAR') + ' mean for this job?',
+  ];
+  var cb = document.getElementById('cb');
+  if (cb && cb.children.length <= 1) {
+    cb.innerHTML = '<div style="color:var(--muted);font-size:8px;letter-spacing:2px;margin-bottom:8px">TAP TO ASK</div>'
+      + suggestions.map(function(q) {
+        return '<button onclick="askSuggested(this)" style="display:block;width:100%;text-align:left;'
+          + 'background:var(--panel2);border:1px solid var(--border2);color:var(--dim);'
+          + 'padding:8px 10px;font-size:10px;font-family:var(--mono);margin-bottom:4px;'
+          + 'cursor:pointer;border-radius:1px">' + q + '</button>';
+      }).join('');
+  }
 }
 
+function askSuggested(btn) {
+  var ci = document.getElementById('ci');
+  if (ci && btn) {
+    ci.value = btn.textContent;
+    sendChat();
+  }
+}
 function hideAssistFab() {
   var fab = document.getElementById('assist-fab');
   if (fab) fab.style.display = 'none';
@@ -1460,29 +1485,41 @@ function calcDEH(styleId,geo,posts,conc,ht){
     if(!sk.bracket_line&&!sk.bracket_fm&&sk.bracket)add(sk.bracket,pstQ*2,sk.bracket.d,pstQ+'×2','HARDWARE');
     add(sk.cap,pstQ,sk.cap.d,pstQ+'caps','HARDWARE');
     if(orCon>0)add(sk.con,orCon,'Concrete 60lb',conc.F,'CONCRETE');
-    var use6ftHW = (orHt >= 6) && sk.hinge6 && sk.latch6;
-    if(walks>0){
-      add(skWg,walks,skWg.d,walks+' walk gate'+(walks>1?'s':''),'GATES');
-      if(use6ftHW){
-        add(sk.hinge6,walks,  sk.hinge6.d,walks+'×1 self-closing hinge pair/gate','GATE HW');
-        add(sk.latch6,walks,  sk.latch6.d,walks+'×1 magna latch/gate','GATE HW');
-      } else {
-        if(sk.hinge)  add(sk.hinge, walks,   sk.hinge.d,  walks+'×1 male hinge/gate','GATE HW');
-        if(sk.hingef) add(sk.hingef,walks*2, sk.hingef.d, walks+'×2 female hinge/gate','GATE HW');
-        if(sk.lhanger)add(sk.lhanger,walks,  sk.lhanger.d,walks+'×1 latch hanger/gate','GATE HW');
-        if(sk.latch)  add(sk.latch,  walks,  sk.latch.d,  walks+'×1 latch fork/gate','GATE HW');
+    if(fam==='ornamental_pool'){
+      if(walks+drives>0){
+        var gateCount=walks+drives;
+        add(sk.wg,gateCount,sk.wg.d,gateCount+' single swing gate'+(gateCount>1?'s':''),'GATES');
+        if(sk.hinge){add(sk.hinge,gateCount,sk.hinge.d+' ('+sk.hinge.s+')',gateCount+' PR self-closing (pool)','GATE HW');}
+        else{add({s:'50383',u:'pair',d:'Hinge Fully Adjustable Self Closing'},gateCount,'Pool Self-Close Hinge',gateCount+' PR','GATE HW');}
+        if(sk.latch){add(sk.latch,gateCount,sk.latch.d+' ('+sk.latch.s+')',gateCount+' magna latch (pool)','GATE HW');}
+        else{add({s:'50139',u:'each',d:'Blk Latch Magna Top Pullback W/Safety Lock'},gateCount,'Pool Magna Latch',gateCount+' EA','GATE HW');}
       }
-    }
-    if(drives>0){
-      add(skDg,drives,skDg.d,drives+' drive gate'+(drives>1?'s':''),'GATES');
-      if(use6ftHW){
-        add(sk.hinge6,drives, sk.hinge6.d,drives+'×1 self-closing hinge pair/gate','GATE HW');
-        add(sk.latch6,drives, sk.latch6.d,drives+'×1 magna latch/gate','GATE HW');
-      } else {
-        if(sk.hinge)  add(sk.hinge, drives,   sk.hinge.d,  drives+'×1 male hinge/gate','GATE HW');
-        if(sk.hingef) add(sk.hingef,drives*2, sk.hingef.d, drives+'×2 female hinge/gate','GATE HW');
-        if(sk.lhanger)add(sk.lhanger,drives,  sk.lhanger.d,drives+'×1 latch hanger/gate','GATE HW');
-        if(sk.latch)  add(sk.latch,  drives,  sk.latch.d,  drives+'×1 latch fork/gate','GATE HW');
+      warn.push('Pool-code hardware: self-closing hinges (50383) · magna latch (50139) · verify AHJ requirements');
+    } else {
+      var use6ftHW=(orHt>=6)&&sk.hinge6&&sk.latch6;
+      if(walks>0){
+        add(skWg,walks,skWg.d,walks+' walk gate'+(walks>1?'s':''),'GATES');
+        if(use6ftHW){
+          add(sk.hinge6,walks,sk.hinge6.d,walks+'x1 self-closing hinge pair/gate','GATE HW');
+          add(sk.latch6,walks,sk.latch6.d,walks+'x1 magna latch/gate','GATE HW');
+        } else {
+          if(sk.hinge) add(sk.hinge,walks,sk.hinge.d,walks+'x1 male hinge/gate','GATE HW');
+          if(sk.hingef)add(sk.hingef,walks*2,sk.hingef.d,walks+'x2 female hinge/gate','GATE HW');
+          if(sk.lhanger)add(sk.lhanger,walks,sk.lhanger.d,walks+'x1 latch hanger/gate','GATE HW');
+          if(sk.latch) add(sk.latch,walks,sk.latch.d,walks+'x1 latch fork/gate','GATE HW');
+        }
+      }
+      if(drives>0){
+        add(skDg,drives,skDg.d,drives+' drive gate'+(drives>1?'s':''),'GATES');
+        if(use6ftHW){
+          add(sk.hinge6,drives,sk.hinge6.d,drives+'x1 self-closing hinge pair/gate','GATE HW');
+          add(sk.latch6,drives,sk.latch6.d,drives+'x1 magna latch/gate','GATE HW');
+        } else {
+          if(sk.hinge) add(sk.hinge,drives,sk.hinge.d,drives+'x1 male hinge/gate','GATE HW');
+          if(sk.hingef)add(sk.hingef,drives*2,sk.hingef.d,drives+'x2 female hinge/gate','GATE HW');
+          if(sk.lhanger)add(sk.lhanger,drives,sk.lhanger.d,drives+'x1 latch hanger/gate','GATE HW');
+          if(sk.latch) add(sk.latch,drives,sk.latch.d,drives+'x1 latch fork/gate','GATE HW');
+        }
       }
     }     if(others>0){if(sk.cant_roller)add(sk.cant_roller,others*4,sk.cant_roller.d,others+'x4 rollers','CANTILEVER HARDWARE');if(sk.cant_cover)add(sk.cant_cover,others*4,sk.cant_cover.d,others+'x4 covers','CANTILEVER HARDWARE');if(sk.cant_latch)add(sk.cant_latch,others,sk.cant_latch.d,others+'x1 latch','CANTILEVER HARDWARE');if(sk.cant_gate)add(sk.cant_gate,others,sk.cant_gate.d,others+'x1 cantilever gate','CANTILEVER HARDWARE');}   } else if(fam==='vinyl'){
     var vPnl=ts+1,vCon=conc.totalBags;
@@ -1607,7 +1644,26 @@ function onStyleChange(){
   document.getElementById('tb-vendor').textContent='AmeriFence';
   document.getElementById('tb-spacing').textContent=style.rp.S+'ft O.C.';
   renderMatToggle(styleId);
+  renderVersionGrid(styleId);
   liveUpdate();
+}
+
+function renderVersionGrid(styleId){
+  var grid=document.getElementById('version-grid');
+  if(!grid)return;
+  var vData=VERSIONS.styles[styleId];
+  var vId=vData?vData.v:'';
+  var cal=vData?vData.cal:null;
+  var calDate=vData?vData.calDate:null;
+  function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'):''}
+  grid.innerHTML=
+    '<div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:6px">VERSION</div>'
+    +'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
+    +'<div style="font-size:11px;color:var(--amber);font-family:var(--mono)">'+esc(vId)+'</div>'
+    +(cal
+      ?'<div style="font-size:7px;color:var(--green)">CALIBRATED '+esc(calDate)+'</div>'
+      :'<div style="font-size:7px;color:var(--dim)">uncalibrated</div>')
+    +'</div>';
 }
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
