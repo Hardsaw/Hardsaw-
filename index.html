@@ -585,6 +585,7 @@ textarea,input{outline:none}
 .price-range-val{font-size:20px;font-weight:bold;font-family:var(--sans);color:var(--green)}
 .price-range-note{font-size:8px;color:var(--dim);margin-top:3px}
 </style>
+<script src="https://maps.googleapis.com/maps/api/js?key=PASTE_YOUR_GOOGLE_MAPS_API_KEY_HERE&libraries=geometry,places&callback=initHardsawMap" async defer></script>
 </head>
 <body>
 
@@ -773,6 +774,48 @@ textarea,input{outline:none}
         </button>
       </div>
     </div>
+  </div>
+
+  <!-- MAP PERIMETER TOOL -->
+  <div class="section-hdr" id="map-hdr" style="cursor:pointer" onclick="toggleMapTool()">
+    MAP PERIMETER TOOL
+    <span id="map-toggle-badge" style="font-size:7px;letter-spacing:2px;color:var(--dim);margin-left:8px">TAP TO OPEN</span>
+  </div>
+  <div id="map-tool-wrap" style="display:none;margin-bottom:12px">
+    <div style="display:flex;gap:4px;margin-bottom:6px">
+      <input id="map-address" type="text" placeholder="Enter job site address..."
+        style="flex:1;background:var(--black);border:1px solid var(--border2);color:var(--text);
+               padding:8px 10px;font-size:12px;font-family:var(--mono);outline:none;border-radius:1px"
+        onkeydown="if(event.key==='Enter')searchAddress()">
+      <button onclick="searchAddress()"
+        style="background:var(--amber);color:var(--black);border:none;padding:8px 12px;
+               font-size:9px;letter-spacing:2px;font-family:var(--mono);cursor:pointer;border-radius:1px">
+        GO
+      </button>
+    </div>
+    <div id="map-canvas" style="width:100%;height:280px;background:var(--panel2);border:1px solid var(--border2);border-radius:1px;margin-bottom:6px"></div>
+    <div style="font-size:8px;color:var(--muted);margin-bottom:8px">
+      TAP MAP TO PLACE FENCE POINTS -- TAP FIRST POINT TO CLOSE -- LONG PRESS SEGMENT FOR GATE
+    </div>
+    <div id="map-segments" style="margin-bottom:8px"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
+      <button onclick="mapUndo()"
+        style="background:transparent;border:1px solid var(--border2);color:var(--dim);
+               padding:7px;font-size:8px;letter-spacing:2px;font-family:var(--mono);cursor:pointer">
+        UNDO
+      </button>
+      <button onclick="mapClear()"
+        style="background:transparent;border:1px solid var(--border2);color:var(--dim);
+               padding:7px;font-size:8px;letter-spacing:2px;font-family:var(--mono);cursor:pointer">
+        CLEAR
+      </button>
+      <button onclick="mapApply()" id="map-apply-btn" disabled
+        style="background:transparent;border:1px solid var(--border2);color:var(--dim);
+               padding:7px;font-size:8px;letter-spacing:2px;font-family:var(--mono);cursor:pointer">
+        USE LAYOUT
+      </button>
+    </div>
+    <div id="map-total" style="font-size:8px;color:var(--amber);margin-top:6px;text-align:center"></div>
   </div>
 
   <!-- Scene builder -->
@@ -985,6 +1028,166 @@ textarea,input{outline:none}
 </div>
 
 <script>
+// GOOGLE MAPS PERIMETER TOOL
+var MAP = null;
+var MAP_MARKERS = [];
+var MAP_POLYLINES = [];
+var MAP_POINTS = [];
+var MAP_GATES = [];
+var MAP_READY = false;
+
+function initHardsawMap() {
+  MAP_READY = true;
+}
+
+function toggleMapTool() {
+  var wrap = document.getElementById('map-tool-wrap');
+  var badge = document.getElementById('map-toggle-badge');
+  var isOpen = wrap.style.display !== 'none';
+  if (isOpen) {
+    wrap.style.display = 'none';
+    badge.textContent = 'TAP TO OPEN';
+    badge.style.color = 'var(--dim)';
+  } else {
+    wrap.style.display = 'block';
+    badge.textContent = 'OPEN';
+    badge.style.color = 'var(--amber)';
+    if (MAP_READY && !MAP) initMap();
+  }
+}
+
+function initMap() {
+  var canvas = document.getElementById('map-canvas');
+  MAP = new google.maps.Map(canvas, {
+    zoom: 18,
+    center: {lat: 39.0997, lng: -94.5786},
+    mapTypeId: 'satellite',
+    disableDefaultUI: true,
+    gestureHandling: 'cooperative',
+    styles: [{featureType:'all',elementType:'labels',stylers:[{visibility:'on'}]}]
+  });
+  MAP.addListener('click', function(e) { mapAddPoint(e.latLng); });
+}
+
+function searchAddress() {
+  if (!MAP) initMap();
+  var addr = document.getElementById('map-address').value.trim();
+  if (!addr) return;
+  var gc = new google.maps.Geocoder();
+  gc.geocode({address: addr + ' Kansas City MO'}, function(results, status) {
+    if (status === 'OK' && results[0]) {
+      MAP.setCenter(results[0].geometry.location);
+      MAP.setZoom(19);
+    }
+  });
+}
+
+function mapAddPoint(latLng) {
+  MAP_POINTS.push(latLng);
+  var marker = new google.maps.Marker({
+    position: latLng,
+    map: MAP,
+    icon: {path: google.maps.SymbolPath.CIRCLE, scale: 6,
+           fillColor: '#FFB800', fillOpacity: 1, strokeColor: '#000', strokeWeight: 1}
+  });
+  MAP_MARKERS.push(marker);
+  if (MAP_POINTS.length > 1) {
+    var prev = MAP_POINTS[MAP_POINTS.length - 2];
+    var line = new google.maps.Polyline({
+      path: [prev, latLng],
+      strokeColor: '#FFB800', strokeWeight: 3, map: MAP
+    });
+    MAP_POLYLINES.push(line);
+    var dist = google.maps.geometry.spherical.computeDistanceBetween(prev, latLng);
+    var lf = Math.round(dist * 3.28084);
+    MAP_POINTS[MAP_POINTS.length - 1]._lf = lf;
+  }
+  updateMapSegments();
+  checkMapClose(latLng);
+}
+
+function checkMapClose(latLng) {
+  if (MAP_POINTS.length < 3) return;
+  var first = MAP_POINTS[0];
+  var dist = google.maps.geometry.spherical.computeDistanceBetween(first, latLng);
+  if (dist < 3) {
+    MAP_POINTS[MAP_POINTS.length - 1]._lf = Math.round(
+      google.maps.geometry.spherical.computeDistanceBetween(MAP_POINTS[MAP_POINTS.length - 2], first) * 3.28084
+    );
+    updateMapSegments();
+  }
+}
+
+function updateMapSegments() {
+  var segs = document.getElementById('map-segments');
+  var total = 0;
+  var html = '';
+  for (var i = 1; i < MAP_POINTS.length; i++) {
+    var lf = MAP_POINTS[i]._lf || 0;
+    total += lf;
+    html += '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);font-size:10px">'
+      + '<span style="color:var(--dim)">Run ' + i + '</span>'
+      + '<span style="color:var(--amber)">' + lf + ' LF</span>'
+      + '</div>';
+  }
+  segs.innerHTML = html;
+  var totalEl = document.getElementById('map-total');
+  var applyBtn = document.getElementById('map-apply-btn');
+  if (total > 0) {
+    totalEl.textContent = 'TOTAL: ' + total + ' LF';
+    applyBtn.disabled = false;
+    applyBtn.style.color = 'var(--amber)';
+    applyBtn.style.borderColor = 'var(--amber)';
+  } else {
+    totalEl.textContent = '';
+    applyBtn.disabled = true;
+    applyBtn.style.color = 'var(--dim)';
+    applyBtn.style.borderColor = 'var(--border2)';
+  }
+}
+
+function mapUndo() {
+  if (MAP_POINTS.length === 0) return;
+  MAP_POINTS.pop();
+  var m = MAP_MARKERS.pop();
+  if (m) m.setMap(null);
+  var l = MAP_POLYLINES.pop();
+  if (l) l.setMap(null);
+  updateMapSegments();
+}
+
+function mapClear() {
+  MAP_POINTS = [];
+  MAP_MARKERS.forEach(function(m){m.setMap(null);});
+  MAP_POLYLINES.forEach(function(l){l.setMap(null);});
+  MAP_MARKERS = [];
+  MAP_POLYLINES = [];
+  updateMapSegments();
+}
+
+function mapApply() {
+  mapClear();
+  var segs = [];
+  for (var i = 1; i < MAP_POINTS.length + 1; i++) {
+    var lf = (MAP_POINTS[i] && MAP_POINTS[i]._lf) || 0;
+    if (lf > 0) segs.push(lf);
+  }
+  // Clear existing fence runs
+  var container = document.getElementById('edges-container');
+  if (container) container.innerHTML = '';
+  S.edges = [];
+  // Add each segment as a fence run
+  segs.forEach(function(lf) {
+    addEdge('fence');
+    var inputs = document.querySelectorAll('#edges-container .edge-len');
+    var last = inputs[inputs.length - 1];
+    if (last) { last.value = lf; last.dispatchEvent(new Event('input')); }
+  });
+  // Close map tool
+  toggleMapTool();
+  liveUpdate();
+}
+
 
 // MATERIAL TOGGLE SYSTEM
 var CUR_MATERIAL = null;
