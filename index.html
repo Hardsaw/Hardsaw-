@@ -1913,7 +1913,7 @@ function renderTab(){
 
   if(t==='BOM'){
     if(!matR.bom.length){el.innerHTML='<div style="color:var(--red)">'+rdy.bl.map(function(b){return'⛔ '+esc(b);}).join('<br>')+'</div>';return;}
-    var pricingOn = PRICING && PRICING.enabled && r.pricingResult;
+    var pricingOn = window.PRICING && PRICING.enabled && r.pricingResult;
     var h='<div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">'
       +(pricingOn
         ? 'QUANTITIES + PRICING -- AmeriFence KC -- <span style="color:#FFB800">indicative</span>'
