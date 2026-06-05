@@ -1913,9 +1913,16 @@ function renderTab(){
 
   if(t==='BOM'){
     if(!matR.bom.length){el.innerHTML='<div style="color:var(--red)">'+rdy.bl.map(function(b){return'⛔ '+esc(b);}).join('<br>')+'</div>';return;}
-    var h='<div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">QUANTITIES ONLY — PRICING DEFERRED</div>';
+    var pricingOn = PRICING && PRICING.enabled && r.pricingResult;
+    var h='<div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">'
+      +(pricingOn
+        ? 'QUANTITIES + PRICING -- AmeriFence KC -- <span style="color:#FFB800">indicative</span>'
+        : 'QUANTITIES ONLY -- <span style="color:var(--dim)">tap $ PRICING to show costs</span>')
+      +'</div>';
     var lastGrp='';
-    h+='<div class="bom-head"><span>ITEM / SKU</span><span style="text-align:right">QTY</span><span>UNIT</span></div>';
+    h+='<div class="bom-head"><span>ITEM / SKU</span><span style="text-align:right">QTY</span>'
+      +(pricingOn?'<span style="text-align:right;color:var(--amber)">EXT $</span>':'<span>UNIT</span>')
+      +'</div>';
         var overrideN=0;
     matR.bom.forEach(function(i){
       if(i.group&&i.group!==lastGrp){h+='<div class="bom-grp">'+i.group+'</div>';lastGrp=i.group;}
