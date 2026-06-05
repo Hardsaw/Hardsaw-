@@ -1,11 +1,11 @@
-â<!DOCTYPE html>
+—<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 <meta name="theme-color" content="#FFB800"/>
 <meta namhe="apple-mobile-web-app-capable" content="yes"/>hhhhh
-<title>Hardsaw Â· Governed Decision Engine</title>
+<title>Hardsaw · Governed Decision Engine</title>
 <style>hhhh
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&display=swap');
 
@@ -33,7 +33,7 @@ input,textarea,button,select{font-family:var(--mono);font-size:12px}
 button{cursor:pointer;border:none;background:none}
 textarea,input{outline:none}
 
-/* ââ SYSTEM RAIL ââ */
+/* ── SYSTEM RAIL ── */
 .sys-rail {
   background:var(--panel);
   border-bottom:1px solid var(--border);
@@ -60,7 +60,7 @@ textarea,input{outline:none}
 .rail-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
 .rail-arrow{color:var(--border2);font-size:8px;margin:0 2px}
 
-/* ââ HEADER ââ */
+/* ── HEADER ── */
 .hdr {
   background:var(--panel);
   border-bottom:2px solid var(--border2);
@@ -84,7 +84,7 @@ textarea,input{outline:none}
 .luna-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 
-/* ââ GOVERNANCE PANEL ââ */
+/* ── GOVERNANCE PANEL ── */
 .gov-panel {
   background:var(--panel);
   border-bottom:1px solid var(--border);
@@ -108,10 +108,10 @@ textarea,input{outline:none}
 .gov-v.red    { color:var(--red); }
 .gov-v.dim    { color:var(--dim); }
 
-/* ââ BODY ââ */
+/* ── BODY ── */
 .body { flex:1; overflow-y:auto; }
 
-/* ââ INTAKE CANVAS ââ */
+/* ── INTAKE CANVAS ── */
 .intake { padding:12px 14px; }
 
 /* Evidence intake */
@@ -276,7 +276,7 @@ textarea,input{outline:none}
 .add-gate-btn{background:transparent;border:1px dashed var(--blue)44;color:var(--blue);padding:8px;font-size:8px;letter-spacing:2px;border-radius:1px;width:100%}
 .del-btn{background:transparent;border:1px solid var(--red)33;color:var(--red);padding:3px 7px;font-size:8px;border-radius:1px;cursor:pointer;flex-shrink:0}
 
-/* ââ THINKING ââ */
+/* ── THINKING ── */
 .think {
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:60px 20px;min-height:60vh;
@@ -296,7 +296,7 @@ textarea,input{outline:none}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 .calc-dot{width:4px;height:4px;border-radius:50%;background:currentColor;flex-shrink:0}
 
-/* ââ RESULT ââ */
+/* ── RESULT ── */
 .result-hdr{
   background:var(--panel);
   border-bottom:1px solid var(--border2);
@@ -400,7 +400,7 @@ textarea,input{outline:none}
 .hash-line{font-size:7px;color:var(--dim);margin-top:6px;word-break:break-all;line-height:1.6}
 .calib-tag{font-size:7px;color:var(--green);letter-spacing:1px;margin-top:6px;padding:2px 6px;border:1px solid var(--green)33;border-radius:1px;display:inline-block}
 
-/* ââ GEOMETRY COLLAPSE ââ */
+/* ── GEOMETRY COLLAPSE ── */
 .graph-toggle-btn {
   width:100%;
   background:var(--panel2);
@@ -445,7 +445,7 @@ textarea,input{outline:none}
 }
 .graph-collapsible.open { display:block; }
 
-/* ââ FLOATING ASSIST ââ */
+/* ── FLOATING ASSIST ── */
 .assist-fab {
   position:fixed;
   bottom:22px;
@@ -545,7 +545,7 @@ textarea,input{outline:none}
   cursor:pointer;
 }
 
-/* ââ SUPPLIER VIEW ââ */
+/* ── SUPPLIER VIEW ── */
 .sup-bar{background:var(--panel);border-bottom:2px solid var(--blue);padding:8px 14px;display:flex;justify-content:space-between;align-items:center}
 .sup-bar-title{font-family:var(--sans);font-size:14px;font-weight:700;letter-spacing:4px;color:var(--blue)}
 .sup-bar-sub{font-size:7px;letter-spacing:2px;color:var(--muted)}
@@ -574,22 +574,11 @@ textarea,input{outline:none}
 .sup-total-coverage{font-size:8px;color:var(--dim);margin-top:2px;text-align:right}
 .sup-hash-line{font-size:7px;color:var(--dim);margin-top:14px;padding-top:10px;border-top:1px solid var(--border);line-height:1.8;word-break:break-all}
 .sup-watermark{text-align:center;font-size:7px;letter-spacing:3px;color:var(--border2);margin-top:20px;padding-top:10px}
-
-/* -- FIELD OVERRIDE -- */
-.bom-override-row{display:grid;grid-template-columns:1fr 40px 80px 28px;gap:4px;padding:5px 0;border-bottom:1px solid var(--border);font-size:11px;align-items:center;}
-.bom-override-input{width:100%;background:var(--black);border:1px solid var(--border2);border-radius:1px;color:var(--amber);font-size:11px;font-family:var(--mono);padding:3px 6px;text-align:right;outline:none;}
-.bom-override-input:focus{border-color:var(--amber);}
-.bom-override-btn{background:transparent;border:1px solid var(--border2);color:var(--muted);font-size:9px;padding:3px 4px;cursor:pointer;border-radius:1px;font-family:var(--mono);}
-.bom-override-btn.flagged{border-color:var(--amber);color:var(--amber);}
-.price-range-bar{margin-top:12px;padding:10px 12px;background:var(--panel2);border:1px solid var(--border2);border-left:3px solid var(--green);}
-.price-range-label{font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:4px;}
-.price-range-val{font-size:20px;font-weight:bold;font-family:var(--sans);color:var(--green);}
-.price-range-note{font-size:8px;color:var(--dim);margin-top:3px;}
 </style>
 </head>
 <body>
 
-<!-- ââ HEADER âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ -->
+<!-- ── HEADER ─────────────────────────────────────────────────────────────────── -->
 <div class="hdr">
   <div class="brand">
     <div class="logo">HARDSAW</div>
@@ -598,35 +587,35 @@ textarea,input{outline:none}
   <div class="hdr-right">
     <div class="luna-chip">
       <div class="luna-dot"></div>
-      <span id="gc">LUNA Â· 0</span>
+      <span id="gc">LUNA · 0</span>
     </div>
   </div>
 </div>
 
-<!-- ââ SYSTEM RAIL âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ -->
+<!-- ── SYSTEM RAIL ─────────────────────────────────────────────────────────────── -->
 <div class="sys-rail" id="sys-rail">
   <div class="rail-step active" id="rail-JOB INFO">
     <div class="rail-dot"></div>JOB INFO
   </div>
-  <div class="rail-arrow">âº</div>
+  <div class="rail-arrow">›</div>
   <div class="rail-step" id="rail-FENCE STYLE">
     <div class="rail-dot"></div>FENCE STYLE
   </div>
-  <div class="rail-arrow">âº</div>
+  <div class="rail-arrow">›</div>
   <div class="rail-step" id="rail-BUILD IT">
     <div class="rail-dot"></div>BUILD IT
   </div>
-  <div class="rail-arrow">âº</div>
+  <div class="rail-arrow">›</div>
   <div class="rail-step" id="rail-REVIEW">
     <div class="rail-dot"></div>REVIEW
   </div>
-  <div class="rail-arrow">âº</div>
+  <div class="rail-arrow">›</div>
   <div class="rail-step" id="rail-SAVE">
     <div class="rail-dot"></div>SAVE
   </div>
 </div>
 
-<!-- ââ GOVERNANCE PANEL ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ -->
+<!-- ── GOVERNANCE PANEL ────────────────────────────────────────────────────────── -->
 <div class="gov-panel">
   <div class="gov-grid">
     <div class="gov-cell">
@@ -643,15 +632,15 @@ textarea,input{outline:none}
     </div>
     <div class="gov-cell">
       <div class="gov-k">READINESS</div>
-      <div class="gov-v dim" id="gv-ready">â</div>
+      <div class="gov-v dim" id="gv-ready">—</div>
     </div>
   </div>
 </div>
 
-<!-- ââ BODY âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ -->
+<!-- ── BODY ───────────────────────────────────────────────────────────────────── -->
 <div class="body">
 
-<!-- âââ IDLE STAGE âââ -->
+<!-- ═══ IDLE STAGE ═══ -->
 <div id="s-idle">
 <div class="intake">
 
@@ -664,25 +653,25 @@ textarea,input{outline:none}
   <input id="fi-cam" type="file" accept="image/*" JOB INFO="environment" class="hidden" onchange="handleImg(this.files[0],'camera')">
   <div class="evidence-grid">
     <div class="evidence-card" id="ev-quote" onclick="document.getElementById('fi').click()">
-      <span class="ev-icon">ð</span>
+      <span class="ev-icon">📄</span>
       <div class="ev-type">QUOTE</div>
       <div class="ev-status" id="ev-quote-st">MISSING</div>
       <div class="ev-facts" id="ev-quote-facts"></div>
     </div>
     <div class="evidence-card" id="ev-sketch" onclick="document.getElementById('fi-cam').click()">
-      <span class="ev-icon">âï¸</span>
+      <span class="ev-icon">✏️</span>
       <div class="ev-type">LAYOUT SKETCH</div>
       <div class="ev-status" id="ev-sketch-st">MISSING</div>
       <div class="ev-facts" id="ev-sketch-facts"></div>
     </div>
     <div class="evidence-card" id="ev-blueprint" style="opacity:0.5">
-      <span class="ev-icon">ð</span>
+      <span class="ev-icon">📐</span>
       <div class="ev-type">BLUEPRINT</div>
       <div class="ev-status">MISSING</div>
       <div class="ev-facts">Upload coming soon</div>
     </div>
     <div class="evidence-card" id="ev-site" onclick="document.getElementById('fi').click()">
-      <span class="ev-icon">ð·</span>
+      <span class="ev-icon">📷</span>
       <div class="ev-type">SITE PHOTO</div>
       <div class="ev-status" id="ev-site-st">MISSING</div>
       <div class="ev-facts" id="ev-site-facts"></div>
@@ -695,48 +684,48 @@ textarea,input{outline:none}
     <div id="ext-box" class="hidden" style="background:var(--panel2);border:1px solid var(--border);padding:10px">
       <div style="font-size:7px;letter-spacing:3px;color:var(--amber);margin-bottom:6px" id="ext-title">VISION EXTRACTED</div>
       <div id="ext-cnt" style="font-size:10px;color:var(--dim);line-height:1.8"></div>
-      <button onclick="applyExtracted()" style="margin-top:8px;width:100%;background:transparent;border:1px solid var(--amber);color:var(--amber);padding:8px;font-size:8px;letter-spacing:2px;cursor:pointer">APPLY TO JOB â</button>
+      <button onclick="applyExtracted()" style="margin-top:8px;width:100%;background:transparent;border:1px solid var(--amber);color:var(--amber);padding:8px;font-size:8px;letter-spacing:2px;cursor:pointer">APPLY TO JOB ↗</button>
     </div>
   </div>
 
   <!-- Material & Spec -->
   <div class="section-hdr">
-    FENCE STYLE â MATERIAL &amp; SPEC
+    FENCE STYLE — MATERIAL &amp; SPEC
     <span class="editable-badge">EDITABLE</span>
   </div>
 
   <div class="sect">
     <label class="lbl">FENCE FAMILY &amp; STYLE</label>
     <select class="sel" id="fam" onchange="onStyleChange()">
-      <optgroup label="ââ WOOD PRIVACY ââ">
-        <option value="wood.privacy.tight_cedar">Wood â Tight Cedar Privacy (6ft)</option>
-        <option value="wood.privacy.spaced_picket">Wood â Spaced Picket (4ft)</option>
-        <option value="wood.privacy.solid_board">Wood â Solid Board (6ft)</option>
-        <option value="wood.shadowbox.standard">Wood â Shadowbox Standard</option>
+      <optgroup label="── WOOD PRIVACY ──">
+        <option value="wood.privacy.tight_cedar">Wood — Tight Cedar Privacy (6ft)</option>
+        <option value="wood.privacy.spaced_picket">Wood — Spaced Picket (4ft)</option>
+        <option value="wood.privacy.solid_board">Wood — Solid Board (6ft)</option>
+        <option value="wood.shadowbox.standard">Wood — Shadowbox Standard</option>
       </optgroup>
-      <optgroup label="ââ CHAIN LINK ââ">
-        <option value="chain_link.residential.galvanized">Chain Link â Residential Galvanized</option>
-        <option value="chain_link.residential.black">Chain Link â Residential Black</option>
-        <option value="chain_link.commercial.galvanized">Chain Link â Commercial Galvanized</option>
-        <option value="chain_link.commercial.black">Chain Link â Commercial Black</option>
+      <optgroup label="── CHAIN LINK ──">
+        <option value="chain_link.residential.galvanized">Chain Link — Residential Galvanized</option>
+        <option value="chain_link.residential.black">Chain Link — Residential Black</option>
+        <option value="chain_link.commercial.galvanized">Chain Link — Commercial Galvanized</option>
+        <option value="chain_link.commercial.black">Chain Link — Commercial Black</option>
       </optgroup>
-      <optgroup label="ââ ORNAMENTAL ââ">
-        <option value="ornamental.steel.flat_top_3rail">Ornamental â Steel Flat Top 3-Rail (DM)</option>
-        <option value="ornamental.steel.spear_top_3rail">Ornamental â Steel Spear Top 3-Rail (DM)</option>
-        <option value="ornamental.steel.flat_top_pool">Ornamental â Steel Flat Top Pool (DM)</option>
-        <option value="ornamental.aluminum.flat_top_3rail">Ornamental â Aluminum Flat Top 3-Rail</option>
-        <option value="ornamental.aluminum.spear_top_3rail">Ornamental â Aluminum Spear Top 3-Rail</option>
+      <optgroup label="── ORNAMENTAL ──">
+        <option value="ornamental.steel.flat_top_3rail">Ornamental — Steel Flat Top 3-Rail (DM)</option>
+        <option value="ornamental.steel.spear_top_3rail">Ornamental — Steel Spear Top 3-Rail (DM)</option>
+        <option value="ornamental.steel.flat_top_pool">Ornamental — Steel Flat Top Pool (DM)</option>
+        <option value="ornamental.aluminum.flat_top_3rail">Ornamental — Aluminum Flat Top 3-Rail</option>
+        <option value="ornamental.aluminum.spear_top_3rail">Ornamental — Aluminum Spear Top 3-Rail</option>
       </optgroup>
-      <optgroup label="ââ VINYL ââ">
-        <option value="vinyl.privacy.tongue_groove">Vinyl â Privacy Tongue &amp; Groove</option>
-        <option value="vinyl.picket.scalloped">Vinyl â Scalloped Picket</option>
+      <optgroup label="── VINYL ──">
+        <option value="vinyl.privacy.tongue_groove">Vinyl — Privacy Tongue &amp; Groove</option>
+        <option value="vinyl.picket.scalloped">Vinyl — Scalloped Picket</option>
       </optgroup>
-      <optgroup label="ââ FARM &amp; RANCH ââ">
-        <option value="farm.no_climb.horse">Farm â No-Climb Horse Fence</option>
-        <option value="farm.barbed.5strand">Farm â Barbed Wire 5-Strand</option>
+      <optgroup label="── FARM &amp; RANCH ──">
+        <option value="farm.no_climb.horse">Farm — No-Climb Horse Fence</option>
+        <option value="farm.barbed.5strand">Farm — Barbed Wire 5-Strand</option>
       </optgroup>
     </select>
-    <div class="style-note" id="style-note" style="margin-top:6px">Tight cedar 6ft: 2.50 pickets/lf Â· 3 rails/section Â· 8ft O.C. Â· KAN004247 â</div>
+    <div class="style-note" id="style-note" style="margin-top:6px">Tight cedar 6ft: 2.50 pickets/lf · 3 rails/section · 8ft O.C. · KAN004247 ✓</div>
   </div>
 
   <div class="row2">
@@ -751,19 +740,19 @@ textarea,input{outline:none}
       <label class="lbl">SITE FLAGS</label>
       <div class="flag-grid">
         <button class="flag-btn" data-flag="HOA"    onclick="this.classList.toggle('on');updateGov()">
-          <span class="flag-icon">ðï¸</span>
+          <span class="flag-icon">🏘️</span>
           <span class="flag-label">HOA</span>
         </button>
         <button class="flag-btn" data-flag="rocky"  onclick="this.classList.toggle('on');updateGov()">
-          <span class="flag-icon">ðª¨</span>
+          <span class="flag-icon">🪨</span>
           <span class="flag-label">ROCKY</span>
         </button>
         <button class="flag-btn" data-flag="grade"  onclick="this.classList.toggle('on');updateGov()">
-          <span class="flag-icon">ð</span>
+          <span class="flag-icon">📐</span>
           <span class="flag-label">SLOPED</span>
         </button>
         <button class="flag-btn" data-flag="permit" onclick="this.classList.toggle('on');updateGov()">
-          <span class="flag-icon">ð</span>
+          <span class="flag-icon">📋</span>
           <span class="flag-label">PERMIT</span>
         </button>
       </div>
@@ -772,7 +761,7 @@ textarea,input{outline:none}
 
   <!-- Scene builder -->
   <div class="section-hdr">
-    BUILD IT â FENCE SCENE
+    BUILD IT — FENCE SCENE
     <div class="lf-counter">
       <span class="lf-build" id="lf-build">0 LF</span>
       <span style="color:var(--dim)">BUILD</span>
@@ -781,24 +770,24 @@ textarea,input{outline:none}
     </div>
   </div>
 
-  <!-- Live graph preview â collapsible -->
+  <!-- Live graph preview — collapsible -->
   <button class="graph-toggle-btn" id="graph-toggle" onclick="toggleGraph()">
     <span>
       <span style="font-size:7px;letter-spacing:3px;color:var(--muted)">LAYOUT SUMMARY</span><br>
-      <span class="gtb-summary" id="graph-summary">Add fence runs below â</span>
+      <span class="gtb-summary" id="graph-summary">Add fence runs below ↓</span>
     </span>
-    <span class="gtb-arrow">âº</span>
+    <span class="gtb-arrow">›</span>
   </button>
   <div class="graph-collapsible" id="graph-preview">
-    <div class="graph-title">GEOMETRY GRAPH â FORMULA DETAIL</div>
+    <div class="graph-title">GEOMETRY GRAPH — FORMULA DETAIL</div>
     <div id="graph-rows">
-      <div class="graph-row"><span>terminal_posts = |V|</span><span class="gv" id="gp-tp">â</span></div>
-      <div class="graph-row"><span>line_posts = Î£ ceil(L/S)â1</span><span class="gv" id="gp-lp">â</span></div>
-      <div class="graph-row highlight"><span>total_posts</span><span class="gv" id="gp-posts">â</span></div>
-      <div class="graph-row"><span>hookups = 2Ã|E|</span><span class="gv" id="gp-hookups">â</span></div>
-      <div class="graph-row"><span>sections = Î£ ceil(L/S)</span><span class="gv" id="gp-secs">â</span></div>
-      <div class="graph-row"><span>build_length_ft</span><span class="gv" id="gp-build">â</span></div>
-      <div class="graph-row"><span>opening_length_ft</span><span class="gv" id="gp-opening">â</span></div>
+      <div class="graph-row"><span>terminal_posts = |V|</span><span class="gv" id="gp-tp">—</span></div>
+      <div class="graph-row"><span>line_posts = Σ ceil(L/S)−1</span><span class="gv" id="gp-lp">—</span></div>
+      <div class="graph-row highlight"><span>total_posts</span><span class="gv" id="gp-posts">—</span></div>
+      <div class="graph-row"><span>hookups = 2×|E|</span><span class="gv" id="gp-hookups">—</span></div>
+      <div class="graph-row"><span>sections = Σ ceil(L/S)</span><span class="gv" id="gp-secs">—</span></div>
+      <div class="graph-row"><span>build_length_ft</span><span class="gv" id="gp-build">—</span></div>
+      <div class="graph-row"><span>opening_length_ft</span><span class="gv" id="gp-opening">—</span></div>
     </div>
   </div>
 
@@ -826,64 +815,64 @@ textarea,input{outline:none}
 
   <!-- Truth bar -->
   <div class="truth-bar">
-    <div class="truth-title">GOVERNANCE â LOCKED TRUTH PARAMETERS</div>
+    <div class="truth-title">GOVERNANCE — LOCKED TRUTH PARAMETERS</div>
     <div class="truth-grid">
       <div class="truth-item"><div class="tk">RULESET</div><div class="tv locked" id="tb-ruleset">WP-TIGHT-v2.0</div></div>
       <div class="truth-item"><div class="tk">VENDOR</div><div class="tv locked" id="tb-vendor">AmeriFence</div></div>
       <div class="truth-item"><div class="tk">POST SPACING</div><div class="tv locked" id="tb-spacing">8ft O.C.</div></div>
       <div class="truth-item"><div class="tk">GATE SCHEMA</div><div class="tv locked" id="tb-gate">opening edge</div></div>
       <div class="truth-item"><div class="tk">ROUNDING</div><div class="tv locked" id="tb-round">ceil / floor</div></div>
-      <div class="truth-item"><div class="tk">UNRESOLVED</div><div class="tv" id="tb-unresolved">â</div></div>
+      <div class="truth-item"><div class="tk">UNRESOLVED</div><div class="tv" id="tb-unresolved">—</div></div>
     </div>
   </div>
 
-  <button class="run-btn" onclick="runJob()">EXECUTE GOVERNED BUILD IT â</button>
+  <button class="run-btn" onclick="runJob()">EXECUTE GOVERNED BUILD IT ↗</button>
 
 </div>
 </div>
 
-<!-- âââ THINKING STAGE âââ -->
+<!-- ═══ THINKING STAGE ═══ -->
 <div id="s-think" class="hidden">
   <div class="think">
-    <div class="think-engine">â HARDSAW</div>
+    <div class="think-engine">⚙ HARDSAW</div>
     <ul class="calc-list" id="calc-list">
-      <li class="calc-item" id="calc-A"><div class="calc-dot"></div>A â GEOMETRY CALCULATOR</li>
-      <li class="calc-item" id="calc-B"><div class="calc-dot"></div>B â POST LAYOUT CALCULATOR</li>
-      <li class="calc-item" id="calc-C"><div class="calc-dot"></div>C â GATE / OPENING CALCULATOR</li>
-      <li class="calc-item" id="calc-D"><div class="calc-dot"></div>D â MATERIAL QUANTITY CALCULATOR</li>
-      <li class="calc-item" id="calc-E"><div class="calc-dot"></div>E â HARDWARE CALCULATOR</li>
-      <li class="calc-item" id="calc-F"><div class="calc-dot"></div>F â CONCRETE / FOOTING CALCULATOR</li>
-      <li class="calc-item" id="calc-G"><div class="calc-dot"></div>G â COMPLIANCE CALCULATOR</li>
-      <li class="calc-item" id="calc-H"><div class="calc-dot"></div>H â PACKAGING CALCULATOR</li>
-      <li class="calc-item" id="calc-I"><div class="calc-dot"></div>I â BOM PACKET TRANSLATOR</li>
-      <li class="calc-item" id="calc-J"><div class="calc-dot"></div>J â READINESS CALCULATOR</li>
+      <li class="calc-item" id="calc-A"><div class="calc-dot"></div>A — GEOMETRY CALCULATOR</li>
+      <li class="calc-item" id="calc-B"><div class="calc-dot"></div>B — POST LAYOUT CALCULATOR</li>
+      <li class="calc-item" id="calc-C"><div class="calc-dot"></div>C — GATE / OPENING CALCULATOR</li>
+      <li class="calc-item" id="calc-D"><div class="calc-dot"></div>D — MATERIAL QUANTITY CALCULATOR</li>
+      <li class="calc-item" id="calc-E"><div class="calc-dot"></div>E — HARDWARE CALCULATOR</li>
+      <li class="calc-item" id="calc-F"><div class="calc-dot"></div>F — CONCRETE / FOOTING CALCULATOR</li>
+      <li class="calc-item" id="calc-G"><div class="calc-dot"></div>G — COMPLIANCE CALCULATOR</li>
+      <li class="calc-item" id="calc-H"><div class="calc-dot"></div>H — PACKAGING CALCULATOR</li>
+      <li class="calc-item" id="calc-I"><div class="calc-dot"></div>I — BOM PACKET TRANSLATOR</li>
+      <li class="calc-item" id="calc-J"><div class="calc-dot"></div>J — READINESS CALCULATOR</li>
     </ul>
   </div>
 </div>
 
-<!-- âââ RESULT STAGE âââ -->
+<!-- ═══ RESULT STAGE ═══ -->
 <div id="s-result" class="hidden">
   <div class="result-hdr">
     <div id="result-hero" style="display:none;background:var(--panel2);border:1px solid var(--border2);border-left:3px solid var(--green);padding:10px 14px;margin-bottom:8px">
       <div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:4px">JOB READY</div>
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div>
-          <div style="font-size:22px;font-weight:bold;font-family:var(--sans);color:var(--amber)" id="hero-total">â</div>
-          <div style="font-size:8px;color:var(--muted);margin-top:2px" id="hero-meta">â</div>
+          <div style="font-size:22px;font-weight:bold;font-family:var(--sans);color:var(--amber)" id="hero-total">—</div>
+          <div style="font-size:8px;color:var(--muted);margin-top:2px" id="hero-meta">—</div>
         </div>
         <div style="text-align:right">
-          <div style="font-size:14px;font-weight:bold;letter-spacing:2px" id="hero-badge">â</div>
-          <div style="font-size:7px;color:var(--muted);margin-top:2px" id="hero-hash">â</div>
+          <div style="font-size:14px;font-weight:bold;letter-spacing:2px" id="hero-badge">—</div>
+          <div style="font-size:7px;color:var(--muted);margin-top:2px" id="hero-hash">—</div>
         </div>
       </div>
     </div>
     <div class="result-top">
       <div id="readiness-badge" class="readiness-badge">
         <div class="rdot"></div>
-        <span id="readiness-label">â</span>
+        <span id="readiness-label">—</span>
       </div>
-      <button class="run-btn" id="btn-save-job" onclick="saveJob()" style="display:none;background:#217346;margin-left:8px;">SAVE JOB â</button>
-<button class="new-job-btn" style="width:auto;margin:0" onclick="reset()">â NEW JOB</button>
+      <button class="run-btn" id="btn-save-job" onclick="saveJob()" style="display:none;background:#217346;margin-left:8px;">SAVE JOB ↓</button>
+<button class="new-job-btn" style="width:auto;margin:0" onclick="reset()">← NEW JOB</button>
     </div>
     <div class="result-meta" id="result-meta"></div>
     <div class="hash-strip" id="hash-strip"></div>
@@ -893,11 +882,11 @@ textarea,input{outline:none}
   <div class="dual-hdr">
     <div class="dual-col material-col">
       <div class="dual-col-title">MATERIAL OUTPUT</div>
-      <div class="dual-col-val" id="dual-mat">â items</div>
+      <div class="dual-col-val" id="dual-mat">— items</div>
     </div>
     <div class="dual-col proof-col">
       <div class="dual-col-title">PROOF OUTPUT</div>
-      <div class="dual-col-val" id="dual-proof">â invariants</div>
+      <div class="dual-col-val" id="dual-proof">— invariants</div>
     </div>
   </div>
 
@@ -922,89 +911,65 @@ textarea,input{outline:none}
 </div>
 
 
-<!-- âââ SUPPLIER VIEW âââ -->
+<!-- ═══ SUPPLIER VIEW ═══ -->
 <div id="s-supplier" class="hidden">
   <div class="sup-bar">
     <div>
-      <div class="sup-bar-title">HARDSAW Â· SUPPLIER VIEW</div>
-      <div class="sup-bar-sub" id="sup-subtitle">MATERIAL PULL SHEET Â· PENDING JOB</div>
+      <div class="sup-bar-title">HARDSAW · SUPPLIER VIEW</div>
+      <div class="sup-bar-sub" id="sup-subtitle">MATERIAL PULL SHEET · PENDING JOB</div>
     </div>
-    <div class="sup-badge" id="sup-trust-badge">â</div>
+    <div class="sup-badge" id="sup-trust-badge">—</div>
   </div>
   <div class="sup-body">
     <div class="sup-hero">
-      <div class="sup-hero-item"><div class="sh-k">BUILD LENGTH</div><div class="sh-v blue" id="sup-build-lf">â</div></div>
-      <div class="sup-hero-item"><div class="sh-k">TOTAL POSTS</div><div class="sh-v" id="sup-posts">â</div></div>
-      <div class="sup-hero-item"><div class="sh-k">MATERIAL TOTAL</div><div class="sh-v amber" id="sup-total-hero">â</div></div>
+      <div class="sup-hero-item"><div class="sh-k">BUILD LENGTH</div><div class="sh-v blue" id="sup-build-lf">—</div></div>
+      <div class="sup-hero-item"><div class="sh-k">TOTAL POSTS</div><div class="sh-v" id="sup-posts">—</div></div>
+      <div class="sup-hero-item"><div class="sh-k">MATERIAL TOTAL</div><div class="sh-v amber" id="sup-total-hero">—</div></div>
     </div>
     <div class="sup-section">
-      <div class="sup-section-title">MATERIAL PULL SHEET â SKU Â· QTY Â· UNIT COST Â· EXTENDED</div>
+      <div class="sup-section-title">MATERIAL PULL SHEET — SKU · QTY · UNIT COST · EXTENDED</div>
       <div class="sup-bom-head"><span>ITEM / SKU</span><span style="text-align:right">QTY</span><span style="text-align:right">UNIT</span><span style="text-align:right">UNIT $</span><span style="text-align:right">EXT $</span></div>
       <div id="sup-bom-rows"></div>
       <div class="sup-total-bar">
         <div><div class="sup-total-label">ESTIMATED MATERIAL TOTAL</div></div>
         <div style="text-align:right">
-          <div class="sup-total-val" id="sup-total-val">â</div>
-          <div class="sup-total-coverage" id="sup-coverage">â SKU coverage</div>
+          <div class="sup-total-val" id="sup-total-val">—</div>
+          <div class="sup-total-coverage" id="sup-coverage">— SKU coverage</div>
         </div>
       </div>
     </div>
     <div class="sup-section"><div class="sup-section-title">VENDOR ROUTING</div><div id="sup-vendor-rows"></div></div>
     <div class="sup-section"><div class="sup-section-title">JOB GEOMETRY</div><div id="sup-geo-rows" style="display:grid;grid-template-columns:1fr 1fr;gap:6px"></div></div>
-    <div class="sup-hash-line" id="sup-hash-line">â</div>
-    <div class="sup-watermark">HARDSAW GOVERNED DECISION ENGINE Â· READ ONLY Â· POWERED BY LUNA</div>
+    <div class="sup-hash-line" id="sup-hash-line">—</div>
+    <div class="sup-watermark">HARDSAW GOVERNED DECISION ENGINE · READ ONLY · POWERED BY LUNA</div>
   </div>
 </div>
 </div><!-- /body -->
-<!-- ââ FLOATING ASSIST BUTTON ââ -->
+<!-- ── FLOATING ASSIST BUTTON ── -->
 <button class="assist-fab" id="assist-fab" onclick="toggleAssistDrawer()">?</button>
 
-<!-- ââ ASSIST DRAWER ââ -->
+<!-- ── ASSIST DRAWER ── -->
 <div class="assist-drawer" id="assist-drawer">
   <div class="assist-drawer-hdr">
     <div>
-      <div class="assist-drawer-title">ASSIST â AI EXPLANATION LAYER</div>
-      <div class="assist-drawer-sub">ENGINE DECIDES Â· ASSIST EXPLAINS</div>
+      <div class="assist-drawer-title">ASSIST — AI EXPLANATION LAYER</div>
+      <div class="assist-drawer-sub">ENGINE DECIDES · ASSIST EXPLAINS</div>
     </div>
-    <button class="assist-close" onclick="toggleAssistDrawer()">â</button>
+    <button class="assist-close" onclick="toggleAssistDrawer()">✕</button>
   </div>
   <div class="assist-drawer-body" id="cb">
-    <div style="color:var(--muted);font-size:10px">Run a job first â then tap here to ask questions about the result.</div>
+    <div style="color:var(--muted);font-size:10px">Run a job first — then tap here to ask questions about the result.</div>
   </div>
   <div class="assist-drawer-ir">
     <input class="assist-drawer-in" id="ci"
-      placeholder="Explain the BOM Â· Show formula Â· Compare to quote..."
+      placeholder="Explain the BOM · Show formula · Compare to quote..."
       onkeydown="if(event.key==='Enter')sendChat()">
-    <button class="assist-drawer-send" onclick="sendChat()">â</button>
+    <button class="assist-drawer-send" onclick="sendChat()">↗</button>
   </div>
 </div>
 
 <script>
-
-// -- FIELD OVERRIDE SYSTEM --
-var FIELD_OVERRIDES = {};
-function flagOverride(sku, inputId) {
-  var el = document.getElementById(inputId);
-  var val = parseInt(el.value);
-  if (!val || val <= 0) return;
-  var btn = el.parentElement.querySelector('.bom-override-btn');
-  if (FIELD_OVERRIDES[sku] && FIELD_OVERRIDES[sku].val === val) {
-    delete FIELD_OVERRIDES[sku];
-    el.style.borderColor = '';
-    if (btn) { btn.textContent = '\u2691'; btn.classList.remove('flagged'); }
-    return;
-  }
-  FIELD_OVERRIDES[sku] = { val: val, engine_val: parseInt(el.dataset.engineVal), ts: Date.now(), decision_hash: S.result ? S.result.outHash : '--' };
-  if (btn) { btn.textContent = '\u2713'; btn.classList.add('flagged'); }
-  if (typeof vadd === 'function' && S.result) {
-    vadd('CLIF_CHANGE_REQUEST', { sku: sku, engine_qty: FIELD_OVERRIDES[sku].engine_val, field_qty: val, delta: val - FIELD_OVERRIDES[sku].engine_val, decision_hash: S.result.outHash, style_id: S.result.styleId, note: 'Contractor field override -- pending pattern confirmation' });
-  }
-}
-function calcPriceRange(total) {
-  if (!total || total <= 0) return null;
-  return { low: Math.round(total * 1.40 / 50) * 50, high: Math.round(total * 1.65 / 50) * 50 };
-}
-// ââ SUPPLIER VIEW ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── SUPPLIER VIEW ────────────────────────────────────────────────────────────────────
 var SUPPLIER_MODE = false;
 
 function checkSupplierMode() {
@@ -1025,8 +990,8 @@ function renderSupplierView() {
   var pr    = r.pricingResult || null;
   var style = r.style || {};
   document.getElementById('sup-subtitle').textContent =
-    (style.label || '').toUpperCase() + ' Â· ' + r.ht + 'FT Â· ' + geo.buildLft + 'LF BUILD';
-  var tl = (r.rdy && (r.rdy.trustLevel || r.rdy.level)) || 'â';
+    (style.label || '').toUpperCase() + ' · ' + r.ht + 'FT · ' + geo.buildLft + 'LF BUILD';
+  var tl = (r.rdy && (r.rdy.trustLevel || r.rdy.level)) || '—';
   var trustEl = document.getElementById('sup-trust-badge');
   trustEl.textContent = tl;
   trustEl.style.color = tl === 'CLEAR' ? 'var(--green)' : tl.indexOf('HUMAN') !== -1 ? 'var(--amber)' : 'var(--red)';
@@ -1042,11 +1007,11 @@ function renderSupplierView() {
       rowsHtml += '<div class="sup-bom-grp">' + item.group + '</div>';
       lastGrp = item.group;
     }
-    var up = 'â'; var ep = 'â';
+    var up = '—'; var ep = '—';
     rowsHtml +=
       '<div class="sup-bom-row">'
       + '<div><div>' + esc(item.label) + '</div>'
-      + '<div class="sup-bom-sku">' + esc(item.s) + ' Â· ' + esc(item.u) + '</div></div>'
+      + '<div class="sup-bom-sku">' + esc(item.s) + ' · ' + esc(item.u) + '</div></div>'
       + '<div style="text-align:right;color:var(--amber);font-weight:bold">' + item.qty + '</div>'
       + '<div style="text-align:right;color:var(--dim);font-size:9px">' + esc(item.u) + '</div>'
       + '<div style="text-align:right;color:var(--text);font-size:10px">' + up + '</div>'
@@ -1056,7 +1021,7 @@ function renderSupplierView() {
   document.getElementById('sup-bom-rows').innerHTML = rowsHtml;
   if (pr && pr.total) {
     document.getElementById('sup-total-val').textContent = '$' + pr.total.toLocaleString();
-    document.getElementById('sup-coverage').textContent = pr.priced_items + '/' + bom.length + ' items priced Â· ' + pr.coverage + '% SKU coverage';
+    document.getElementById('sup-coverage').textContent = pr.priced_items + '/' + bom.length + ' items priced · ' + pr.coverage + '% SKU coverage';
   } else {
     document.getElementById('sup-total-val').textContent = 'Enable pricing';
     document.getElementById('sup-coverage').textContent = 'Tap $ PRICING in main view first';
@@ -1064,13 +1029,13 @@ function renderSupplierView() {
   var styleId = r.styleId || '';
   var vendors = [];
   if (styleId.indexOf('ornamental') === 0) {
-    vendors = [{name:'AmeriFence KC',role:'PANELS Â· POSTS Â· HARDWARE',status:'primary'},{name:'Master Halco KC',role:'ALUMINUM GATES (Princeton line)',status:'alt'}];
+    vendors = [{name:'AmeriFence KC',role:'PANELS · POSTS · HARDWARE',status:'primary'},{name:'Master Halco KC',role:'ALUMINUM GATES (Princeton line)',status:'alt'}];
   } else if (styleId.indexOf('chain_link') === 0) {
-    vendors = [{name:'AmeriFence KC',role:'FABRIC Â· POSTS Â· HARDWARE Â· GATES',status:'primary'}];
+    vendors = [{name:'AmeriFence KC',role:'FABRIC · POSTS · HARDWARE · GATES',status:'primary'}];
   } else if (styleId.indexOf('wood') === 0) {
-    vendors = [{name:'AmeriFence KC',role:'PICKETS Â· POSTS Â· RAILS Â· HARDWARE Â· GATES',status:'primary'}];
+    vendors = [{name:'AmeriFence KC',role:'PICKETS · POSTS · RAILS · HARDWARE · GATES',status:'primary'}];
   } else if (styleId.indexOf('vinyl') === 0) {
-    vendors = [{name:'AmeriFence KC',role:'PANELS Â· POSTS Â· HARDWARE Â· GATES',status:'primary'}];
+    vendors = [{name:'AmeriFence KC',role:'PANELS · POSTS · HARDWARE · GATES',status:'primary'}];
   } else {
     vendors = [{name:'AmeriFence KC',role:'ALL MATERIALS',status:'primary'}];
   }
@@ -1083,7 +1048,7 @@ function renderSupplierView() {
   var gHtml = geoData.map(function(f){return '<div style="background:var(--panel2);border:1px solid var(--border2);padding:8px 10px"><div style="font-size:7px;color:var(--muted);letter-spacing:1px;margin-bottom:3px">'+f[0]+'</div><div style="font-size:14px;font-weight:bold;font-family:var(--sans)">'+f[1]+'</div></div>';}).join('');
   document.getElementById('sup-geo-rows').innerHTML = gHtml;
   document.getElementById('sup-hash-line').innerHTML =
-    'DECISION HASH: ' + r.outHash + '<br>GEO HASH: ' + geo.geoHash + '<br>CALIBRATION: ' + (r.sv && r.sv.cal ? 'AmeriFence ' + r.sv.cal + ' Â· ' + r.sv.calDate : 'UNCALIBRATED') + '<br>RULESET: ' + (r.sv ? r.sv.v : 'â') + ' Â· VENDOR: amerifence_v3.2.0';
+    'DECISION HASH: ' + r.outHash + '<br>GEO HASH: ' + geo.geoHash + '<br>CALIBRATION: ' + (r.sv && r.sv.cal ? 'AmeriFence ' + r.sv.cal + ' · ' + r.sv.calDate : 'UNCALIBRATED') + '<br>RULESET: ' + (r.sv ? r.sv.v : '—') + ' · VENDOR: amerifence_v3.2.0';
   show('s-supplier');
 }
 
@@ -1098,7 +1063,7 @@ function toggleAssistDrawer() {
   } else {
     drawer.classList.add('open');
     fab.classList.add('fab-open');
-    fab.textContent = 'â';
+    fab.textContent = '✕';
     var body = document.getElementById('cb');
     if (body) body.scrollTop = body.scrollHeight;
   }
@@ -1129,20 +1094,20 @@ function updateGraphSummary() {
   var posts = document.getElementById('gp-posts').textContent;
   var secs  = document.getElementById('gp-secs').textContent;
   var summary = '';
-  if (build && build !== 'â' && build !== '0ft') {
-    summary = build + ' Â· ' + posts + ' posts Â· ' + secs + ' sections';
+  if (build && build !== '—' && build !== '0ft') {
+    summary = build + ' · ' + posts + ' posts · ' + secs + ' sections';
   } else {
-    summary = 'Add fence runs below â';
+    summary = 'Add fence runs below ↓';
   }
   document.getElementById('graph-summary').textContent = summary;
 }
 
 
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-// HARDSAW v3.1 â GOVERNED DECISION ENGINE
+// ══════════════════════════════════════════════════════════════════════════════
+// HARDSAW v3.1 — GOVERNED DECISION ENGINE
 // Golden Key: All math is provable and replayable.
-// Golden Rule: Material accuracy 94â98% vs real AmeriFence quotes.
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Golden Rule: Material accuracy 94–98% vs real AmeriFence quotes.
+// ══════════════════════════════════════════════════════════════════════════════
 
 var VERSIONS = {
   coreEngine: 'core_engine_v3.1.0', protocol: 'ufbp_v1.0.0',
@@ -1171,39 +1136,39 @@ var VERSIONS = {
 };
 
 var STYLES = {
-  'wood.privacy.tight_cedar':   {family:'wood',note:'Tight cedar 6ft: 2.50 pickets/lf Â· 3 rails/section Â· 8ft O.C. Â· KAN004247 â',rp:{S:8,pickets_lf:2.50,picket_fn:'round',rails_sec:3,walk_rb:2,drive_rb:3,con_line:1,con_term:1},label:'Wood Privacy â Tight Cedar',skus:{picket:{s:'61563',u:'each',d:'Cedar Picket 5/8"Ã5-1/2"Ã6\''},post:{s:'64489',u:'each',d:'4Ã4Ã8 Green Treated Post'},rail:{s:'62486',u:'each',d:'2Ã4Ã8 Wrc Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Hinge Pair'},latch:{s:'10914',u:'each',d:'Gate Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod 48"'},bracket_line:{s:'8BFLINE00',u:'each',d:'Afs Beta Blk Line Bracket'},bracket_univ:{s:'8BB102IWI',u:'each',d:'Blk Universal Bracket'},cant_roller:{s:'10957',u:'each',d:'Cantilever Roller 4"x2-1/2" Nylon'},cant_cover:{s:'10957-CV',u:'each',d:'Cantilever Roller Cover'},cant_latch:{s:'10969',u:'each',d:'Cantilever Receiver/Latch'},cant_gate:{s:'CANT-GATE',u:'each',d:'Cantilever Gate Assembly'},wg:{s:'63978',u:'each',d:'Walk Gate Cedar'},dg:{s:'63979',u:'each',d:'Drive Gate Cedar'}}},
-  'wood.privacy.spaced_picket': {family:'wood',note:'Spaced picket: ceil(lfÃ1.601) Â· 61566 5.5in actual Â· 2 rails/section Â· KAN004304 â Â· AFC Move3 recal 2026-05-31',rp:{S:8,pickets_lf:1.601,picket_fn:'ceil',rails_sec:2,walk_rb:3,drive_rb:6,con_line:1,con_term:1},cal:'AFC_BOM_SPACED_M3',calDate:'2026-05-31',label:'Wood Privacy â Spaced Picket',skus:{picket:{s:'61566',u:'each',d:'1Ã5-1/2Ã6 WRC Graham De Picket (spaced)'},post:{s:'63960',u:'each',d:'3-1/2Ã3-1/2Ã6 Treated Post'},rail8:{s:'62486',u:'each',d:'2Ã4Ã8 Wrc Rail'},rail10:{s:'62487',u:'each',d:'2Ã4Ã10 Wrc Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Hinge Pair'},latch:{s:'10914',u:'each',d:'Gate Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod 48"'},cant_roller:{s:'10957',u:'each',d:'Cantilever Roller 4"x2-1/2" Nylon'},cant_cover:{s:'10957-CV',u:'each',d:'Cantilever Roller Cover'},cant_latch:{s:'10969',u:'each',d:'Cantilever Receiver/Latch'},cant_gate:{s:'CANT-GATE',u:'each',d:'Cantilever Gate Assembly'},wg:{s:'63978',u:'each',d:'Walk Gate Spaced'},dg:{s:'63979',u:'each',d:'Drive Gate Spaced'}}},
-  'wood.privacy.solid_board':   {family:'wood',note:'Solid board 6ft: 2.28 boards/lf (61563 De Sugi 5/8x5.5x6) Â· 3 rails/section Â· 8ft O.C. Â· cal:AFC_BOM_SOLID_272LF_M13',rp:{S:8,pickets_lf:2.28,picket_fn:'ceil',rails_sec:3,walk_rb:2,drive_rb:3,con_line:1,con_term:1},cal:'AFC_BOM_SOLID_272LF_M13',calDate:'2026-06-02',label:'Wood Privacy â Solid Board',skus:{picket:{s:'61563',u:'each',d:'5/8Ã5-1/2Ã6 De Sugi Japanese Cedar Picket'},post:{s:'64489',u:'each',d:'4Ã4Ã8 Green Treated Post'},rail8:{s:'62486',u:'each',d:'2Ã4Ã8 Wrc Rail'},rail10:{s:'62487',u:'each',d:'2Ã4Ã10 Wrc Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Strap Hinge Pair'},latch:{s:'10914',u:'each',d:'Wood Gate Paddle Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod 48" Blk'},cant_roller:{s:'10957',u:'each',d:'Cantilever Roller 4"x2-1/2" Nylon'},cant_cover:{s:'10957-CV',u:'each',d:'Cantilever Roller Cover'},cant_latch:{s:'10969',u:'each',d:'Cantilever Receiver/Latch'},cant_gate:{s:'CANT-GATE',u:'each',d:'Cantilever Gate Assembly'},wg:{s:'63978',u:'each',d:'Walk Gate Solid'},dg:{s:'63979',u:'each',d:'Drive Gate Solid'}}},
-  'wood.shadowbox.standard':    {family:'wood',note:'Shadowbox 6ft: 3.52 boards/lf (61563 De Sugi 5/8x5.5x6 staggered both faces) Â· 3 rails/section Â· 8ft O.C. Â· cal:AFC_BOM_SHADOW_213LF_M13',rp:{S:8,pickets_lf:3.52,picket_fn:'ceil',rails_sec:3,walk_rb:2,drive_rb:3,con_line:1,con_term:1},cal:'AFC_BOM_SHADOW_213LF_M13',calDate:'2026-06-02',label:'Wood Shadowbox',skus:{picket:{s:'61563',u:'each',d:'5/8Ã5-1/2Ã6 De Sugi Japanese Cedar Picket'},post:{s:'64489',u:'each',d:'4Ã4Ã8 Green Treated Post'},rail8:{s:'62486',u:'each',d:'2Ã4Ã8 Wrc Rail'},rail10:{s:'62487',u:'each',d:'2Ã4Ã10 Wrc Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Strap Hinge Pair'},latch:{s:'10914',u:'each',d:'Wood Gate Paddle Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod 48" Blk'},cant_roller:{s:'10957',u:'each',d:'Cantilever Roller 4"x2-1/2" Nylon'},cant_cover:{s:'10957-CV',u:'each',d:'Cantilever Roller Cover'},cant_latch:{s:'10969',u:'each',d:'Cantilever Receiver/Latch'},cant_gate:{s:'CANT-GATE',u:'each',d:'Cantilever Gate Assembly'},wg:{s:'63978',u:'each',d:'Walk Gate Shadow'},dg:{s:'63979',u:'each',d:'Drive Gate Shadow'}}},
-  'chain_link.residential.galvanized': {family:'chain_link',note:'Residential galvanized: 10ft max Â· 50ft rolls Â· F567 fitting counts Â· Hoover doctrine Â· 1bag/post AFC calibrated',rp:{S:10,fab_roll:50,rail_stick:21,con_line:1,con_term:1,bands_end:3,bands_corner:6,bands_gate:3,bands_formula:'height_minus1_min3',tie_per_lp:3,top_rail_ties:5,post_term_length:'height_plus36in',post_line_length:'height_plus30in',footing_formula:'F567'},cal:'DOCTRINE_HOOVER_F567',calDate:'2026-05-31',label:'Chain Link Res. Galvanized',skus:{tp:{s:'AF-TP-6-237',u:'each',d:'Terminal Post 2-1/2" Galv'},lp:{s:'AF-LP-6-162',u:'each',d:'Line Post 1-5/8" Galv'},fab:{s:'AF-FAB-6-50',u:'roll',d:'Fabric 50ft Roll Galv'},rail:{s:'AF-TR-21',u:'each',d:'Top Rail 21ft'},tw:{s:'AF-TW-100',u:'roll',d:'Tension Wire 100ft'},tie:{s:'AF-TIE-250',u:'bag',d:'Tie Wire Bag'},tb:{s:'10406',u:'each',d:'Tension Band 2-1/2"'},eb:{s:'10456',u:'each',d:'End Band 2-1/2"'},re:{s:'10703',u:'each',d:'Rail End 1-3/8" Alum Offset'},tb4:{s:'11003',u:'each',d:'Tension Bar 4ftÃ3/16"Ã5/8"'},tb6:{s:'11015',u:'each',d:'Tension Bar 6ftÃ3/16"Ã3/4"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},cb:{s:'11170',u:'each',d:'Carriage Bolt 5/16"Ã1-1/4"'},cant_roller:{s:'10957',u:'each',d:'Cantilever Roller 4"x2-1/2" Nylon'},cant_cover:{s:'10957-CV',u:'each',d:'Cantilever Roller Cover'},cant_latch:{s:'10969',u:'each',d:'Cantilever Receiver/Latch'},cant_gate:{s:'CANT-GATE',u:'each',d:'Cantilever Gate Assembly'},wg:{s:'AF-WG-4',u:'each',d:'Walk Gate'},dg:{s:'AF-DG-12',u:'each',d:'Drive Gate'}}},
-  'chain_link.residential.black': {family:'chain_link',note:'Residential black vinyl: 10ft max Â· 50ft rolls Â· F567 fitting counts Â· Hoover doctrine Â· 1bag/post AFC calibrated',rp:{S:10,fab_roll:50,rail_stick:21,con_line:1,con_term:1,bands_end:3,bands_corner:6,bands_gate:3,bands_formula:'height_minus1_min3',tie_per_lp:3,top_rail_ties:5,post_term_length:'height_plus36in',post_line_length:'height_plus30in',footing_formula:'F567'},cal:'DOCTRINE_HOOVER_F567',calDate:'2026-05-30',label:'Chain Link Res. Black',skus:{tp:{s:'AF-TP-6-BK',u:'each',d:'Terminal Post Black'},lp:{s:'AF-LP-6-BK',u:'each',d:'Line Post Black'},fab:{s:'AF-FAB-6-BK-50',u:'roll',d:'Fabric Black 50ft'},rail:{s:'AF-TR-21-BK',u:'each',d:'Top Rail Black 21ft'},tw:{s:'AF-TW-BK',u:'roll',d:'Tension Wire Black'},tie:{s:'AF-TIE-BK',u:'bag',d:'Tie Wire Black'},tb:{s:'10406-BK',u:'each',d:'Tension Band Black'},re:{s:'10703-BK',u:'each',d:'Rail End Black'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},cb:{s:'11170B',u:'each',d:'Carriage Bolt 5/16"Ã1-1/4" Black'},cant_roller:{s:'10957',u:'each',d:'Cantilever Roller 4"x2-1/2" Nylon'},cant_cover:{s:'10957-CV',u:'each',d:'Cantilever Roller Cover'},cant_latch:{s:'10969',u:'each',d:'Cantilever Receiver/Latch'},cant_gate:{s:'CANT-GATE',u:'each',d:'Cantilever Gate Assembly'},wg:{s:'AF-WG-4-BK',u:'each',d:'Walk Gate Black'},dg:{s:'AF-DG-12-BK',u:'each',d:'Drive Gate Black'}}},
-  'chain_link.commercial.galvanized': {family:'chain_link',note:'Commercial galvanized 9ga 2" mesh Â· Hoover HF40 kit BOM 6ftÃ500ft Â· 12ft O.C. Â· 2-1/2" terminal Â· 2" line Â· 3" gate Â· 4" cantilever Â· cal:HOOVER_COM_CL_6FT_500FT',cal:'HOOVER_COM_CL_6FT_500FT',calDate:'2026-06-01',rp:{S:12,fab_roll:50,rail_stick:21,con_line:1,con_term:2,fab_gauge:'9ga',mesh:'2in'},label:'Chain Link Comm. Galv',skus:{tp:{s:'CL-COM-TP-212',u:'each',d:'Terminal Post 2-1/2" OD x 8\'6" HF40 Galv'},lp:{s:'CL-COM-LP-2',u:'each',d:'Line Post 2" OD x 8\' HF40 Galv'},fab:{s:'CL-COM-FAB-6-9GA',u:'roll',d:'Fabric 6ft 9ga 2" Mesh Galv 50ft Roll'},rail:{s:'CL-COM-TR-158-21',u:'each',d:'Top Rail 1-5/8" x 21ft HF40'},tw:{s:'CL-COM-TW-7GA',u:'roll',d:'Tension Wire 7ga 1000ft'},tie:{s:'CL-COM-TIE-158',u:'bag',d:'Tie Wire Alum Pigtail 1-5/8"'},tb:{s:'CL-COM-TB-212',u:'each',d:'Tension Band 2-1/2"'},eb:{s:'CL-COM-EB-212',u:'each',d:'End Band 2-1/2"'},tb6:{s:'CL-COM-TBAR-6FT',u:'each',d:'Tension Bar 6ft'},tb4:{s:'CL-COM-TBAR-4FT',u:'each',d:'Tension Bar 4ft'},re:{s:'CL-COM-RE-158',u:'each',d:'Rail End Cup 1-5/8"'},cap:{s:'CL-COM-CAP-212',u:'each',d:'Post Cap 2-1/2"'},hr:{s:'CL-COM-HR-9GA',u:'each',d:'Hog Ring 9ga'},cb:{s:'CL-COM-CB-516',u:'each',d:'Carriage Bolt 5/16"x1-1/4"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},cant_roller:{s:'10957',u:'each',d:'Cantilever Roller 4"x2-1/2" Nylon'},cant_cover:{s:'10957-CV',u:'each',d:'Cantilever Roller Cover'},cant_latch:{s:'10969',u:'each',d:'Cantilever Receiver/Latch'},cant_gate:{s:'CANT-GATE',u:'each',d:'Cantilever Gate Assembly'},wg:{s:'CL-COM-WG',u:'each',d:'Walk Gate Commercial'},dg:{s:'CL-COM-DG',u:'each',d:'Drive Gate Commercial'}}},
-  'chain_link.commercial.black': {family:'chain_link',note:'Commercial black 9ga 2" mesh Â· Hoover HF40 kit BOM 6ftÃ500ft Â· 12ft O.C. Â· 2-1/2" terminal Â· 2" line Â· 3" gate Â· 4" cantilever Â· cal:HOOVER_COM_CL_6FT_500FT',cal:'HOOVER_COM_CL_6FT_500FT',calDate:'2026-06-01',rp:{S:12,fab_roll:50,rail_stick:21,con_line:1,con_term:2,fab_gauge:'9ga',mesh:'2in'},label:'Chain Link Comm. Black',skus:{tp:{s:'CL-COM-TP-212-BK',u:'each',d:'Terminal Post 2-1/2in OD x 8ft6in HF40 Black'},lp:{s:'CL-COM-LP-2-BK',u:'each',d:'Line Post 2in OD x 8ft HF40 Black'},fab:{s:'CL-COM-FAB-6-9GA-BK',u:'roll',d:'Fabric 6ft 9ga 2" Mesh Black 50ft Roll'},rail:{s:'CL-COM-TR-158-21-BK',u:'each',d:'Top Rail 1-5/8" x 21ft HF40 Black'},tw:{s:'CL-COM-TW-7GA-BK',u:'roll',d:'Tension Wire 7ga 1000ft Black'},tie:{s:'CL-COM-TIE-158-BK',u:'bag',d:'Tie Wire Alum Pigtail 1-5/8" Black'},tb:{s:'CL-COM-TB-212-BK',u:'each',d:'Tension Band 2-1/2" Black'},eb:{s:'CL-COM-EB-212-BK',u:'each',d:'End Band 2-1/2" Black'},tb6:{s:'CL-COM-TBAR-6FT-BK',u:'each',d:'Tension Bar 6ft Black'},tb4:{s:'CL-COM-TBAR-4FT-BK',u:'each',d:'Tension Bar 4ft Black'},re:{s:'CL-COM-RE-158-BK',u:'each',d:'Rail End Cup 1-5/8" Black'},cap:{s:'CL-COM-CAP-212-BK',u:'each',d:'Post Cap 2-1/2" Black'},hr:{s:'CL-COM-HR-9GA-BK',u:'each',d:'Hog Ring 9ga Black'},cb:{s:'11170B',u:'each',d:'Carriage Bolt 5/16"x1-1/4" Black'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},cant_roller:{s:'10957',u:'each',d:'Cantilever Roller 4"x2-1/2" Nylon'},cant_cover:{s:'10957-CV',u:'each',d:'Cantilever Roller Cover'},cant_latch:{s:'10969',u:'each',d:'Cantilever Receiver/Latch'},cant_gate:{s:'CANT-GATE',u:'each',d:'Cantilever Gate Assembly'},wg:{s:'CL-COM-WG-BK',u:'each',d:'Walk Gate Commercial Black'},dg:{s:'CL-COM-DG-BK',u:'each',d:'Drive Gate Commercial Black'}}},
+  'wood.privacy.tight_cedar':   {family:'wood',note:'Tight cedar 6ft: 2.50 pickets/lf · 3 rails/section · 8ft O.C. · KAN004247 ✓',rp:{S:8,pickets_lf:2.50,picket_fn:'round',rails_sec:3,walk_rb:2,drive_rb:3,con_line:1,con_term:1},label:'Wood Privacy — Tight Cedar',skus:{picket:{s:'61563',u:'each',d:'Cedar Picket 5/8"×5-1/2"×6\''},post:{s:'64489',u:'each',d:'4×4×8 Green Treated Post'},rail:{s:'62486',u:'each',d:'2×4×8 Wrc Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Hinge Pair'},latch:{s:'10914',u:'each',d:'Gate Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod 48"'},bracket_line:{s:'8BFLINE00',u:'each',d:'Afs Beta Blk Line Bracket'},bracket_univ:{s:'8BB102IWI',u:'each',d:'Blk Universal Bracket'},cant_roller:{s:'10957',u:'each',d:'Cantilever Roller 4"x2-1/2" Nylon'},cant_cover:{s:'10957-CV',u:'each',d:'Cantilever Roller Cover'},cant_latch:{s:'10969',u:'each',d:'Cantilever Receiver/Latch'},cant_gate:{s:'CANT-GATE',u:'each',d:'Cantilever Gate Assembly'},wg:{s:'63978',u:'each',d:'Walk Gate Cedar'},dg:{s:'63979',u:'each',d:'Drive Gate Cedar'}}},
+  'wood.privacy.spaced_picket': {family:'wood',note:'Spaced picket: ceil(lf×1.601) · 61566 5.5in actual · 2 rails/section · KAN004304 ✓ · AFC Move3 recal 2026-05-31',rp:{S:8,pickets_lf:1.601,picket_fn:'ceil',rails_sec:2,walk_rb:3,drive_rb:6,con_line:1,con_term:1},cal:'AFC_BOM_SPACED_M3',calDate:'2026-05-31',label:'Wood Privacy — Spaced Picket',skus:{picket:{s:'61566',u:'each',d:'1×5-1/2×6 WRC Graham De Picket (spaced)'},post:{s:'63960',u:'each',d:'3-1/2×3-1/2×6 Treated Post'},rail8:{s:'62486',u:'each',d:'2×4×8 Wrc Rail'},rail10:{s:'62487',u:'each',d:'2×4×10 Wrc Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Hinge Pair'},latch:{s:'10914',u:'each',d:'Gate Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod 48"'},cant_roller:{s:'10957',u:'each',d:'Cantilever Roller 4"x2-1/2" Nylon'},cant_cover:{s:'10957-CV',u:'each',d:'Cantilever Roller Cover'},cant_latch:{s:'10969',u:'each',d:'Cantilever Receiver/Latch'},cant_gate:{s:'CANT-GATE',u:'each',d:'Cantilever Gate Assembly'},wg:{s:'63978',u:'each',d:'Walk Gate Spaced'},dg:{s:'63979',u:'each',d:'Drive Gate Spaced'}}},
+  'wood.privacy.solid_board':   {family:'wood',note:'Solid board 6ft: 2.28 boards/lf (61563 De Sugi 5/8x5.5x6) · 3 rails/section · 8ft O.C. · cal:AFC_BOM_SOLID_272LF_M13',rp:{S:8,pickets_lf:2.28,picket_fn:'ceil',rails_sec:3,walk_rb:2,drive_rb:3,con_line:1,con_term:1},cal:'AFC_BOM_SOLID_272LF_M13',calDate:'2026-06-02',label:'Wood Privacy — Solid Board',skus:{picket:{s:'61563',u:'each',d:'5/8×5-1/2×6 De Sugi Japanese Cedar Picket'},post:{s:'64489',u:'each',d:'4×4×8 Green Treated Post'},rail8:{s:'62486',u:'each',d:'2×4×8 Wrc Rail'},rail10:{s:'62487',u:'each',d:'2×4×10 Wrc Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Strap Hinge Pair'},latch:{s:'10914',u:'each',d:'Wood Gate Paddle Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod 48" Blk'},cant_roller:{s:'10957',u:'each',d:'Cantilever Roller 4"x2-1/2" Nylon'},cant_cover:{s:'10957-CV',u:'each',d:'Cantilever Roller Cover'},cant_latch:{s:'10969',u:'each',d:'Cantilever Receiver/Latch'},cant_gate:{s:'CANT-GATE',u:'each',d:'Cantilever Gate Assembly'},wg:{s:'63978',u:'each',d:'Walk Gate Solid'},dg:{s:'63979',u:'each',d:'Drive Gate Solid'}}},
+  'wood.shadowbox.standard':    {family:'wood',note:'Shadowbox 6ft: 3.52 boards/lf (61563 De Sugi 5/8x5.5x6 staggered both faces) · 3 rails/section · 8ft O.C. · cal:AFC_BOM_SHADOW_213LF_M13',rp:{S:8,pickets_lf:3.52,picket_fn:'ceil',rails_sec:3,walk_rb:2,drive_rb:3,con_line:1,con_term:1},cal:'AFC_BOM_SHADOW_213LF_M13',calDate:'2026-06-02',label:'Wood Shadowbox',skus:{picket:{s:'61563',u:'each',d:'5/8×5-1/2×6 De Sugi Japanese Cedar Picket'},post:{s:'64489',u:'each',d:'4×4×8 Green Treated Post'},rail8:{s:'62486',u:'each',d:'2×4×8 Wrc Rail'},rail10:{s:'62487',u:'each',d:'2×4×10 Wrc Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Strap Hinge Pair'},latch:{s:'10914',u:'each',d:'Wood Gate Paddle Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod 48" Blk'},cant_roller:{s:'10957',u:'each',d:'Cantilever Roller 4"x2-1/2" Nylon'},cant_cover:{s:'10957-CV',u:'each',d:'Cantilever Roller Cover'},cant_latch:{s:'10969',u:'each',d:'Cantilever Receiver/Latch'},cant_gate:{s:'CANT-GATE',u:'each',d:'Cantilever Gate Assembly'},wg:{s:'63978',u:'each',d:'Walk Gate Shadow'},dg:{s:'63979',u:'each',d:'Drive Gate Shadow'}}},
+  'chain_link.residential.galvanized': {family:'chain_link',note:'Residential galvanized: 10ft max · 50ft rolls · F567 fitting counts · Hoover doctrine · 1bag/post AFC calibrated',rp:{S:10,fab_roll:50,rail_stick:21,con_line:1,con_term:1,bands_end:3,bands_corner:6,bands_gate:3,bands_formula:'height_minus1_min3',tie_per_lp:3,top_rail_ties:5,post_term_length:'height_plus36in',post_line_length:'height_plus30in',footing_formula:'F567'},cal:'DOCTRINE_HOOVER_F567',calDate:'2026-05-31',label:'Chain Link Res. Galvanized',skus:{tp:{s:'AF-TP-6-237',u:'each',d:'Terminal Post 2-1/2" Galv'},lp:{s:'AF-LP-6-162',u:'each',d:'Line Post 1-5/8" Galv'},fab:{s:'AF-FAB-6-50',u:'roll',d:'Fabric 50ft Roll Galv'},rail:{s:'AF-TR-21',u:'each',d:'Top Rail 21ft'},tw:{s:'AF-TW-100',u:'roll',d:'Tension Wire 100ft'},tie:{s:'AF-TIE-250',u:'bag',d:'Tie Wire Bag'},tb:{s:'10406',u:'each',d:'Tension Band 2-1/2"'},eb:{s:'10456',u:'each',d:'End Band 2-1/2"'},re:{s:'10703',u:'each',d:'Rail End 1-3/8" Alum Offset'},tb4:{s:'11003',u:'each',d:'Tension Bar 4ft×3/16"×5/8"'},tb6:{s:'11015',u:'each',d:'Tension Bar 6ft×3/16"×3/4"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},cb:{s:'11170',u:'each',d:'Carriage Bolt 5/16"×1-1/4"'},cant_roller:{s:'10957',u:'each',d:'Cantilever Roller 4"x2-1/2" Nylon'},cant_cover:{s:'10957-CV',u:'each',d:'Cantilever Roller Cover'},cant_latch:{s:'10969',u:'each',d:'Cantilever Receiver/Latch'},cant_gate:{s:'CANT-GATE',u:'each',d:'Cantilever Gate Assembly'},wg:{s:'AF-WG-4',u:'each',d:'Walk Gate'},dg:{s:'AF-DG-12',u:'each',d:'Drive Gate'}}},
+  'chain_link.residential.black': {family:'chain_link',note:'Residential black vinyl: 10ft max · 50ft rolls · F567 fitting counts · Hoover doctrine · 1bag/post AFC calibrated',rp:{S:10,fab_roll:50,rail_stick:21,con_line:1,con_term:1,bands_end:3,bands_corner:6,bands_gate:3,bands_formula:'height_minus1_min3',tie_per_lp:3,top_rail_ties:5,post_term_length:'height_plus36in',post_line_length:'height_plus30in',footing_formula:'F567'},cal:'DOCTRINE_HOOVER_F567',calDate:'2026-05-30',label:'Chain Link Res. Black',skus:{tp:{s:'AF-TP-6-BK',u:'each',d:'Terminal Post Black'},lp:{s:'AF-LP-6-BK',u:'each',d:'Line Post Black'},fab:{s:'AF-FAB-6-BK-50',u:'roll',d:'Fabric Black 50ft'},rail:{s:'AF-TR-21-BK',u:'each',d:'Top Rail Black 21ft'},tw:{s:'AF-TW-BK',u:'roll',d:'Tension Wire Black'},tie:{s:'AF-TIE-BK',u:'bag',d:'Tie Wire Black'},tb:{s:'10406-BK',u:'each',d:'Tension Band Black'},re:{s:'10703-BK',u:'each',d:'Rail End Black'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},cb:{s:'11170B',u:'each',d:'Carriage Bolt 5/16"×1-1/4" Black'},cant_roller:{s:'10957',u:'each',d:'Cantilever Roller 4"x2-1/2" Nylon'},cant_cover:{s:'10957-CV',u:'each',d:'Cantilever Roller Cover'},cant_latch:{s:'10969',u:'each',d:'Cantilever Receiver/Latch'},cant_gate:{s:'CANT-GATE',u:'each',d:'Cantilever Gate Assembly'},wg:{s:'AF-WG-4-BK',u:'each',d:'Walk Gate Black'},dg:{s:'AF-DG-12-BK',u:'each',d:'Drive Gate Black'}}},
+  'chain_link.commercial.galvanized': {family:'chain_link',note:'Commercial galvanized 9ga 2" mesh · Hoover HF40 kit BOM 6ft×500ft · 12ft O.C. · 2-1/2" terminal · 2" line · 3" gate · 4" cantilever · cal:HOOVER_COM_CL_6FT_500FT',cal:'HOOVER_COM_CL_6FT_500FT',calDate:'2026-06-01',rp:{S:12,fab_roll:50,rail_stick:21,con_line:1,con_term:2,fab_gauge:'9ga',mesh:'2in'},label:'Chain Link Comm. Galv',skus:{tp:{s:'CL-COM-TP-212',u:'each',d:'Terminal Post 2-1/2" OD x 8\'6" HF40 Galv'},lp:{s:'CL-COM-LP-2',u:'each',d:'Line Post 2" OD x 8\' HF40 Galv'},fab:{s:'CL-COM-FAB-6-9GA',u:'roll',d:'Fabric 6ft 9ga 2" Mesh Galv 50ft Roll'},rail:{s:'CL-COM-TR-158-21',u:'each',d:'Top Rail 1-5/8" x 21ft HF40'},tw:{s:'CL-COM-TW-7GA',u:'roll',d:'Tension Wire 7ga 1000ft'},tie:{s:'CL-COM-TIE-158',u:'bag',d:'Tie Wire Alum Pigtail 1-5/8"'},tb:{s:'CL-COM-TB-212',u:'each',d:'Tension Band 2-1/2"'},eb:{s:'CL-COM-EB-212',u:'each',d:'End Band 2-1/2"'},tb6:{s:'CL-COM-TBAR-6FT',u:'each',d:'Tension Bar 6ft'},tb4:{s:'CL-COM-TBAR-4FT',u:'each',d:'Tension Bar 4ft'},re:{s:'CL-COM-RE-158',u:'each',d:'Rail End Cup 1-5/8"'},cap:{s:'CL-COM-CAP-212',u:'each',d:'Post Cap 2-1/2"'},hr:{s:'CL-COM-HR-9GA',u:'each',d:'Hog Ring 9ga'},cb:{s:'CL-COM-CB-516',u:'each',d:'Carriage Bolt 5/16"x1-1/4"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},cant_roller:{s:'10957',u:'each',d:'Cantilever Roller 4"x2-1/2" Nylon'},cant_cover:{s:'10957-CV',u:'each',d:'Cantilever Roller Cover'},cant_latch:{s:'10969',u:'each',d:'Cantilever Receiver/Latch'},cant_gate:{s:'CANT-GATE',u:'each',d:'Cantilever Gate Assembly'},wg:{s:'CL-COM-WG',u:'each',d:'Walk Gate Commercial'},dg:{s:'CL-COM-DG',u:'each',d:'Drive Gate Commercial'}}},
+  'chain_link.commercial.black': {family:'chain_link',note:'Commercial black 9ga 2" mesh · Hoover HF40 kit BOM 6ft×500ft · 12ft O.C. · 2-1/2" terminal · 2" line · 3" gate · 4" cantilever · cal:HOOVER_COM_CL_6FT_500FT',cal:'HOOVER_COM_CL_6FT_500FT',calDate:'2026-06-01',rp:{S:12,fab_roll:50,rail_stick:21,con_line:1,con_term:2,fab_gauge:'9ga',mesh:'2in'},label:'Chain Link Comm. Black',skus:{tp:{s:'CL-COM-TP-212-BK',u:'each',d:'Terminal Post 2-1/2in OD x 8ft6in HF40 Black'},lp:{s:'CL-COM-LP-2-BK',u:'each',d:'Line Post 2in OD x 8ft HF40 Black'},fab:{s:'CL-COM-FAB-6-9GA-BK',u:'roll',d:'Fabric 6ft 9ga 2" Mesh Black 50ft Roll'},rail:{s:'CL-COM-TR-158-21-BK',u:'each',d:'Top Rail 1-5/8" x 21ft HF40 Black'},tw:{s:'CL-COM-TW-7GA-BK',u:'roll',d:'Tension Wire 7ga 1000ft Black'},tie:{s:'CL-COM-TIE-158-BK',u:'bag',d:'Tie Wire Alum Pigtail 1-5/8" Black'},tb:{s:'CL-COM-TB-212-BK',u:'each',d:'Tension Band 2-1/2" Black'},eb:{s:'CL-COM-EB-212-BK',u:'each',d:'End Band 2-1/2" Black'},tb6:{s:'CL-COM-TBAR-6FT-BK',u:'each',d:'Tension Bar 6ft Black'},tb4:{s:'CL-COM-TBAR-4FT-BK',u:'each',d:'Tension Bar 4ft Black'},re:{s:'CL-COM-RE-158-BK',u:'each',d:'Rail End Cup 1-5/8" Black'},cap:{s:'CL-COM-CAP-212-BK',u:'each',d:'Post Cap 2-1/2" Black'},hr:{s:'CL-COM-HR-9GA-BK',u:'each',d:'Hog Ring 9ga Black'},cb:{s:'11170B',u:'each',d:'Carriage Bolt 5/16"x1-1/4" Black'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},cant_roller:{s:'10957',u:'each',d:'Cantilever Roller 4"x2-1/2" Nylon'},cant_cover:{s:'10957-CV',u:'each',d:'Cantilever Roller Cover'},cant_latch:{s:'10969',u:'each',d:'Cantilever Receiver/Latch'},cant_gate:{s:'CANT-GATE',u:'each',d:'Cantilever Gate Assembly'},wg:{s:'CL-COM-WG-BK',u:'each',d:'Walk Gate Commercial Black'},dg:{s:'CL-COM-DG-BK',u:'each',d:'Drive Gate Commercial Black'}}},
   'ornamental.steel.flat_top_3rail': {
     family:'ornamental',
     label:'Ornamental Steel Flat Top 3-Rail (DM)',
-    note:'Steel DM series Â· 8ft bays Â· integrated brackets Â· S:8 Â· KAN004434 â',
+    note:'Steel DM series · 8ft bays · integrated brackets · S:8 · KAN004434 ✓',
     rp:{S:8, panel_w:8, con_line:1, con_term:2, bracket_system:'integrated', height_keyed:true},
     skus:{
       panel:{
-        4:{s:'8W14X83FT',u:'each',d:'DM Blk Flat Top 3-Rail Panel 4ftÃ8ft'},
-        5:{s:'8W15X83FT',u:'each',d:'DM Blk Flat Top 3-Rail Panel 5ftÃ8ft'},
-        6:{s:'8W16X83FT',u:'each',d:'DM Blk Flat Top 3-Rail Panel 6ftÃ8ft'},
+        4:{s:'8W14X83FT',u:'each',d:'DM Blk Flat Top 3-Rail Panel 4ft×8ft'},
+        5:{s:'8W15X83FT',u:'each',d:'DM Blk Flat Top 3-Rail Panel 5ft×8ft'},
+        6:{s:'8W16X83FT',u:'each',d:'DM Blk Flat Top 3-Rail Panel 6ft×8ft'},
       },
       post:{
-        4:{s:'8W12P69',u:'each',d:'Blk Sq Post 2"Ã16GaÃ69in (4ft fence)'},
-        5:{s:'8W12P81',u:'each',d:'Blk Sq Post 2"Ã16GaÃ81in (5ft fence)'},
-        6:{s:'8W12P93',u:'each',d:'Blk Sq Post 2"Ã16GaÃ93in (6ft fence)'},
+        4:{s:'8W12P69',u:'each',d:'Blk Sq Post 2"×16Ga×69in (4ft fence)'},
+        5:{s:'8W12P81',u:'each',d:'Blk Sq Post 2"×16Ga×81in (5ft fence)'},
+        6:{s:'8W12P93',u:'each',d:'Blk Sq Post 2"×16Ga×93in (6ft fence)'},
       },
       wg:{
-        4:{s:'DM4X4BLKFT',u:'each',d:'DM Gate 4WÃ4H Single Swing Black'},
-        5:{s:'DM5X4BLKFT',u:'each',d:'DM Gate 5WÃ4H Single Swing Black'},
-        6:{s:'DM4X6BLKFT',u:'each',d:'DM Gate 4WÃ6H Single Swing Black'},
+        4:{s:'DM4X4BLKFT',u:'each',d:'DM Gate 4W×4H Single Swing Black'},
+        5:{s:'DM5X4BLKFT',u:'each',d:'DM Gate 5W×4H Single Swing Black'},
+        6:{s:'DM4X6BLKFT',u:'each',d:'DM Gate 4W×6H Single Swing Black'},
       },
       dg:{
-        4:{s:'DM5X4BLKFT',u:'each',d:'DM Drive Gate 5WÃ4H Black'},
-        5:{s:'DM6X4BLKFT',u:'each',d:'DM Drive Gate 6WÃ4H Black'},
-        6:{s:'DM4X6BLKFT',u:'each',d:'DM Drive Gate 4WÃ6H Black'},
+        4:{s:'DM5X4BLKFT',u:'each',d:'DM Drive Gate 5W×4H Black'},
+        5:{s:'DM6X4BLKFT',u:'each',d:'DM Drive Gate 6W×4H Black'},
+        6:{s:'DM4X6BLKFT',u:'each',d:'DM Drive Gate 4W×6H Black'},
       },
       bracket_line:{s:'8BFLINE00',u:'each',d:'Afs/Beta Blk Line Bracket'},
       bracket_univ:{s:'8BB102IWI',u:'each',d:'Blk Universal Bracket'},
@@ -1220,28 +1185,28 @@ var STYLES = {
   'ornamental.steel.spear_top_3rail': {
     family:'ornamental',
     label:'Ornamental Steel Spear Top 3-Rail (DM)',
-    note:'Steel DM spear top Â· 8ft bays Â· integrated brackets Â· S:8 Â· uncalibrated',
+    note:'Steel DM spear top · 8ft bays · integrated brackets · S:8 · uncalibrated',
     rp:{S:8, panel_w:8, con_line:1, con_term:2, bracket_system:'integrated', height_keyed:true},
     skus:{
       panel:{
-        4:{s:'8W14X83SP',u:'each',d:'DM Blk Spear Top 3-Rail Panel 4ftÃ8ft'},
-        5:{s:'8W15X83SP',u:'each',d:'DM Blk Spear Top 3-Rail Panel 5ftÃ8ft'},
-        6:{s:'8W16X83SP',u:'each',d:'DM Blk Spear Top 3-Rail Panel 6ftÃ8ft'},
+        4:{s:'8W14X83SP',u:'each',d:'DM Blk Spear Top 3-Rail Panel 4ft×8ft'},
+        5:{s:'8W15X83SP',u:'each',d:'DM Blk Spear Top 3-Rail Panel 5ft×8ft'},
+        6:{s:'8W16X83SP',u:'each',d:'DM Blk Spear Top 3-Rail Panel 6ft×8ft'},
       },
       post:{
-        4:{s:'8W12P69',u:'each',d:'Blk Sq Post 2"Ã16GaÃ69in (4ft fence)'},
-        5:{s:'8W12P81',u:'each',d:'Blk Sq Post 2"Ã16GaÃ81in (5ft fence)'},
-        6:{s:'8W12P93',u:'each',d:'Blk Sq Post 2"Ã16GaÃ93in (6ft fence)'},
+        4:{s:'8W12P69',u:'each',d:'Blk Sq Post 2"×16Ga×69in (4ft fence)'},
+        5:{s:'8W12P81',u:'each',d:'Blk Sq Post 2"×16Ga×81in (5ft fence)'},
+        6:{s:'8W12P93',u:'each',d:'Blk Sq Post 2"×16Ga×93in (6ft fence)'},
       },
       wg:{
-        4:{s:'DM4X4BLKFT',u:'each',d:'DM Gate 4WÃ4H Single Swing Black'},
-        5:{s:'DM5X4BLKFT',u:'each',d:'DM Gate 5WÃ4H Single Swing Black'},
-        6:{s:'DM4X6BLKFT',u:'each',d:'DM Gate 4WÃ6H Single Swing Black'},
+        4:{s:'DM4X4BLKFT',u:'each',d:'DM Gate 4W×4H Single Swing Black'},
+        5:{s:'DM5X4BLKFT',u:'each',d:'DM Gate 5W×4H Single Swing Black'},
+        6:{s:'DM4X6BLKFT',u:'each',d:'DM Gate 4W×6H Single Swing Black'},
       },
       dg:{
-        4:{s:'DM5X4BLKFT',u:'each',d:'DM Drive Gate 5WÃ4H Black'},
-        5:{s:'DM6X4BLKFT',u:'each',d:'DM Drive Gate 6WÃ4H Black'},
-        6:{s:'DM4X6BLKFT',u:'each',d:'DM Drive Gate 4WÃ6H Black'},
+        4:{s:'DM5X4BLKFT',u:'each',d:'DM Drive Gate 5W×4H Black'},
+        5:{s:'DM6X4BLKFT',u:'each',d:'DM Drive Gate 6W×4H Black'},
+        6:{s:'DM4X6BLKFT',u:'each',d:'DM Drive Gate 4W×6H Black'},
       },
       bracket_line:{s:'8BFLINE00',u:'each',d:'Afs/Beta Blk Line Bracket'},
       bracket_univ:{s:'8BB102IWI',u:'each',d:'Blk Universal Bracket'},
@@ -1255,18 +1220,18 @@ var STYLES = {
       latch6:{s:'50139',u:'each',d:'Blk Latch Magna Top Pullback W/Safety Lock (6ft gate)'},
     }
   },
-  'ornamental.steel.flat_top_pool':  {family:'ornamental_pool',label:'Ornamental Steel Flat Top â Pool (DM)',note:'Steel DM pool: self-closing hinge 50383 Â· magna latch 50139 Â· S:8 Â· KAN005124 â (Apr 2026)',rp:{S:8,panel_w:8,con_line:1,con_term:2,pool:true,bracket_system:'external'},skus:{panel:{s:'8W14X83FT',u:'each',d:'Dm Blk Flat Top 3 Rail Panel 4\'Ã8\''},post:{s:'8W12P69',u:'each',d:'Blk Sq Post 2"Ã16GaÃ72"'},bracket_line:{s:'8BFLINE00',u:'each',d:'Afs/Beta Blk Line Bracket'},bracket_univ:{s:'8BB102IWI',u:'each',d:'Blk Universal Bracket'},cap:{s:'8AB506',u:'each',d:'Blk Flat Cap 2"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'DM4X4BLKFT',u:'each',d:'DM Gate 4WÃ4H Single Swing Black'},hinge:{s:'50383',u:'pair',d:'Hinge â Fully Adjustable Self Closing'},latch:{s:'50139',u:'each',d:'Blk Latch â Magna Top Pullback W/Safety Lock'}}  },
-  'ornamental.aluminum.flat_top_3rail': {family:'ornamental',label:'Ornamental Aluminum Flat Top 3-Rail (IRONSALES)',note:'True aluminum Â· 6ft bays Â· inset panels Â· no external brackets Â· S:6 Â· uncalibrated',rp:{S:6,panel_w:6,con_line:1,con_term:2,bracket_system:'none'},skus:{panel:{s:'8W14X83FT',u:'each',d:'Alum Flat Top 3 Rail Panel 4\'Ã6\''},post:{s:'8W12P69',u:'each',d:'Alum Sq Post 2"Ã16GaÃ5\'9"'},cap:{s:'8AB506',u:'each',d:'Alum Flat Cap 2"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'OR-AL-WG4',u:'each',d:'Aluminum Walk Gate 4ft'},dg:{s:'OR-AL-DG5',u:'each',d:'Aluminum Drive Gate 5ft'},hinge:{s:'8HB301',u:'each',d:'Blk Latch Hanger 1-1/4"'},latch:{s:'8HB402',u:'each',d:'Blk Latch Fork 2" Orn Sq'}}  },
-  'ornamental.aluminum.spear_top_3rail':{family:'ornamental',label:'Ornamental Aluminum Spear Top 3-Rail (IRONSALES)',note:'True aluminum spear top Â· 6ft bays Â· inset panels Â· no external brackets Â· S:6 Â· uncalibrated',rp:{S:6,panel_w:6,con_line:1,con_term:2,bracket_system:'none'},skus:{panel:{s:'8W14X83SP',u:'each',d:'Alum Spear Top 3 Rail Panel 4\'Ã6\''},post:{s:'8W12P69',u:'each',d:'Alum Sq Post 2"Ã16GaÃ5\'9"'},cap:{s:'8AB506',u:'each',d:'Alum Flat Cap 2"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'OR-AL-WG4',u:'each',d:'Aluminum Walk Gate 4ft'},dg:{s:'OR-AL-DG5',u:'each',d:'Aluminum Drive Gate 5ft'},hinge:{s:'8HB301',u:'each',d:'Blk Latch Hanger 1-1/4"'},latch:{s:'8HB402',u:'each',d:'Blk Latch Fork 2" Orn Sq'}}  },
-  'vinyl.privacy.tongue_groove':  {family:'vinyl',note:'Vinyl T&G: 8ft panels Â· terminal/gate posts concrete+rebar Â· line posts no fill Â· Hoover doctrine',rp:{S:8,panel_w:8,install_method:'concrete_term_only',con_line:0,con_term:2,post_size:'5in_sq',footing_dia_in:12,footing_depth_in:36,reinforcement:'rebar_to_top_rail'},cal:'DOCTRINE_HOOVER_VINYL',calDate:'2026-05-30',label:'Vinyl Privacy T&G',skus:{panel:{s:'VN-TG-8',u:'each',d:'Vinyl Panel T&G 8ft'},post:{s:'7WAFC373L',u:'each',d:'Vinyl Post 5"x5"x96" Line (AFC-373)'},post_end:{s:'7WAFC373E',u:'each',d:'Vinyl Post 5"x5"x96" End (AFC-373)'},cap:{s:'VN-CAP',u:'each',d:'Post Cap'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},cant_roller:{s:'10957',u:'each',d:'Cantilever Roller 4in x 2-1/2in Nylon'},cant_cover:{s:'10957-CV',u:'each',d:'Cantilever Roller Cover'},cant_latch:{s:'10969',u:'each',d:'Cantilever Receiver/Latch'},cant_gate:{s:'CANT-GATE',u:'each',d:'Cantilever Gate Assembly'},wg:{s:'VN-WG',u:'each',d:'Walk Gate'},dg:{s:'VN-DG',u:'each',d:'Drive Gate'}}},
-  'vinyl.picket.scalloped':       {family:'vinyl',note:'Vinyl scalloped picket: 8ft panels',rp:{S:8,panel_w:8,con_line:1,con_term:2},label:'Vinyl Scalloped Picket',skus:{panel:{s:'VN-SC-8',u:'each',d:'Vinyl Scalloped Panel 8ft'},post:{s:'VN-POST-4x4',u:'each',d:'Vinyl Post 4Ã4'},cap:{s:'VN-CAP-SQ',u:'each',d:'Post Cap Sq'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'VN-WG',u:'each',d:'Walk Gate'},dg:{s:'VN-DG',u:'each',d:'Drive Gate'}}},
-  'farm.no_climb.horse': {family:'farm',note:'No-climb horse: 12ft spacing Â· 100ft wire rolls',rp:{S:12,con_line:1,con_term:2},label:'Farm No-Climb Horse',skus:{wire:{s:'FM-NC-4060',u:'roll',d:'No-Climb Wire 4"Ã60" 100ft'},post:{s:'FM-POST',u:'each',d:'4Ã4Ã8 Treated Post'},staple:{s:'FM-STAPLE',u:'lb',d:'Fence Staples 1-3/4"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'FM-WG',u:'each',d:'Farm Walk Gate'},dg:{s:'FM-DG',u:'each',d:'Farm Drive Gate'}}},
-  'farm.barbed.5strand':  {family:'farm',note:'Barbed 5-strand: 12ft spacing Â· 1320ft rolls',rp:{S:12,strands:5,con_line:1,con_term:2},label:'Farm Barbed 5-Strand',skus:{wire:{s:'FM-BARB-1320',u:'roll',d:'Barbed Wire 1320ft Roll'},post:{s:'FM-POST',u:'each',d:'4Ã4Ã8 Treated Post'},staple:{s:'FM-STAPLE',u:'lb',d:'Fence Staples'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'FM-WG',u:'each',d:'Farm Walk Gate'},dg:{s:'FM-DG',u:'each',d:'Farm Drive Gate'}}},
+  'ornamental.steel.flat_top_pool':  {family:'ornamental_pool',label:'Ornamental Steel Flat Top — Pool (DM)',note:'Steel DM pool: self-closing hinge 50383 · magna latch 50139 · S:8 · KAN005124 ✓ (Apr 2026)',rp:{S:8,panel_w:8,con_line:1,con_term:2,pool:true,bracket_system:'external'},skus:{panel:{s:'8W14X83FT',u:'each',d:'Dm Blk Flat Top 3 Rail Panel 4\'×8\''},post:{s:'8W12P69',u:'each',d:'Blk Sq Post 2"×16Ga×72"'},bracket_line:{s:'8BFLINE00',u:'each',d:'Afs/Beta Blk Line Bracket'},bracket_univ:{s:'8BB102IWI',u:'each',d:'Blk Universal Bracket'},cap:{s:'8AB506',u:'each',d:'Blk Flat Cap 2"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'DM4X4BLKFT',u:'each',d:'DM Gate 4W×4H Single Swing Black'},hinge:{s:'50383',u:'pair',d:'Hinge — Fully Adjustable Self Closing'},latch:{s:'50139',u:'each',d:'Blk Latch — Magna Top Pullback W/Safety Lock'}}  },
+  'ornamental.aluminum.flat_top_3rail': {family:'ornamental',label:'Ornamental Aluminum Flat Top 3-Rail (IRONSALES)',note:'True aluminum · 6ft bays · inset panels · no external brackets · S:6 · uncalibrated',rp:{S:6,panel_w:6,con_line:1,con_term:2,bracket_system:'none'},skus:{panel:{s:'8W14X83FT',u:'each',d:'Alum Flat Top 3 Rail Panel 4\'×6\''},post:{s:'8W12P69',u:'each',d:'Alum Sq Post 2"×16Ga×5\'9"'},cap:{s:'8AB506',u:'each',d:'Alum Flat Cap 2"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'OR-AL-WG4',u:'each',d:'Aluminum Walk Gate 4ft'},dg:{s:'OR-AL-DG5',u:'each',d:'Aluminum Drive Gate 5ft'},hinge:{s:'8HB301',u:'each',d:'Blk Latch Hanger 1-1/4"'},latch:{s:'8HB402',u:'each',d:'Blk Latch Fork 2" Orn Sq'}}  },
+  'ornamental.aluminum.spear_top_3rail':{family:'ornamental',label:'Ornamental Aluminum Spear Top 3-Rail (IRONSALES)',note:'True aluminum spear top · 6ft bays · inset panels · no external brackets · S:6 · uncalibrated',rp:{S:6,panel_w:6,con_line:1,con_term:2,bracket_system:'none'},skus:{panel:{s:'8W14X83SP',u:'each',d:'Alum Spear Top 3 Rail Panel 4\'×6\''},post:{s:'8W12P69',u:'each',d:'Alum Sq Post 2"×16Ga×5\'9"'},cap:{s:'8AB506',u:'each',d:'Alum Flat Cap 2"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'OR-AL-WG4',u:'each',d:'Aluminum Walk Gate 4ft'},dg:{s:'OR-AL-DG5',u:'each',d:'Aluminum Drive Gate 5ft'},hinge:{s:'8HB301',u:'each',d:'Blk Latch Hanger 1-1/4"'},latch:{s:'8HB402',u:'each',d:'Blk Latch Fork 2" Orn Sq'}}  },
+  'vinyl.privacy.tongue_groove':  {family:'vinyl',note:'Vinyl T&G: 8ft panels · terminal/gate posts concrete+rebar · line posts no fill · Hoover doctrine',rp:{S:8,panel_w:8,install_method:'concrete_term_only',con_line:0,con_term:2,post_size:'5in_sq',footing_dia_in:12,footing_depth_in:36,reinforcement:'rebar_to_top_rail'},cal:'DOCTRINE_HOOVER_VINYL',calDate:'2026-05-30',label:'Vinyl Privacy T&G',skus:{panel:{s:'VN-TG-8',u:'each',d:'Vinyl Panel T&G 8ft'},post:{s:'7WAFC373L',u:'each',d:'Vinyl Post 5"x5"x96" Line (AFC-373)'},post_end:{s:'7WAFC373E',u:'each',d:'Vinyl Post 5"x5"x96" End (AFC-373)'},cap:{s:'VN-CAP',u:'each',d:'Post Cap'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},cant_roller:{s:'10957',u:'each',d:'Cantilever Roller 4in x 2-1/2in Nylon'},cant_cover:{s:'10957-CV',u:'each',d:'Cantilever Roller Cover'},cant_latch:{s:'10969',u:'each',d:'Cantilever Receiver/Latch'},cant_gate:{s:'CANT-GATE',u:'each',d:'Cantilever Gate Assembly'},wg:{s:'VN-WG',u:'each',d:'Walk Gate'},dg:{s:'VN-DG',u:'each',d:'Drive Gate'}}},
+  'vinyl.picket.scalloped':       {family:'vinyl',note:'Vinyl scalloped picket: 8ft panels',rp:{S:8,panel_w:8,con_line:1,con_term:2},label:'Vinyl Scalloped Picket',skus:{panel:{s:'VN-SC-8',u:'each',d:'Vinyl Scalloped Panel 8ft'},post:{s:'VN-POST-4x4',u:'each',d:'Vinyl Post 4×4'},cap:{s:'VN-CAP-SQ',u:'each',d:'Post Cap Sq'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'VN-WG',u:'each',d:'Walk Gate'},dg:{s:'VN-DG',u:'each',d:'Drive Gate'}}},
+  'farm.no_climb.horse': {family:'farm',note:'No-climb horse: 12ft spacing · 100ft wire rolls',rp:{S:12,con_line:1,con_term:2},label:'Farm No-Climb Horse',skus:{wire:{s:'FM-NC-4060',u:'roll',d:'No-Climb Wire 4"×60" 100ft'},post:{s:'FM-POST',u:'each',d:'4×4×8 Treated Post'},staple:{s:'FM-STAPLE',u:'lb',d:'Fence Staples 1-3/4"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'FM-WG',u:'each',d:'Farm Walk Gate'},dg:{s:'FM-DG',u:'each',d:'Farm Drive Gate'}}},
+  'farm.barbed.5strand':  {family:'farm',note:'Barbed 5-strand: 12ft spacing · 1320ft rolls',rp:{S:12,strands:5,con_line:1,con_term:2},label:'Farm Barbed 5-Strand',skus:{wire:{s:'FM-BARB-1320',u:'roll',d:'Barbed Wire 1320ft Roll'},post:{s:'FM-POST',u:'each',d:'4×4×8 Treated Post'},staple:{s:'FM-STAPLE',u:'lb',d:'Fence Staples'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'FM-WG',u:'each',d:'Farm Walk Gate'},dg:{s:'FM-DG',u:'each',d:'Farm Drive Gate'}}},
 };
 
 function H(s){var h=0;for(var i=0;i<s.length;i++)h=Math.imul(31,h)+s.charCodeAt(i)|0;return Math.abs(h).toString(16).padStart(8,'0').toUpperCase();}
 
-// ââ TRUST GATE ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── TRUST GATE ────────────────────────────────────────────────────────────────
 // Mirrors hardsaw.severity_weights and hardsaw.trust_thresholds (verified 2026-05-26).
 // If DB values change, update these constants and the verification date above.
 var SEVERITY_WEIGHTS = { CRITICAL: 100, HIGH: 40, MEDIUM: 10, LOW: 2, INFO: 0 };
@@ -1287,22 +1252,22 @@ function trustLevelForScore(score) {
 
 function collectFindings(geo, posts, flags, ht, styleId) {
   var f = [];
-  // CRITICAL â engine math broken, BOM cannot be valid
+  // CRITICAL — engine math broken, BOM cannot be valid
   if (geo.buildLft < 1)     f.push({code:'NO_FENCE_RUNS',    severity:'CRITICAL', message:'No fence runs entered',                                          source:'geometry'});
-  if (posts.totalPosts < 2) f.push({code:'POST_COUNT_ERROR', severity:'CRITICAL', message:'Post count error â check layout',                                source:'geometry'});
-  // HIGH â output valid, human action gates execution
-  if (flags.includes('permit'))                       f.push({code:'PERMIT_REQUIRED', severity:'HIGH',   message:'Permit required â obtain before scheduling crew',           source:'flag'});
-  if (ht > 8)                                         f.push({code:'HEIGHT_OVER_8FT', severity:'HIGH',   message:'Height >8ft â permit likely required',                       source:'spec'});
-  if (STYLES[styleId] && STYLES[styleId].rp.pool)     f.push({code:'POOL_CODE_STYLE', severity:'HIGH',   message:'Pool code compliant style â verify local AHJ requirements',  source:'spec'});
-  // MEDIUM â confirmation or planning impact
-  if (flags.includes('HOA'))                          f.push({code:'HOA_APPROVAL',    severity:'MEDIUM', message:'HOA â confirm apREVIEWd style and color before ordering',     source:'flag'});
-  if (flags.includes('rocky'))                        f.push({code:'ROCKY_SOIL',      severity:'MEDIUM', message:'Rocky soil â auger rental or blasting likely',               source:'flag'});
-  if (flags.includes('grade'))                        f.push({code:'SLOPED_TERRAIN',  severity:'MEDIUM', message:'Sloped terrain â stepped or racked install required',        source:'flag'});
-  if (geo.totalLft > 1000)                            f.push({code:'LARGE_JOB',       severity:'MEDIUM', message:'Large job â confirm phased delivery',                        source:'geometry'});
+  if (posts.totalPosts < 2) f.push({code:'POST_COUNT_ERROR', severity:'CRITICAL', message:'Post count error — check layout',                                source:'geometry'});
+  // HIGH — output valid, human action gates execution
+  if (flags.includes('permit'))                       f.push({code:'PERMIT_REQUIRED', severity:'HIGH',   message:'Permit required — obtain before scheduling crew',           source:'flag'});
+  if (ht > 8)                                         f.push({code:'HEIGHT_OVER_8FT', severity:'HIGH',   message:'Height >8ft — permit likely required',                       source:'spec'});
+  if (STYLES[styleId] && STYLES[styleId].rp.pool)     f.push({code:'POOL_CODE_STYLE', severity:'HIGH',   message:'Pool code compliant style — verify local AHJ requirements',  source:'spec'});
+  // MEDIUM — confirmation or planning impact
+  if (flags.includes('HOA'))                          f.push({code:'HOA_APPROVAL',    severity:'MEDIUM', message:'HOA — confirm apREVIEWd style and color before ordering',     source:'flag'});
+  if (flags.includes('rocky'))                        f.push({code:'ROCKY_SOIL',      severity:'MEDIUM', message:'Rocky soil — auger rental or blasting likely',               source:'flag'});
+  if (flags.includes('grade'))                        f.push({code:'SLOPED_TERRAIN',  severity:'MEDIUM', message:'Sloped terrain — stepped or racked install required',        source:'flag'});
+  if (geo.totalLft > 1000)                            f.push({code:'LARGE_JOB',       severity:'MEDIUM', message:'Large job — confirm phased delivery',                        source:'geometry'});
   return f;
 }
 
-// ââ 10 CALCULATORS ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── 10 CALCULATORS ────────────────────────────────────────────────────────────
 function calcA(edges){
   var fe=edges.filter(function(e){return e.kind==='fence';});
   var oe=edges.filter(function(e){return e.kind==='opening';});
@@ -1321,13 +1286,13 @@ function calcB(geo,ends,corners,walks,drives,others,S,shared){
   var secsArr=geo.fenceEdges.map(function(e){return Math.ceil(e.length/S);});
   var ts=secsArr.reduce(function(a,b){return a+b;},0);
   var hookups=2*geo.fenceEdges.length;
-  return{terminalPosts:tp,linePosts:lpAdj,gatePosts:gp,endPosts:ends,cornerPosts:corners,walkGates:walks,driveGates:drives,otherGates:others,hookups:hookups,totalSecs:ts,lpArr:lpArr,secsArr:secsArr,S:S,totalPosts:tp+lpAdj,F:{tp:ends+'(ends)+'+corners+'(corners)+'+(walks+drives+others)+'Ã2(gate)='+tp,lp:lpArr.map(function(v,i){return 'ceil('+geo.fenceEdges[i].length+'/'+S+')-1='+v;}).join(' + ')+'='+lp+' â'+lpCorr+'(gate corr)='+lpAdj,hookups:'2Ã'+geo.fenceEdges.length+'='+hookups,secs:secsArr.map(function(v,i){return 'ceil('+geo.fenceEdges[i].length+'/'+S+')='+v;}).join(' + ')+'='+ts}};
+  return{terminalPosts:tp,linePosts:lpAdj,gatePosts:gp,endPosts:ends,cornerPosts:corners,walkGates:walks,driveGates:drives,otherGates:others,hookups:hookups,totalSecs:ts,lpArr:lpArr,secsArr:secsArr,S:S,totalPosts:tp+lpAdj,F:{tp:ends+'(ends)+'+corners+'(corners)+'+(walks+drives+others)+'×2(gate)='+tp,lp:lpArr.map(function(v,i){return 'ceil('+geo.fenceEdges[i].length+'/'+S+')-1='+v;}).join(' + ')+'='+lp+' −'+lpCorr+'(gate corr)='+lpAdj,hookups:'2×'+geo.fenceEdges.length+'='+hookups,secs:secsArr.map(function(v,i){return 'ceil('+geo.fenceEdges[i].length+'/'+S+')='+v;}).join(' + ')+'='+ts}};
 }
 function calcF(posts,rp,family){
-  if(family==='wood'){var b=posts.totalPosts*rp.con_line;return{totalBags:b,F:posts.totalPosts+'Ã'+rp.con_line+'='+b+' [wood: 1/post calibrated]'};}
-  if(rp.install_method==='driven'){return{totalBags:0,F:'0 [driven/surface-mount: no concrete]'};}   if(rp.con_method==='flat_pallet'){return{totalBags:rp.con_flat_qty,F:rp.con_flat_qty+' [flat pallet spec Â· Ameristar footing '+rp.footing_depth_in+'in]'};}   if(rp.install_method==='concrete_term_only'){var bt=Math.ceil(posts.terminalPosts*rp.con_term);return{totalBags:bt,F:posts.terminalPosts+'Ã'+rp.con_term+'(terminal only Â· line posts no fill)='+bt+' [vinyl doctrine]'};}
+  if(family==='wood'){var b=posts.totalPosts*rp.con_line;return{totalBags:b,F:posts.totalPosts+'×'+rp.con_line+'='+b+' [wood: 1/post calibrated]'};}
+  if(rp.install_method==='driven'){return{totalBags:0,F:'0 [driven/surface-mount: no concrete]'};}   if(rp.con_method==='flat_pallet'){return{totalBags:rp.con_flat_qty,F:rp.con_flat_qty+' [flat pallet spec · Ameristar footing '+rp.footing_depth_in+'in]'};}   if(rp.install_method==='concrete_term_only'){var bt=Math.ceil(posts.terminalPosts*rp.con_term);return{totalBags:bt,F:posts.terminalPosts+'×'+rp.con_term+'(terminal only · line posts no fill)='+bt+' [vinyl doctrine]'};}
   var b=Math.ceil(posts.linePosts*rp.con_line+posts.terminalPosts*rp.con_term);
-  return{totalBags:b,F:posts.linePosts+'Ã'+rp.con_line+'(line)+'+posts.terminalPosts+'Ã'+rp.con_term+'(term)'};
+  return{totalBags:b,F:posts.linePosts+'×'+rp.con_line+'(line)+'+posts.terminalPosts+'×'+rp.con_term+'(term)'};
 }
 function calcDEH(styleId,geo,posts,conc,ht){
   var style=STYLES[styleId],rp=style.rp,sk=style.skus,fam=style.family;
@@ -1338,24 +1303,24 @@ function calcDEH(styleId,geo,posts,conc,ht){
 
   if(fam==='wood'){
     var pk=rp.picket_fn==='floor'?Math.floor(lf*rp.pickets_lf):rp.picket_fn==='round'?Math.round(lf*rp.pickets_lf):Math.ceil(lf*rp.pickets_lf);
-    add(sk.picket,pk,sk.picket.d+' ('+sk.picket.s+')',rp.picket_fn+'('+lf+'Ã'+rp.pickets_lf+')='+pk,'PICKETS');
-    pf('Pickets',pk,rp.picket_fn+'('+lf+'Ã'+rp.pickets_lf+')');
+    add(sk.picket,pk,sk.picket.d+' ('+sk.picket.s+')',rp.picket_fn+'('+lf+'×'+rp.pickets_lf+')='+pk,'PICKETS');
+    pf('Pickets',pk,rp.picket_fn+'('+lf+'×'+rp.pickets_lf+')');
     add(sk.post,tp+lp,sk.post.d+' ('+sk.post.s+')',tp+'(T)+'+lp+'(L)='+(tp+lp),'POSTS');
     pf('Posts',tp+lp,tp+'T+'+lp+'L='+(tp+lp));
     var rlTotal=ts*rp.rails_sec+walks*rp.walk_rb+drives*rp.drive_rb;
     var rl10=walks*rp.walk_rb+(drives?drives*rp.drive_rb:0);
     var rl8=Math.max(0,rlTotal-rl10);
     if(sk.rail8&&sk.rail10){
-      if(rl8>0)add(sk.rail8,rl8,sk.rail8.d+' ('+sk.rail8.s+')',ts+'Ã'+rp.rails_sec+'='+rl8,'RAILS');
-      if(rl10>0)add(sk.rail10,rl10,sk.rail10.d+' ('+sk.rail10.s+')',(walks?walks+'WÃ'+rp.walk_rb:'')+(drives?'+'+drives+'DÃ'+rp.drive_rb:'')+'='+rl10,'RAILS');
+      if(rl8>0)add(sk.rail8,rl8,sk.rail8.d+' ('+sk.rail8.s+')',ts+'×'+rp.rails_sec+'='+rl8,'RAILS');
+      if(rl10>0)add(sk.rail10,rl10,sk.rail10.d+' ('+sk.rail10.s+')',(walks?walks+'W×'+rp.walk_rb:'')+(drives?'+'+drives+'D×'+rp.drive_rb:'')+'='+rl10,'RAILS');
     } else {
-      add(sk.rail,rlTotal,sk.rail.d+' ('+sk.rail.s+')',ts+'Ã'+rp.rails_sec+(walks?'+'+walks+'WÃ'+rp.walk_rb:'')+(drives?'+'+drives+'DÃ'+rp.drive_rb:'')+'='+rlTotal,'RAILS');
+      add(sk.rail,rlTotal,sk.rail.d+' ('+sk.rail.s+')',ts+'×'+rp.rails_sec+(walks?'+'+walks+'W×'+rp.walk_rb:'')+(drives?'+'+drives+'D×'+rp.drive_rb:'')+'='+rlTotal,'RAILS');
     }
-    pf('Rails',rlTotal,ts+'Ã'+rp.rails_sec+' + gate bonus');
+    pf('Rails',rlTotal,ts+'×'+rp.rails_sec+' + gate bonus');
     add(sk.con,conc.totalBags,'Concrete 60lb',conc.F,'CONCRETE');
     pf('Concrete',conc.totalBags,conc.F);
-    if(walks>0){add(sk.hinge,walks,sk.hinge.d+' ('+sk.hinge.s+')',walks+'Ã1 pair','GATE HARDWARE');add(sk.latch,walks,sk.latch.d+' ('+sk.latch.s+')',walks+'Ã1 latch','GATE HARDWARE');}
-    if(drives>0){add(sk.hinge,drives*2,sk.hinge.d+' ('+sk.hinge.s+')',drives+'Ã2 pairs','GATE HARDWARE');add(sk.latch,drives,sk.latch.d+' ('+sk.latch.s+')',drives+'Ã1','GATE HARDWARE');add(sk.rod,drives,sk.rod.d+' ('+sk.rod.s+')',drives+'Ã1','GATE HARDWARE');if(sk.dg)add(sk.dg,drives,sk.dg.d,drives+' drive','GATES');}
+    if(walks>0){add(sk.hinge,walks,sk.hinge.d+' ('+sk.hinge.s+')',walks+'×1 pair','GATE HARDWARE');add(sk.latch,walks,sk.latch.d+' ('+sk.latch.s+')',walks+'×1 latch','GATE HARDWARE');}
+    if(drives>0){add(sk.hinge,drives*2,sk.hinge.d+' ('+sk.hinge.s+')',drives+'×2 pairs','GATE HARDWARE');add(sk.latch,drives,sk.latch.d+' ('+sk.latch.s+')',drives+'×1','GATE HARDWARE');add(sk.rod,drives,sk.rod.d+' ('+sk.rod.s+')',drives+'×1','GATE HARDWARE');if(sk.dg)add(sk.dg,drives,sk.dg.d,drives+' drive','GATES');}
     if(walks>0&&sk.wg)add(sk.wg,walks,sk.wg.d,walks+' walk','GATES');
     if(others>0){if(sk.cant_roller)add(sk.cant_roller,others*4,sk.cant_roller.d,others+'x4 rollers','CANTILEVER HARDWARE');if(sk.cant_cover)add(sk.cant_cover,others*4,sk.cant_cover.d,others+'x4 covers','CANTILEVER HARDWARE');if(sk.cant_latch)add(sk.cant_latch,others,sk.cant_latch.d,others+'x1 latch','CANTILEVER HARDWARE');if(sk.cant_gate)add(sk.cant_gate,others,sk.cant_gate.d,others+'x1 cantilever gate','CANTILEVER HARDWARE');}
   } else if(fam==='chain_link'){
@@ -1371,19 +1336,19 @@ function calcDEH(styleId,geo,posts,conc,ht){
     add(sk.tp,tp,sk.tp.d,tp+' terminal posts','POSTS');
     add(sk.lp,lp,sk.lp.d,lp+' line posts','POSTS');
     pf('Terminal posts',tp,posts.F.tp); pf('Line posts',lp,posts.F.lp);
-    add(sk.fab,fabQ,sk.fab.d,'ceil('+lf+'Ã1.02/'+rp.fab_roll+')='+fabQ+' rolls [build_length]','FABRIC');
+    add(sk.fab,fabQ,sk.fab.d,'ceil('+lf+'×1.02/'+rp.fab_roll+')='+fabQ+' rolls [build_length]','FABRIC');
     add(sk.rail,railQ,sk.rail.d,'ceil('+lf+'/'+rp.rail_stick+')='+railQ+' [no +1]','RAILS');
     add(sk.tw,twQ,sk.tw.d,'ceil('+lf+'/100)+1='+twQ,'WIRE');
     add(sk.tie,tieQ,sk.tie.d,tieQ+' bags','WIRE');
-    add(sk.tb,bands,sk.tb.d,'('+ht+'-1)Ã'+(posts.endPosts+posts.gatePosts)+'termHookups='+bands+' [F567]','HARDWARE');
+    add(sk.tb,bands,sk.tb.d,'('+ht+'-1)×'+(posts.endPosts+posts.gatePosts)+'termHookups='+bands+' [F567]','HARDWARE');
     if(sk.eb)add(sk.eb,endBands,sk.eb.d,'(end+gate)='+endBands+' end bands','HARDWARE');
     if(tenBarSku)add(tenBarSku,tenBarQty,tenBarSku.d,'(end+gate)='+tenBarQty+' tension bars','HARDWARE');
     add(sk.re,posts.hookups,sk.re.d,'hookups='+posts.hookups,'HARDWARE');
     var cbQty=ht*tp;
-    if(sk.cb)add(sk.cb,cbQty,sk.cb.d,ht+'Ã'+tp+'termPosts='+cbQty+' [heightÃtermPosts]','HARDWARE');
+    if(sk.cb)add(sk.cb,cbQty,sk.cb.d,ht+'×'+tp+'termPosts='+cbQty+' [height×termPosts]','HARDWARE');
     add(sk.con,conc.totalBags,'Concrete 60lb',conc.F,'CONCRETE');
-    pf('Fabric rolls',fabQ,'ceil(buildLftÃ1.02/'+rp.fab_roll+')');
-    pf('Tension bands',bands,'(height-1)Ã(endPosts+gatePosts) F567');
+    pf('Fabric rolls',fabQ,'ceil(buildLft×1.02/'+rp.fab_roll+')');
+    pf('Tension bands',bands,'(height-1)×(endPosts+gatePosts) F567');
     pf('Concrete',conc.totalBags,conc.F);
     if(walks>0)add(sk.wg,walks,sk.wg.d,walks+' walk','GATES');
     if(drives>0)add(sk.dg,drives,sk.dg.d,drives+' drive','GATES');     if(others>0){if(sk.cant_roller)add(sk.cant_roller,others*4,sk.cant_roller.d,others+'x4 rollers','CANTILEVER HARDWARE');if(sk.cant_cover)add(sk.cant_cover,others*4,sk.cant_cover.d,others+'x4 covers','CANTILEVER HARDWARE');if(sk.cant_latch)add(sk.cant_latch,others,sk.cant_latch.d,others+'x1 latch','CANTILEVER HARDWARE');if(sk.cant_gate)add(sk.cant_gate,others,sk.cant_gate.d,others+'x1 cantilever gate','CANTILEVER HARDWARE');}   } else if(fam==='ornamental'){
@@ -1396,40 +1361,40 @@ function calcDEH(styleId,geo,posts,conc,ht){
     var gateAdj=walks+drives+others; var brkUnivQ=(posts.endPosts*3)+(posts.cornerPosts*6)+(gateAdj*6)+(gateAdj*6); var brkLineQ=Math.max(0,(lp-gateAdj)*3); var brkTermQ=tp*4,brkFmQ=ts*6;
     add(skPanel,pnlQ,skPanel.d,ts+' sec (no +1)','PANELS');
     add(skPost,pstQ,skPost.d,pstQ+' posts','POSTS');
-    if(rp.bracket_system==='flat_mount'&&sk.bracket_fm)add(sk.bracket_fm,brkFmQ,sk.bracket_fm.d,ts+'Ã6 flat mount','HARDWARE');
+    if(rp.bracket_system==='flat_mount'&&sk.bracket_fm)add(sk.bracket_fm,brkFmQ,sk.bracket_fm.d,ts+'×6 flat mount','HARDWARE');
     else if(rp.bracket_system==='integrated'){
-      if(sk.bracket_univ&&brkUnivQ>0)add(sk.bracket_univ,brkUnivQ,sk.bracket_univ.d,'(tpÃ3)+(midRunÃ6)='+brkUnivQ+' univ','HARDWARE');
-      if(sk.bracket_line&&brkLineQ>0)add(sk.bracket_line,brkLineQ,sk.bracket_line.d,'(lpÃ3)-(midRunÃ6)='+brkLineQ+' line','HARDWARE');
+      if(sk.bracket_univ&&brkUnivQ>0)add(sk.bracket_univ,brkUnivQ,sk.bracket_univ.d,'(tp×3)+(midRun×6)='+brkUnivQ+' univ','HARDWARE');
+      if(sk.bracket_line&&brkLineQ>0)add(sk.bracket_line,brkLineQ,sk.bracket_line.d,'(lp×3)-(midRun×6)='+brkLineQ+' line','HARDWARE');
     }
     else if(rp.bracket_system==='none'){}
-    else if(sk.bracket_line)add(sk.bracket_line,brkLineQ,sk.bracket_line.d,lp+'Ã3 line','HARDWARE');
-    if(rp.bracket_system!=='flat_mount'&&rp.bracket_system!=='integrated'&&rp.bracket_system!=='none'&&sk.bracket_term)add(sk.bracket_term,brkTermQ,sk.bracket_term.d,tp+'Ã4 terminal','HARDWARE');
-    if(!sk.bracket_line&&!sk.bracket_fm&&sk.bracket)add(sk.bracket,pstQ*2,sk.bracket.d,pstQ+'Ã2','HARDWARE');
+    else if(sk.bracket_line)add(sk.bracket_line,brkLineQ,sk.bracket_line.d,lp+'×3 line','HARDWARE');
+    if(rp.bracket_system!=='flat_mount'&&rp.bracket_system!=='integrated'&&rp.bracket_system!=='none'&&sk.bracket_term)add(sk.bracket_term,brkTermQ,sk.bracket_term.d,tp+'×4 terminal','HARDWARE');
+    if(!sk.bracket_line&&!sk.bracket_fm&&sk.bracket)add(sk.bracket,pstQ*2,sk.bracket.d,pstQ+'×2','HARDWARE');
     add(sk.cap,pstQ,sk.cap.d,pstQ+'caps','HARDWARE');
     if(orCon>0)add(sk.con,orCon,'Concrete 60lb',conc.F,'CONCRETE');
     var use6ftHW = (orHt >= 6) && sk.hinge6 && sk.latch6;
     if(walks>0){
       add(skWg,walks,skWg.d,walks+' walk gate'+(walks>1?'s':''),'GATES');
       if(use6ftHW){
-        add(sk.hinge6,walks,  sk.hinge6.d,walks+'Ã1 self-closing hinge pair/gate','GATE HW');
-        add(sk.latch6,walks,  sk.latch6.d,walks+'Ã1 magna latch/gate','GATE HW');
+        add(sk.hinge6,walks,  sk.hinge6.d,walks+'×1 self-closing hinge pair/gate','GATE HW');
+        add(sk.latch6,walks,  sk.latch6.d,walks+'×1 magna latch/gate','GATE HW');
       } else {
-        if(sk.hinge)  add(sk.hinge, walks,   sk.hinge.d,  walks+'Ã1 male hinge/gate','GATE HW');
-        if(sk.hingef) add(sk.hingef,walks*2, sk.hingef.d, walks+'Ã2 female hinge/gate','GATE HW');
-        if(sk.lhanger)add(sk.lhanger,walks,  sk.lhanger.d,walks+'Ã1 latch hanger/gate','GATE HW');
-        if(sk.latch)  add(sk.latch,  walks,  sk.latch.d,  walks+'Ã1 latch fork/gate','GATE HW');
+        if(sk.hinge)  add(sk.hinge, walks,   sk.hinge.d,  walks+'×1 male hinge/gate','GATE HW');
+        if(sk.hingef) add(sk.hingef,walks*2, sk.hingef.d, walks+'×2 female hinge/gate','GATE HW');
+        if(sk.lhanger)add(sk.lhanger,walks,  sk.lhanger.d,walks+'×1 latch hanger/gate','GATE HW');
+        if(sk.latch)  add(sk.latch,  walks,  sk.latch.d,  walks+'×1 latch fork/gate','GATE HW');
       }
     }
     if(drives>0){
       add(skDg,drives,skDg.d,drives+' drive gate'+(drives>1?'s':''),'GATES');
       if(use6ftHW){
-        add(sk.hinge6,drives, sk.hinge6.d,drives+'Ã1 self-closing hinge pair/gate','GATE HW');
-        add(sk.latch6,drives, sk.latch6.d,drives+'Ã1 magna latch/gate','GATE HW');
+        add(sk.hinge6,drives, sk.hinge6.d,drives+'×1 self-closing hinge pair/gate','GATE HW');
+        add(sk.latch6,drives, sk.latch6.d,drives+'×1 magna latch/gate','GATE HW');
       } else {
-        if(sk.hinge)  add(sk.hinge, drives,   sk.hinge.d,  drives+'Ã1 male hinge/gate','GATE HW');
-        if(sk.hingef) add(sk.hingef,drives*2, sk.hingef.d, drives+'Ã2 female hinge/gate','GATE HW');
-        if(sk.lhanger)add(sk.lhanger,drives,  sk.lhanger.d,drives+'Ã1 latch hanger/gate','GATE HW');
-        if(sk.latch)  add(sk.latch,  drives,  sk.latch.d,  drives+'Ã1 latch fork/gate','GATE HW');
+        if(sk.hinge)  add(sk.hinge, drives,   sk.hinge.d,  drives+'×1 male hinge/gate','GATE HW');
+        if(sk.hingef) add(sk.hingef,drives*2, sk.hingef.d, drives+'×2 female hinge/gate','GATE HW');
+        if(sk.lhanger)add(sk.lhanger,drives,  sk.lhanger.d,drives+'×1 latch hanger/gate','GATE HW');
+        if(sk.latch)  add(sk.latch,  drives,  sk.latch.d,  drives+'×1 latch fork/gate','GATE HW');
       }
     }     if(others>0){if(sk.cant_roller)add(sk.cant_roller,others*4,sk.cant_roller.d,others+'x4 rollers','CANTILEVER HARDWARE');if(sk.cant_cover)add(sk.cant_cover,others*4,sk.cant_cover.d,others+'x4 covers','CANTILEVER HARDWARE');if(sk.cant_latch)add(sk.cant_latch,others,sk.cant_latch.d,others+'x1 latch','CANTILEVER HARDWARE');if(sk.cant_gate)add(sk.cant_gate,others,sk.cant_gate.d,others+'x1 cantilever gate','CANTILEVER HARDWARE');}   } else if(fam==='vinyl'){
     var vPnl=ts+1,vCon=conc.totalBags;
@@ -1446,20 +1411,20 @@ function calcDEH(styleId,geo,posts,conc,ht){
     if(styleId==='farm.no_climb.horse'){add(sk.wire,Math.ceil(lf/100),sk.wire.d,'ceil('+lf+'/100)','WIRE');}
     else{add(sk.wire,Math.ceil(lf*(rp.strands||5)/1320),sk.wire.d,(rp.strands||5)+' strands','WIRE');}
     add(sk.post,fPst,sk.post.d,fPst+' posts','POSTS');
-    add(sk.staple,Math.ceil(fPst*0.25),sk.staple.d,fPst+'Ã0.25lb','HARDWARE');
+    add(sk.staple,Math.ceil(fPst*0.25),sk.staple.d,fPst+'×0.25lb','HARDWARE');
     add(sk.con,fCon,'Concrete 60lb',conc.F,'CONCRETE');
     if(walks>0)add(sk.wg,walks,sk.wg.d,walks+' walk','GATES');
     if(drives>0)add(sk.dg,drives,sk.dg.d,drives+' drive','GATES');
   }
   // Warnings
   var flags=Array.from(document.querySelectorAll('.flag-btn.on')).map(function(b){return b.dataset.flag;});
-  if(flags.includes('HOA'))   warn.push('HOA â confirm apREVIEWd style and color before ordering');
-  if(flags.includes('rocky')) warn.push('Rocky soil â auger rental or blasting likely');
-  if(flags.includes('grade')) warn.push('Sloped terrain â stepped or racked install required');
-  if(flags.includes('permit'))warn.push('Permit required â obtain before scheduling crew');
-  if(ht>8)                    warn.push('Height >8ft â permit likely required');
-  if(geo.totalLft>1000)       warn.push('Large job â confirm phased delivery');
-  if(rp&&rp.pool) warn.push('Pool code compliant style â verify local AHJ requirements');
+  if(flags.includes('HOA'))   warn.push('HOA — confirm apREVIEWd style and color before ordering');
+  if(flags.includes('rocky')) warn.push('Rocky soil — auger rental or blasting likely');
+  if(flags.includes('grade')) warn.push('Sloped terrain — stepped or racked install required');
+  if(flags.includes('permit'))warn.push('Permit required — obtain before scheduling crew');
+  if(ht>8)                    warn.push('Height >8ft — permit likely required');
+  if(geo.totalLft>1000)       warn.push('Large job — confirm phased delivery');
+  if(rp&&rp.pool) warn.push('Pool code compliant style — verify local AHJ requirements');
   return{bom,warn,proof};
 }
 function calcJ(geo, posts, matR, flags, ht, styleId) {
@@ -1473,24 +1438,24 @@ function calcJ(geo, posts, matR, flags, ht, styleId) {
     level:    threshold.level,     // CLEAR | HUMAN_RECOMMENDED | HUMAN_REQUIRED | BLOCKED
     score:    score,
     findings: findings,            // [{code, severity, message, source}, ...]
-    bl:       bl,                  // legacy compat â CRITICAL messages only
-    warn:     warn                 // legacy compat â non-CRITICAL messages
+    bl:       bl,                  // legacy compat — CRITICAL messages only
+    warn:     warn                 // legacy compat — non-CRITICAL messages
   };
 }
 
-// ââ INVARIANT PROOF ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── INVARIANT PROOF ──────────────────────────────────────────────────────────
 function buildProof(geo,posts,styleId){
   return{
-    'hookups = 2Ã|E|':        posts.hookups===2*geo.fenceEdges.length,
+    'hookups = 2×|E|':        posts.hookups===2*geo.fenceEdges.length,
     'terminal_posts = |V|':   posts.terminalPosts>=2,
-    'line_posts â¥ 0':         posts.linePosts>=0,
+    'line_posts ≥ 0':         posts.linePosts>=0,
     'build_length > 0':       geo.buildLft>0,
     'spacing locked':         posts.S===(STYLES[styleId]&&STYLES[styleId].rp?STYLES[styleId].rp.S:posts.S),
     'geo hash deterministic': geo.geoHash.length===8,
   };
 }
 
-// ââ LIVE GRAPH PREVIEW âââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── LIVE GRAPH PREVIEW ───────────────────────────────────────────────────────
 function liveUpdate(){
   var edges=getEdges();
   var styleId=document.getElementById('fam').value;
@@ -1524,7 +1489,7 @@ function liveUpdate(){
     if(der&&L>0){
       var lp=Math.max(0,Math.ceil(L/S)-1);
       var sec=Math.ceil(L/S);
-      der.textContent='â '+lp+' line posts Â· '+sec+' sections Â· '+L+'ft';
+      der.textContent='→ '+lp+' line posts · '+sec+' sections · '+L+'ft';
     }
   });
   updateGov();
@@ -1556,7 +1521,7 @@ function onStyleChange(){
   liveUpdate();
 }
 
-// ââ STATE âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── STATE ─────────────────────────────────────────────────────────────────────
 var S={result:null,log:[],chat:[],tab:'BOM',loading:false};
 var vault=[];
 var extracted=null;
@@ -1567,7 +1532,7 @@ function gate(a){
   var r=f.includes(a)?'BLOCKED':al.includes(a)?'ALLOWED':'BLOCKED';
   S.log.push({a:a,r:r});
   var n=S.log.filter(function(l){return l.r==='ALLOWED';}).length;
-  document.getElementById('gc').textContent='LUNA Â· '+n;
+  document.getElementById('gc').textContent='LUNA · '+n;
   renderLog();return r==='ALLOWED';
 }
 
@@ -1590,7 +1555,7 @@ const VAULT_EVENT_MAP = {
   'luna_denial':       'LUNA_DENIAL'
 };
 
-// LifeVault remote write â fire-and-forget. See commit 0c21d0a for full implementation.
+// LifeVault remote write — fire-and-forget. See commit 0c21d0a for full implementation.
 // Step 6.3: accept gate-action names (via VAULT_EVENT_MAP), aliases for legacy
 // typos, or event_type names passed through directly.
 async function vaultRemote(input, data) {
@@ -1610,7 +1575,7 @@ async function vaultRemote(input, data) {
   }
   const cfg = window.HARDSAW_CONFIG;
   if (!cfg || !cfg.CONTRACTOR_ID || cfg.CONTRACTOR_ID.indexOf('PASTE_') === 0) {
-    console.warn('[vault] CONTRACTOR_ID not configured â skipping remote write');
+    console.warn('[vault] CONTRACTOR_ID not configured — skipping remote write');
     return;
   }
   try {
@@ -1634,7 +1599,7 @@ async function vaultRemote(input, data) {
       return;
     }
     const result = await resp.json();
-    console.log('[vault] appended', eventType, 'â', result.event_id);
+    console.log('[vault] appended', eventType, '→', result.event_id);
   } catch (e) {
     console.warn('[vault] remote write exception:', e && e.message ? e.message : e);
   }
@@ -1656,11 +1621,11 @@ async function vaultRemote(input, data) {
             var d=await r.json();
             return d.content&&d.content[0]?d.content[0].text:'Assist unavailable.';
       }catch(e){
-            return 'Assist offline â engine results valid.';
+            return 'Assist offline — engine results valid.';
       }
   }
 
-// ââ VISION ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── VISION ────────────────────────────────────────────────────────────────────
 async function handleImg(file,source){
   if(!file)return;
   document.getElementById('up-img').src='';
@@ -1690,11 +1655,11 @@ async function handleImg(file,source){
       extracted=data;
       var total=(data.fenceEdges||[]).length+(data.lineItems||[]).length;
       if(statusEl){statusEl.textContent='PARSED';statusEl.className='ev-status parsed';}
-      if(factsEl){factsEl.textContent=total+' extracted facts Â· '+data.confidence+' confidence';}
+      if(factsEl){factsEl.textContent=total+' extracted facts · '+data.confidence+' confidence';}
       renderExtracted(data);
     }catch(err){
       if(statusEl){statusEl.textContent='PARSE ERROR';statusEl.className='ev-status conflict';}
-      if(factsEl){factsEl.textContent='Could not parse â enter layout below';}
+      if(factsEl){factsEl.textContent='Could not parse — enter layout below';}
     }
   };
   reader.readAsDataURL(file);
@@ -1702,14 +1667,14 @@ async function handleImg(file,source){
 
 function renderExtracted(d){
   var box=document.getElementById('ext-box'),ttl=document.getElementById('ext-title'),cnt=document.getElementById('ext-cnt');
-  ttl.textContent='VISION EXTRACTED'+(d.quoteNumber?' Â· '+d.quoteNumber:'')+(d.vendor?' Â· '+d.vendor:'');
+  ttl.textContent='VISION EXTRACTED'+(d.quoteNumber?' · '+d.quoteNumber:'')+(d.vendor?' · '+d.vendor:'');
   var h='';
   if(d.layoutDescription)h+='<div style="color:var(--text);margin-bottom:8px;font-size:10px">'+esc(d.layoutDescription)+'</div>';
   if(d.fenceEdges&&d.fenceEdges.length)h+='<div style="color:var(--amber)">Fence runs: '+d.fenceEdges.map(function(e){return e.length+'ft';}).join(', ')+'</div>';
   if(d.openingEdges&&d.openingEdges.length)h+='<div style="color:var(--blue)">Gate openings: '+d.openingEdges.map(function(e){return e.length+'ft';}).join(', ')+'</div>';
   if(d.height_ft)h+='<div>Height: '+d.height_ft+'ft</div>';
   if(d.quoteTotal)h+='<div style="color:var(--amber);margin-top:4px">Quote total: $'+d.quoteTotal.toLocaleString()+'</div>';
-  if(d.lineItems&&d.lineItems.length){h+='<div style="margin-top:6px;font-size:7px;color:var(--muted);letter-spacing:2px">LINE ITEMS ('+d.lineItems.length+')</div>';d.lineItems.forEach(function(i){h+='<div style="font-size:9px;color:var(--dim)">'+i.qty+'Ã '+esc(i.description)+(i.sku?' ('+esc(i.sku)+')':'')+'</div>';});}
+  if(d.lineItems&&d.lineItems.length){h+='<div style="margin-top:6px;font-size:7px;color:var(--muted);letter-spacing:2px">LINE ITEMS ('+d.lineItems.length+')</div>';d.lineItems.forEach(function(i){h+='<div style="font-size:9px;color:var(--dim)">'+i.qty+'× '+esc(i.description)+(i.sku?' ('+esc(i.sku)+')':'')+'</div>';});}
   cnt.innerHTML=h;
   box.classList.remove('hidden');
 }
@@ -1728,7 +1693,7 @@ function applyExtracted(){
   liveUpdate();
 }
 
-// ââ EDGE CARDS ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── EDGE CARDS ────────────────────────────────────────────────────────────────
 var edgeN=0;
 function addEdge(kind,len,note){
   edgeN++;var id='e'+edgeN;
@@ -1741,9 +1706,9 @@ function addEdge(kind,len,note){
     +'<input type="hidden" class="edge-kind" value="'+kind+'">'
     +'<input class="inp edge-len" type="number" min="0.1" max="5000" step="0.5" placeholder="ft" value="'+(len||'')+'" style="width:80px;text-align:right;padding:6px 8px" oninput="liveUpdate()">'
     +'<input class="inp" type="text" placeholder="note" value="'+(note||'')+'" style="width:80px;font-size:11px;padding:6px 8px">'
-    +'<button class="del-btn" onclick="delEdge(\''+id+'\')">â</button>'
+    +'<button class="del-btn" onclick="delEdge(\''+id+'\')">✕</button>'
     +'</div>'
-    +(kind==='fence'?'<div class="edge-derived" id="der-'+id+'">â</div>':'');
+    +(kind==='fence'?'<div class="edge-derived" id="der-'+id+'">—</div>':'');
   document.getElementById('edges-container').appendChild(div);
   liveUpdate();
 }
@@ -1758,7 +1723,7 @@ function getEdges(){
   return out;
 }
 
-// ââ RUN JOB âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── RUN JOB ───────────────────────────────────────────────────────────────────
 async function runJob(){
   var edges=getEdges();
   if(!edges.filter(function(e){return e.kind==='fence';}).length){alert('Add at least one fence run.');return;}
@@ -1778,7 +1743,7 @@ async function runJob(){
   setRailStep('JOB INFO','done');setRailStep('FENCE STYLE','done');setRailStep('BUILD IT','active');
   show('s-think');
   S={result:null,log:[],chat:[],tab:'BOM',loading:false};vault=[];
-  document.getElementById('gc').textContent='LUNA Â· 0';
+  document.getElementById('gc').textContent='LUNA · 0';
 
   // Animate calculators
   var calcs=['A','B','C','D','E','F','G','H','I','J'];
@@ -1839,22 +1804,22 @@ document.getElementById('btn-save-job').style.display='inline-block';
 
   gate('assist_chat');
   var sum=await claude(
-    'You are Assist inside Hardsaw v3.1 â the field AI for Hardsaw Fence LLC, a premium KC Metro fence contractor. '
-    +'ROLE: The engine BUILD ITs and REVIEWs. You explain, derive, and answer field questions. Never re-estimate â trust the engine output. '
+    'You are Assist inside Hardsaw v3.1 — the field AI for Hardsaw Fence LLC, a premium KC Metro fence contractor. '
+    +'ROLE: The engine BUILD ITs and REVIEWs. You explain, derive, and answer field questions. Never re-estimate — trust the engine output. '
     +'RESPONSE RULES: Contractor-grade language. Direct answers. Cite calibration source when present. '
-    +'INSTALL DOCTRINE â use this to answer field questions: '
-    +'POST DEPTH: KC frost line = 36in per code. All posts minimum 36in deep. Bell-shaped hole (wider at bottom). Leave concrete 3-4in below grade â never flush. 6in gravel base. Gate posts 42-48in deep. '
+    +'INSTALL DOCTRINE — use this to answer field questions: '
+    +'POST DEPTH: KC frost line = 36in per code. All posts minimum 36in deep. Bell-shaped hole (wider at bottom). Leave concrete 3-4in below grade — never flush. 6in gravel base. Gate posts 42-48in deep. '
     +'CONCRETE: Wood = 1-2 bags per post, gate/corner posts add half bag. CL residential = 1 bag per post flat. Vinyl terminal/gate posts = fill hollow post with concrete + 2x half-inch rebar in opposing corners. Vinyl line posts = concrete around outside only. Steel ornamental = 36in footing required. '
     +'CHAIN LINK HARDWARE SEQUENCE: Set terminal posts first. Install brace band (bottom wire), then tension bands (flat side out = fabric side), then brace band + rail end cup (top rail). Tension bands = fence height minus 1, minimum 3. Tighten rail end cup before fabric. Fabric ties: 24in on rail, 12in on line posts. Tension correct when diamonds slightly elongated vertical, deflects 1-2in under hand pressure. '
-    +'GATE SECURITY: Top male CL hinge installed upside down â prevents lifting gate off hinges. '
+    +'GATE SECURITY: Top male CL hinge installed upside down — prevents lifting gate off hinges. '
     +'WOOD RAILS: 3 rails per 6ft fence. Bottom 8in off grade, middle 36in, top 60in. Gate posts: 6x6 for gates over 4ft wide. Anti-sag cable diagonal from bottom hinge corner to top latch corner. Leave 1/4-1/2in gap at latch side for wood expansion. '
-    +'ORNAMENTAL ALUMINUM: Driven posts (no concrete) on residential. Set gate end posts first â 24-48hr cure before hanging gate. Panels slot into pre-punched post holes. Self-tapping screws at each rail. Post caps with exterior adhesive last. Rack limit 12in per 6ft panel â beyond that stair-step with end posts. '
-    +'ORNAMENTAL STEEL: All posts in concrete 36in minimum. Cut ends: remove shavings, zinc primer, 2 coats touch-up paint â warranty void without. '
-    +'VINYL: Terminal/gate posts get rebar + filled with concrete to bottom of top rail hole. Mount gate hardware BEFORE filling gate post. Tape rail ends before filling â concrete travels through hollow rails. Line posts: concrete outside only. '
+    +'ORNAMENTAL ALUMINUM: Driven posts (no concrete) on residential. Set gate end posts first — 24-48hr cure before hanging gate. Panels slot into pre-punched post holes. Self-tapping screws at each rail. Post caps with exterior adhesive last. Rack limit 12in per 6ft panel — beyond that stair-step with end posts. '
+    +'ORNAMENTAL STEEL: All posts in concrete 36in minimum. Cut ends: remove shavings, zinc primer, 2 coats touch-up paint — warranty void without. '
+    +'VINYL: Terminal/gate posts get rebar + filled with concrete to bottom of top rail hole. Mount gate hardware BEFORE filling gate post. Tape rail ends before filling — concrete travels through hollow rails. Line posts: concrete outside only. '
     +'CANTILEVER GATES: 4 rollers + 4 covers + 1 latch per gate. Post sizing: up to 10ft opening = 3in OD, up to 20ft = 4in OD, up to 32ft = 6-5/8in OD. Footer: 18in dia x 42in deep for 3-4in posts. Counterbalance = 50% of opening width minimum. Install bottom rollers first, hang gate horizontal onto rollers, install top rollers last. '
     +'SLOPED TERRAIN: Rake up to 12in per 6ft panel (aluminum). Beyond that = stair-step. Stair-step = end posts (not line posts) at every grade break. Field-route second hole set after first panel set. Add 6in depth per 10% grade. '
-    +'GATE SAG: Check hinge post plumb first. If leaning â reset in concrete. If plumb â tighten turnbuckle cable diagonal from bottom hinge to top latch corner. Vinyl gate sag â check for post insert (steel angle inside vinyl post required for gate posts). '
-          +'SHARED POSTS: When a gate opening sits at a corner or end of a run, the gate post and corner/end post are the same physical post. Enter the count of these shared locations in the SHARED POSTS field â engine deducts them from terminal post total. Example: gate at corner = 1 shared post. Gate at end of run = 1 shared post. Gate between two runs with no corner = 0 shared posts. '
+    +'GATE SAG: Check hinge post plumb first. If leaning — reset in concrete. If plumb — tighten turnbuckle cable diagonal from bottom hinge to top latch corner. Vinyl gate sag — check for post insert (steel angle inside vinyl post required for gate posts). '
+          +'SHARED POSTS: When a gate opening sits at a corner or end of a run, the gate post and corner/end post are the same physical post. Enter the count of these shared locations in the SHARED POSTS field — engine deducts them from terminal post total. Example: gate at corner = 1 shared post. Gate at end of run = 1 shared post. Gate between two runs with no corner = 0 shared posts. '
     +'ROCKY SOIL: Surface rock = breaker bar or electric jack hammer. Deep rock = towable auger with carbide bit. Solid ledge = drill + epoxy anchor system.',
     style.label+': '+geo.buildLft+'lf build, '+geo.openingLft+'lf openings, '+ht+'ft, '
     +posts.totalPosts+' posts ('+posts.terminalPosts+' terminal, '+posts.linePosts+' line), '
@@ -1864,7 +1829,7 @@ document.getElementById('btn-save-job').style.display='inline-block';
   S.chat=[{role:'assist',text:sum}];renderChat();
 }
 
-// ââ RENDER ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ── RENDER ────────────────────────────────────────────────────────────────────
 var STC={ready:'var(--green)',needs_review:'var(--amber)',human_required:'#FF8800',not_ready:'var(--red)'};
 var STL={ready:'READY TO EXECUTE',needs_review:'NEEDS REVIEW',human_required:'HUMAN APPROVAL REQUIRED',not_ready:'NOT READY'};
 
@@ -1874,17 +1839,17 @@ function renderResultUI(){
   badge.style.color=STC[st];badge.style.borderColor=STC[st];badge.style.border='1px solid';
   document.getElementById('readiness-label').textContent=STL[st];
   document.getElementById('result-meta').textContent=
-    r.style.label+' Â· '+r.ht+'ft Â· build '+r.geo.buildLft+'ft Â· openings '+r.geo.openingLft+'ft Â· '
-    +r.posts.totalPosts+' posts Â· '+r.posts.totalSecs+' sections';
-  document.getElementById('hash-strip').textContent='GEO: '+r.geo.geoHash+' Â· DECISION: '+r.outHash;
+    r.style.label+' · '+r.ht+'ft · build '+r.geo.buildLft+'ft · openings '+r.geo.openingLft+'ft · '
+    +r.posts.totalPosts+' posts · '+r.posts.totalSecs+' sections';
+  document.getElementById('hash-strip').textContent='GEO: '+r.geo.geoHash+' · DECISION: '+r.outHash;
   var heroEl = document.getElementById('result-hero');
   if(heroEl) {
     var prTotal = (r.pricingResult && r.pricingResult.total)
       ? '$' + r.pricingResult.total.toLocaleString() + ' materials'
-      : r.matR.bom.length + ' items Â· pricing off';
+      : r.matR.bom.length + ' items · pricing off';
     document.getElementById('hero-total').textContent = prTotal;
-    document.getElementById('hero-meta').textContent  = r.style.label + ' Â· ' + r.ht + 'ft Â· ' + r.geo.buildLft + 'ft Â· ' + r.posts.totalPosts + ' posts';
-    var tl2 = (r.rdy && (r.rdy.trustLevel || r.rdy.level)) || 'â';
+    document.getElementById('hero-meta').textContent  = r.style.label + ' · ' + r.ht + 'ft · ' + r.geo.buildLft + 'ft · ' + r.posts.totalPosts + ' posts';
+    var tl2 = (r.rdy && (r.rdy.trustLevel || r.rdy.level)) || '—';
     var heroBadgeEl = document.getElementById('hero-badge');
     heroBadgeEl.textContent = tl2;
     heroBadgeEl.style.color = tl2==='CLEAR' ? 'var(--green)' : tl2.includes('HUMAN') ? 'var(--amber)' : 'var(--red)';
@@ -1912,18 +1877,16 @@ function renderTab(){
   var geo=r.geo,posts=r.posts,matR=r.matR,rdy=r.rdy;
 
   if(t==='BOM'){
-    if(!matR.bom.length){el.innerHTML='<div style="color:var(--red)">'+rdy.bl.map(function(b){return'â '+esc(b);}).join('<br>')+'</div>';return;}
-    var h='<div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">QUANTITIES ONLY â PRICING DEFERRED</div>';
+    if(!matR.bom.length){el.innerHTML='<div style="color:var(--red)">'+rdy.bl.map(function(b){return'⛔ '+esc(b);}).join('<br>')+'</div>';return;}
+    var h='<div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">QUANTITIES ONLY — PRICING DEFERRED</div>';
     var lastGrp='';
     h+='<div class="bom-head"><span>ITEM / SKU</span><span style="text-align:right">QTY</span><span>UNIT</span></div>';
-    var overrideInputN = 0;
-      matR.bom.forEach(function(i){
+    matR.bom.forEach(function(i){
       if(i.group&&i.group!==lastGrp){h+='<div class="bom-grp">'+i.group+'</div>';lastGrp=i.group;}
-      var priceCell='';
-      if(pricingOn){
-        var pc=PRICING.calcLineCost(i.s,i.qty);
-        priceCell=pc.has_price
-          ?'<div style="color:var(--amber);font-weight:bold;text-align:right;font-size:10px">
+      h+='<div class="bom-row"><div><div>'+esc(i.label)+'</div><div class="bom-sku">'+esc(i.s)+'</div></div>'
+        +'<div style="color:var(--amber);font-weight:bold;text-align:right">'+i.qty+'</div>'
+        +'<div style="color:var(--dim)">'+i.u+'</div></div>';
+    });
     // Geometry facts
     h+='<div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border2)">'
       +'<div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">GEOMETRY FACTS</div>'
@@ -1933,45 +1896,28 @@ function renderTab(){
      ['TOTAL POSTS',posts.totalPosts],['SECTIONS',posts.totalSecs],
      ['HOOKUPS',posts.hookups],['POST SPACING',posts.S+'ft O.C.']
     ].forEach(function(f){h+='<div><div style="font-size:7px;color:var(--muted);letter-spacing:1px">'+f[0]+'</div><div style="font-size:13px;font-weight:bold">'+f[1]+'</div></div>';});
-    if(pricingOn&&matR.pricingResult){
-      var pr2=matR.pricingResult;
-      var prRange=calcPriceRange(pr2.total);
-      h+='<div style="margin-top:12px;padding:10px;background:var(--panel2);border:1px solid var(--amber)44">'
-        +'<div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:6px">MATERIAL COST &#8212; CONTRACTOR</div>'
-        +'<div style="font-size:20px;font-weight:bold;color:var(--amber);font-family:var(--sans)">$'+pr2.total.toLocaleString()+'</div>'
-        +'<div style="font-size:8px;color:var(--dim);margin-top:4px">'+pr2.priced_items+'/'+matR.bom.length+' items priced &#183; '+pr2.coverage+'% SKU coverage &#183; '+pr2.note+'</div>'
-        +'</div>';
-      if(prRange){
-        h+='<div class="price-range-bar">'
-          +'<div class="price-range-label">CUSTOMER ESTIMATE RANGE</div>'
-          +'<div class="price-range-val">$'+prRange.low.toLocaleString()+' &#8211; $'+prRange.high.toLocaleString()+'</div>'
-          +'<div class="price-range-note">Materials only &#183; Final price set by wholesaler &#183; Valid 14 days from quote date</div>'
-          +'</div>';
-      }
-    }
-
     h+='</div></div>';
     // Version lineage
-    h+='<div class="ver-panel" style="margin-top:10px"><div class="ver-title">VERSION LINEAGE â RuleVersionSet</div>';
+    h+='<div class="ver-panel" style="margin-top:10px"><div class="ver-title">VERSION LINEAGE — RuleVersionSet</div>';
     Object.entries(r.versions).forEach(function(e){h+='<div class="ver-row"><span class="ver-k">'+esc(e[0])+'</span><span class="ver-v">'+esc(e[1])+'</span></div>';});
     h+='</div>';
-    if(r.sv.cal)h+='<div class="calib-tag">â CALIBRATED Â· AmeriFence '+r.sv.cal+' Â· '+r.sv.calDate+'</div>';
-    h+='<div class="hash-line">GEO: '+geo.geoHash+' Â· DECISION: '+r.outHash+'<br>PROOF: '+(r.invPass?'â ALL INVARIANTS PASS':'â PROOF FAILED')+'</div>';
+    if(r.sv.cal)h+='<div class="calib-tag">✓ CALIBRATED · AmeriFence '+r.sv.cal+' · '+r.sv.calDate+'</div>';
+    h+='<div class="hash-line">GEO: '+geo.geoHash+' · DECISION: '+r.outHash+'<br>PROOF: '+(r.invPass?'✓ ALL INVARIANTS PASS':'✗ PROOF FAILED')+'</div>';
     el.innerHTML=h;
 
   } else if(t==='PROOF'){
-    var h='<div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:10px">PROOF â EVERY VALUE TRACEABLE AND REPLAYABLE</div>';
-    h+='<div style="font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:6px">CALCULATOR A â GEOMETRY</div>';
+    var h='<div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:10px">PROOF — EVERY VALUE TRACEABLE AND REPLAYABLE</div>';
+    h+='<div style="font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:6px">CALCULATOR A — GEOMETRY</div>';
     [{k:'build_length_ft',v:geo.buildLft+'ft',f:geo.F.buildLft+' ft (fence edges)'},
      {k:'opening_length_ft',v:geo.openingLft+'ft',f:geo.F.openingLft+' ft (gate edges)'},
      {k:'total_length_ft',v:geo.totalLft+'ft',f:geo.buildLft+' + '+geo.openingLft},
      {k:'geometry_hash',v:geo.geoHash,f:'H(edges)'},
     ].forEach(function(p){h+='<div class="proof-row"><div class="proof-k">'+esc(p.k)+'</div><div><div class="proof-v">'+esc(String(p.v))+'</div><div class="proof-f">'+esc(p.f)+'</div></div></div>';});
 
-    h+='<div style="font-size:7px;letter-spacing:2px;color:var(--muted);margin:10px 0 6px">CALCULATOR B â POST LAYOUT</div>';
+    h+='<div style="font-size:7px;letter-spacing:2px;color:var(--muted);margin:10px 0 6px">CALCULATOR B — POST LAYOUT</div>';
     [{k:'terminal_posts = |V|',v:posts.terminalPosts,f:posts.F.tp},
-     {k:'line_posts = Î£ ceil(L/S)â1',v:posts.linePosts,f:posts.F.lp},
-     {k:'hookups = 2Ã|E|',v:posts.hookups,f:posts.F.hookups},
+     {k:'line_posts = Σ ceil(L/S)−1',v:posts.linePosts,f:posts.F.lp},
+     {k:'hookups = 2×|E|',v:posts.hookups,f:posts.F.hookups},
      {k:'total_sections',v:posts.totalSecs,f:posts.F.secs},
      {k:'post_spacing (S)',v:posts.S+'ft O.C.',f:'Locked rulepack '+r.style.rp.S+'ft'},
     ].forEach(function(p){h+='<div class="proof-row"><div class="proof-k">'+esc(p.k)+'</div><div><div class="proof-v">'+esc(String(p.v))+'</div><div class="proof-f">'+esc(p.f)+'</div></div></div>';});
@@ -1983,7 +1929,7 @@ function renderTab(){
 
     h+='<div style="font-size:7px;letter-spacing:2px;color:var(--muted);margin:10px 0 6px">MATERIAL FORMULA TRACE</div>';
     matR.bom.forEach(function(i){
-      h+='<div style="padding:5px 0;border-bottom:1px solid var(--border)"><div style="font-size:10px;color:var(--dim)">'+esc(i.label)+'</div><div style="font-size:8px;color:var(--dim);margin-top:2px">'+esc(i.formula)+' â '+i.qty+' '+i.u+'</div></div>';
+      h+='<div style="padding:5px 0;border-bottom:1px solid var(--border)"><div style="font-size:10px;color:var(--dim)">'+esc(i.label)+'</div><div style="font-size:8px;color:var(--dim);margin-top:2px">'+esc(i.formula)+' → '+i.qty+' '+i.u+'</div></div>';
     });
     h+='<div class="hash-line" style="margin-top:10px">GEO HASH: '+geo.geoHash+'<br>DECISION HASH: '+r.outHash+'</div>';
     el.innerHTML=h;
@@ -2027,18 +1973,18 @@ function renderTab(){
   } else if(t==='PACKETS'){
     var oh=r.outHash;
     var h='<div class="pkt-sec"><div class="pkt-hdr">CONTRACTOR PACKET</div><div class="pkt-body">'
-      +'Job: '+oh+'<br>'+r.style.label+' Â· '+r.ht+'ft<br>'
-      +'Build: '+geo.buildLft+'ft Â· Openings: '+geo.openingLft+'ft<br>'
+      +'Job: '+oh+'<br>'+r.style.label+' · '+r.ht+'ft<br>'
+      +'Build: '+geo.buildLft+'ft · Openings: '+geo.openingLft+'ft<br>'
       +'Posts: '+posts.totalPosts+' ('+posts.terminalPosts+' terminal, '+posts.linePosts+' line)<br>'
-      +'Sections: '+posts.totalSecs+' Â· '+posts.S+'ft O.C. Â· Gates: '+posts.walkGates+'W/'+posts.driveGates+'D<br>'
+      +'Sections: '+posts.totalSecs+' · '+posts.S+'ft O.C. · Gates: '+posts.walkGates+'W/'+posts.driveGates+'D<br>'
       +'Status: '+rdy.st.replace('_',' ').toUpperCase()
       +'</div></div>';
     h+='<div class="pkt-sec"><div class="pkt-hdr">SUPPLIER PACKET (PO DRAFT)</div><div class="pkt-body">'
-      +'PO: '+oh+'<br>'+matR.bom.map(function(i){return i.qty+'Ã '+i.s+' ('+i.u+')';}).join('<br>')+'</div></div>';
-    h+='<div class="pkt-sec"><div class="pkt-hdr">DECISION RECORD â DecisionResult</div><div class="pkt-body" style="font-size:9px">'
+      +'PO: '+oh+'<br>'+matR.bom.map(function(i){return i.qty+'× '+i.s+' ('+i.u+')';}).join('<br>')+'</div></div>';
+    h+='<div class="pkt-sec"><div class="pkt-hdr">DECISION RECORD — DecisionResult</div><div class="pkt-body" style="font-size:9px">'
       +'decisionId: '+oh+'<br>familyId: '+r.style.family+'<br>styleId: '+r.styleId+'<br>'
       +Object.entries(r.versions).map(function(e){return esc(e[0])+': '+esc(e[1]);}).join('<br>')+'</div></div>';
-    h+='<div class="pkt-sec"><div class="pkt-hdr">LIFEVAULT â APPEND-ONLY CHAIN</div><div class="pkt-body" style="font-size:9px">'
+    h+='<div class="pkt-sec"><div class="pkt-hdr">LIFEVAULT — APPEND-ONLY CHAIN</div><div class="pkt-body" style="font-size:9px">'
       +vault.map(function(e){return'<div style="display:flex;gap:8px;padding:2px 0;border-bottom:1px solid var(--border)"><span style="color:var(--amber);min-width:130px">'+e.t+'</span><span style="color:var(--dim)">'+e.h+'</span></div>';}).join('')+'</div></div>';
     el.innerHTML=h;
   }
@@ -2047,7 +1993,7 @@ function renderTab(){
 function renderChat(){
   var cb=document.getElementById('cb');if(!cb)return;
   cb.innerHTML=S.chat.map(function(m){
-    return'<div class="'+(m.role==='assist'?'msg-a':'msg-u')+'"><div class="'+(m.role==='assist'?'role-a':'role-u')+'">'+(m.role==='assist'?'ASSIST â EXPLAIN RESULT':'YOU')+'</div>'+esc(m.text)+'</div>';
+    return'<div class="'+(m.role==='assist'?'msg-a':'msg-u')+'"><div class="'+(m.role==='assist'?'role-a':'role-u')+'">'+(m.role==='assist'?'ASSIST — EXPLAIN RESULT':'YOU')+'</div>'+esc(m.text)+'</div>';
   }).join('')+(S.loading?'<div class="msg-a"><div class="role-a">ASSIST</div><span style="color:var(--muted)">thinking...</span></div>':'');
   cb.scrollTop=cb.scrollHeight;
 }
@@ -2142,7 +2088,7 @@ async function saveJob(){ var customerName=prompt('Customer name or job referenc
       }
     }
   }catch(_){}
-  var reply=await claude('You are Assist in Hardsaw v3.1 â field AI for Hardsaw Fence LLC, KC Metro premium fence contractor. Subordinate to the engine â never re-estimate, trust engine output. Answer field questions from install doctrine: KC frost line 36in, bell-shaped holes, concrete 3-4in below grade, gate posts 42-48in deep, CL tension bands = height minus 1 minimum 3, ornamental rack limit 12in per panel, cantilever posts 3-4-6in OD by opening size, stair-step needs end posts not line posts, gate sag check post plumb first. Contractor language. Direct answers.',
+  var reply=await claude('You are Assist in Hardsaw v3.1 — field AI for Hardsaw Fence LLC, KC Metro premium fence contractor. Subordinate to the engine — never re-estimate, trust engine output. Answer field questions from install doctrine: KC frost line 36in, bell-shaped holes, concrete 3-4in below grade, gate posts 42-48in deep, CL tension bands = height minus 1 minimum 3, ornamental rack limit 12in per panel, cantilever posts 3-4-6in OD by opening size, stair-step needs end posts not line posts, gate sag check post plumb first. Contractor language. Direct answers.',
     jctx+' | Q: '+msg);
   S.loading=false;S.chat.push({role:'assist',text:reply});renderChat();
 }
@@ -2156,7 +2102,7 @@ function setRailStep(id,state){
 function reset(){
   hideAssistFab();
   S={result:null,log:[],chat:[],tab:'BOM',loading:false};vault=[];extracted=null;
-  document.getElementById('gc').textContent='LUNA Â· 0';
+  document.getElementById('gc').textContent='LUNA · 0';
   document.getElementById('edges-container').innerHTML='';
   ['ends','corners','wg','dg','og'].forEach(function(id){
     var el=document.getElementById(id);if(el)el.value=id==='ends'?'2':'0';
@@ -2175,291 +2121,7 @@ function reset(){
   setRailStep('JOB INFO','active');
   // Reset gov panel
   document.getElementById('gv-proof').textContent='AWAITING INPUT';document.getElementById('gv-proof').className='gov-v dim';
-  document.getElementById('gv-ready').textContent='â';document.getElementById('gv-ready').className='gov-v dim';
-  edgeN=0;show('s-idle');addEdge('fence');liveUpdate();
-}
-
-function show(id){['s-idle','s-think','s-result','s-supplier'].forEach(function(s){var el=document.getElementById(s);if(el)el.classList.toggle('hidden',s!==id);});}
-function sleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
-function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-
-checkSupplierMode();
-// Init
-addEdge('fence');onStyleChange();
-</script>
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-+pc.extended.toLocaleString()+'</div>'
-          :'<div style="color:var(--dim);text-align:right;font-size:9px">--</div>';
-      } else {
-        priceCell='<div style="color:var(--dim)">'+i.u+'</div>';
-      }
-      var inputId = 'ov-'+overrideInputN++;
-      var isOverridden = FIELD_OVERRIDES[i.s] !== undefined;
-      h+='<div class="bom-override-row">'
-        +'<div><div style="'+(isOverridden?'color:var(--amber)':'')+'">'
-        +esc(i.label)+'</div>'
-        +'<div class="bom-sku">'+esc(i.s)+'</div></div>'
-        +'<div style="color:var(--amber);font-weight:bold;text-align:right">'
-        +(isOverridden?'<span style="text-decoration:line-through;color:var(--dim);font-size:9px">'+i.qty+'</span><br>'+FIELD_OVERRIDES[i.s].val:i.qty)
-        +'</div>'
-        +'<input class="bom-override-input" id="'+inputId+'" type="number" min="1" max="9999"'
-        +' value="'+(isOverridden?FIELD_OVERRIDES[i.s].val:i.qty)+'"'
-        +' data-engine-val="'+i.qty+'"'
-        +' placeholder="'+i.qty+'">'
-        +'<button class="bom-override-btn'+(isOverridden?' flagged':'')+'"'
-        +' onclick="flagOverride(\''+ esc(i.s) +'\',\''+ inputId +'\')">'
-        +(isOverridden?'\u2713':'\u2691')+'</button>'
-        +'</div>';
-    });
-    // Geometry facts
-    h+='<div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border2)">'
-      +'<div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">GEOMETRY FACTS</div>'
-      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">';
-    [['BUILD LF',geo.buildLft+'ft'],['OPENING LF',geo.openingLft+'ft'],
-     ['TERMINAL POSTS',posts.terminalPosts],['LINE POSTS',posts.linePosts],
-     ['TOTAL POSTS',posts.totalPosts],['SECTIONS',posts.totalSecs],
-     ['HOOKUPS',posts.hookups],['POST SPACING',posts.S+'ft O.C.']
-    ].forEach(function(f){h+='<div><div style="font-size:7px;color:var(--muted);letter-spacing:1px">'+f[0]+'</div><div style="font-size:13px;font-weight:bold">'+f[1]+'</div></div>';});
-    h+='</div></div>';
-    // Version lineage
-    h+='<div class="ver-panel" style="margin-top:10px"><div class="ver-title">VERSION LINEAGE â RuleVersionSet</div>';
-    Object.entries(r.versions).forEach(function(e){h+='<div class="ver-row"><span class="ver-k">'+esc(e[0])+'</span><span class="ver-v">'+esc(e[1])+'</span></div>';});
-    h+='</div>';
-    if(r.sv.cal)h+='<div class="calib-tag">â CALIBRATED Â· AmeriFence '+r.sv.cal+' Â· '+r.sv.calDate+'</div>';
-    h+='<div class="hash-line">GEO: '+geo.geoHash+' Â· DECISION: '+r.outHash+'<br>PROOF: '+(r.invPass?'â ALL INVARIANTS PASS':'â PROOF FAILED')+'</div>';
-    el.innerHTML=h;
-
-  } else if(t==='PROOF'){
-    var h='<div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:10px">PROOF â EVERY VALUE TRACEABLE AND REPLAYABLE</div>';
-    h+='<div style="font-size:7px;letter-spacing:2px;color:var(--muted);margin-bottom:6px">CALCULATOR A â GEOMETRY</div>';
-    [{k:'build_length_ft',v:geo.buildLft+'ft',f:geo.F.buildLft+' ft (fence edges)'},
-     {k:'opening_length_ft',v:geo.openingLft+'ft',f:geo.F.openingLft+' ft (gate edges)'},
-     {k:'total_length_ft',v:geo.totalLft+'ft',f:geo.buildLft+' + '+geo.openingLft},
-     {k:'geometry_hash',v:geo.geoHash,f:'H(edges)'},
-    ].forEach(function(p){h+='<div class="proof-row"><div class="proof-k">'+esc(p.k)+'</div><div><div class="proof-v">'+esc(String(p.v))+'</div><div class="proof-f">'+esc(p.f)+'</div></div></div>';});
-
-    h+='<div style="font-size:7px;letter-spacing:2px;color:var(--muted);margin:10px 0 6px">CALCULATOR B â POST LAYOUT</div>';
-    [{k:'terminal_posts = |V|',v:posts.terminalPosts,f:posts.F.tp},
-     {k:'line_posts = Î£ ceil(L/S)â1',v:posts.linePosts,f:posts.F.lp},
-     {k:'hookups = 2Ã|E|',v:posts.hookups,f:posts.F.hookups},
-     {k:'total_sections',v:posts.totalSecs,f:posts.F.secs},
-     {k:'post_spacing (S)',v:posts.S+'ft O.C.',f:'Locked rulepack '+r.style.rp.S+'ft'},
-    ].forEach(function(p){h+='<div class="proof-row"><div class="proof-k">'+esc(p.k)+'</div><div><div class="proof-v">'+esc(String(p.v))+'</div><div class="proof-f">'+esc(p.f)+'</div></div></div>';});
-
-    h+='<div style="font-size:7px;letter-spacing:2px;color:var(--muted);margin:10px 0 6px">INVARIANT CHECKS</div>';
-    Object.entries(r.invars).forEach(function(e){
-      h+='<div class="invariant-row"><span style="color:var(--muted);font-size:9px">'+esc(e[0])+'</span><span class="'+(e[1]?'inv-pass':'inv-fail')+'">'+(e[1]?'PASS':'FAIL')+'</span></div>';
-    });
-
-    h+='<div style="font-size:7px;letter-spacing:2px;color:var(--muted);margin:10px 0 6px">MATERIAL FORMULA TRACE</div>';
-    matR.bom.forEach(function(i){
-      h+='<div style="padding:5px 0;border-bottom:1px solid var(--border)"><div style="font-size:10px;color:var(--dim)">'+esc(i.label)+'</div><div style="font-size:8px;color:var(--dim);margin-top:2px">'+esc(i.formula)+' â '+i.qty+' '+i.u+'</div></div>';
-    });
-    h+='<div class="hash-line" style="margin-top:10px">GEO HASH: '+geo.geoHash+'<br>DECISION HASH: '+r.outHash+'</div>';
-    el.innerHTML=h;
-
-  } else if(t==='READY'){
-    var st=rdy.st;
-    var stateColor = st==='ready'?'#00E87A':st==='needs_review'?'#FFB800':st==='human_required'?'#FF8800':'#FF3030';
-    var h='<div style="font-size:14px;font-weight:bold;margin-bottom:12px;color:'+stateColor+'">'+STL[st]+'</div>';
-
-    // Trust gate summary
-    h+='<div class="bom-grp">TRUST GATE</div>';
-    h+='<div class="proof-row"><div class="proof-k">Trust level</div><div class="proof-v" style="color:'+stateColor+'">'+rdy.level+'</div></div>';
-    h+='<div class="proof-row"><div class="proof-k">Findings score</div><div class="proof-v">'+rdy.score+'</div></div>';
-    h+='<div class="proof-row"><div class="proof-k">Findings count</div><div class="proof-v">'+rdy.findings.length+'</div></div>';
-
-    // Unified findings list (sorted by severity descending)
-    if(rdy.findings.length){
-      h+='<div class="bom-grp">FINDINGS</div>';
-      var sortedF = rdy.findings.slice().sort(function(a,b){ return (SEVERITY_WEIGHTS[b.severity]||0) - (SEVERITY_WEIGHTS[a.severity]||0); });
-      h+='<ul class="al-list">';
-      sortedF.forEach(function(f){
-        var sevColor = f.severity==='CRITICAL'?'#FF3030':f.severity==='HIGH'?'#FF8800':f.severity==='MEDIUM'?'#FFB800':f.severity==='LOW'?'#888':'#555';
-        h+='<li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:11px;color:'+sevColor+';display:flex;justify-content:space-between;align-items:flex-start;gap:8px">'
-          +'<span><span style="font-weight:bold;letter-spacing:1px;font-size:9px;padding:1px 5px;border:1px solid '+sevColor+'44;border-radius:1px;margin-right:6px">'+f.severity+'</span>'+esc(f.message)+'</span>'
-          +'<span style="font-size:8px;color:var(--dim);letter-spacing:1px;white-space:nowrap;flex-shrink:0;margin-top:3px">['+esc(f.code)+']</span>'
-          +'</li>';
-      });
-      h+='</ul>';
-    } else {
-      h+='<div style="color:#00E87A;margin:10px 0;font-size:11px">All checks passed. No findings. Clear to execute.</div>';
-    }
-
-    h+='<div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border)">';
-    h+='<div class="bom-grp">LOCKED PARAMETERS</div>';
-    [['Rulepack',r.versions.styleRulepackVersion],['Vendor profile',r.versions.vendorProfileVersion],
-     ['Post spacing',posts.S+'ft O.C.'],['Gate schema','opening edge deduction'],['Proof state',r.invPass?'ALL PASS':'FAILED']
-    ].forEach(function(p){h+='<div class="proof-row"><div class="proof-k">'+p[0]+'</div><div class="proof-v" style="font-size:9px;color:var(--amber)">'+p[1]+'</div></div>';});
-    h+='</div>';
-    el.innerHTML=h;
-
-  } else if(t==='PACKETS'){
-    var oh=r.outHash;
-    var h='<div class="pkt-sec"><div class="pkt-hdr">CONTRACTOR PACKET</div><div class="pkt-body">'
-      +'Job: '+oh+'<br>'+r.style.label+' Â· '+r.ht+'ft<br>'
-      +'Build: '+geo.buildLft+'ft Â· Openings: '+geo.openingLft+'ft<br>'
-      +'Posts: '+posts.totalPosts+' ('+posts.terminalPosts+' terminal, '+posts.linePosts+' line)<br>'
-      +'Sections: '+posts.totalSecs+' Â· '+posts.S+'ft O.C. Â· Gates: '+posts.walkGates+'W/'+posts.driveGates+'D<br>'
-      +'Status: '+rdy.st.replace('_',' ').toUpperCase()
-      +'</div></div>';
-    h+='<div class="pkt-sec"><div class="pkt-hdr">SUPPLIER PACKET (PO DRAFT)</div><div class="pkt-body">'
-      +'PO: '+oh+'<br>'+matR.bom.map(function(i){return i.qty+'Ã '+i.s+' ('+i.u+')';}).join('<br>')+'</div></div>';
-    h+='<div class="pkt-sec"><div class="pkt-hdr">DECISION RECORD â DecisionResult</div><div class="pkt-body" style="font-size:9px">'
-      +'decisionId: '+oh+'<br>familyId: '+r.style.family+'<br>styleId: '+r.styleId+'<br>'
-      +Object.entries(r.versions).map(function(e){return esc(e[0])+': '+esc(e[1]);}).join('<br>')+'</div></div>';
-    h+='<div class="pkt-sec"><div class="pkt-hdr">LIFEVAULT â APPEND-ONLY CHAIN</div><div class="pkt-body" style="font-size:9px">'
-      +vault.map(function(e){return'<div style="display:flex;gap:8px;padding:2px 0;border-bottom:1px solid var(--border)"><span style="color:var(--amber);min-width:130px">'+e.t+'</span><span style="color:var(--dim)">'+e.h+'</span></div>';}).join('')+'</div></div>';
-    el.innerHTML=h;
-  }
-}
-
-function renderChat(){
-  var cb=document.getElementById('cb');if(!cb)return;
-  cb.innerHTML=S.chat.map(function(m){
-    return'<div class="'+(m.role==='assist'?'msg-a':'msg-u')+'"><div class="'+(m.role==='assist'?'role-a':'role-u')+'">'+(m.role==='assist'?'ASSIST â EXPLAIN RESULT':'YOU')+'</div>'+esc(m.text)+'</div>';
-  }).join('')+(S.loading?'<div class="msg-a"><div class="role-a">ASSIST</div><span style="color:var(--muted)">thinking...</span></div>':'');
-  cb.scrollTop=cb.scrollHeight;
-}
-
-function renderLog(){
-  var lc=document.getElementById('lc'),ll=document.getElementById('ll');if(!lc||!ll)return;
-  if(S.log.length){lc.classList.remove('hidden');ll.innerHTML=S.log.map(function(l){return'<div class="luna-row"><span style="color:'+(l.r==='ALLOWED'?'#00E87A':'#FF3030')+';min-width:60px">'+l.r+'</span><span style="color:var(--muted)">'+l.a+'</span></div>';}).join('');}
-}
-
-async function saveJob(){ var customerName=prompt('Customer name or job reference (e.g. "Smith - Oak Grove"):'); if(!customerName||!customerName.trim())return; var r=S.result; if(!r){alert('Run a job first.');return;} var spec={ decision_hash:r.outHash, geometry_hash:r.geo.geoHash, style:r.styleId, height_ft:r.ht, build_lf:r.geo.buildLft, opening_lf:r.geo.openingLft, total_lf:r.geo.totalLft, sections:r.posts.totalSecs, terminal_posts:r.posts.terminalPosts, line_posts:r.posts.linePosts, total_posts:r.posts.totalPosts, walk_gates:r.posts.walkGates, drive_gates:r.posts.driveGates, other_gates:r.posts.otherGates, concrete_bags:r.conc&&r.conc.totalBags?r.conc.totalBags:0, readiness:r.rdy.st, customer_ref:customerName.trim(), versions:r.versions, bom_items:r.matR.bom.length, saved_at:new Date().toISOString() }; var payload={ id:crypto.randomUUID(), contractor_id:'ce43db8b-1bd1-44fd-aece-c4ad7c26efcd', intent_id:'HARDSAW_JOB_'+r.outHash, trace_id:r.outHash.substring(0,8), state:'PACKETS_READY', canonical_spec:spec, ruleset_version:r.versions.styleRulepackVersion||'unknown', vendor_profile_version:r.versions.vendorProfileVersion||'unknown', core_engine_version:r.versions.coreEngineVersion||'unknown' }; try{ var resp=await fetch( 'https://unddklhbrmqvyqagomtn.supabase.co/rest/v1/jobs', { method:'POST', headers:{ 'apikey':window.HARDSAW_CONFIG.SUPABASE_ANON_KEY, 'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY, 'Content-Type':'application/json', 'Accept-Profile':'hardsaw', 'Content-Profile':'hardsaw', 'Prefer':'return=minimal' }, body:JSON.stringify(payload) } ); if(resp.ok||resp.status===201){ alert('Job saved. Decision: '+r.outHash+'\nCustomer: '+customerName.trim()); document.getElementById('btn-save-job').textContent='JOB SAVED \u2713'; document.getElementById('btn-save-job').disabled=true; } else { var err=await resp.text(); alert('Save failed: '+err); } }catch(e){ alert('Save error: '+e.message); } } async function sendChat(){
-  var inp=document.getElementById('ci');var msg=inp.value.trim();if(!msg||S.loading)return;
-  inp.value='';S.loading=true;S.chat.push({role:'user',text:msg});renderChat();gate('assist_chat');
-  var r=S.result;
-  var jctx='CURRENT JOB: '+r.style.label+' | '+r.ht+'ft height | '+r.geo.buildLft+'lf build | '+r.geo.openingLft+'lf openings | '
-    +'posts: '+r.posts.terminalPosts+' terminal + '+r.posts.linePosts+' line = '+r.posts.totalPosts+' total | '
-    +'spacing: '+r.posts.S+'ft O.C. | '
-    +'gates: '+r.posts.walkGates+'W '+r.posts.driveGates+'D '+r.posts.otherGates+'O | '
-    +'concrete: '+(r.conc&&r.conc.totalBags?r.conc.totalBags:'0')+' bags | '
-    +'sections: '+r.geo.totalLft+'lf total | '
-    +'readiness: '+r.rdy.st+' | decision: '+r.outHash;
-  try{
-    var mapResp=await fetch(
-      'https://unddklhbrmqvyqagomtn.supabase.co/rest/v1/vendor_product_mappings'
-      +'?select=rulepack_id,notes,product_lines!vendor_product_mappings_product_line_id_fkey(name,family,grade,coating,warranty_years,concrete_depth_in,colors_standard,notes),manufacturers!vendor_product_mappings_manufacturer_id_fkey(name,website)'
-      +'&rulepack_id=eq.'+encodeURIComponent(r.versions.styleRulepackVersion||r.versions.familyRulepackVersion||''),
-      {headers:{'apikey':window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,'Accept-Profile':'hardsaw'}}
-    );
-    if(mapResp.ok){
-      var mapData=await mapResp.json();
-      if(mapData&&mapData[0]){
-        var pl=mapData[0].product_lines||{};
-        var mfr=mapData[0].manufacturers||{};
-        jctx+=' | MANUFACTURER: '+mfr.name
-          +' ('+mfr.website+')'
-          +' | PRODUCT LINE: '+pl.name
-          +' | GRADE: '+(pl.grade||'residential')
-          +' | COATING: '+(pl.coating||'standard')
-          +' | WARRANTY: '+(pl.warranty_years===99?'lifetime':pl.warranty_years+'yr')
-          +' | FOOTER DEPTH: '+(pl.concrete_depth_in||36)+'in'
-          +' | COLORS: '+(pl.colors_standard||[]).join(', ')
-          +' | MFR NOTES: '+(pl.notes||'');
-      }
-    }
-  }catch(_){}
-  try{
-    var skus=(r.matR&&r.matR.bom?r.matR.bom:[]).map(function(b){return b.s;}).filter(Boolean);
-    if(skus.length>0){
-      var skuResp=await fetch(
-        'https://unddklhbrmqvyqagomtn.supabase.co/rest/v1/product_skus'
-        +'?select=sku,description,retail_price,contractor_price,pricing_model'
-        +'&sku=in.('+skus.map(function(s){return encodeURIComponent(s);}).join(',')+')',
-        {headers:{'apikey':window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,'Accept-Profile':'hardsaw'}}
-      );
-      if(skuResp.ok){
-        var skuData=await skuResp.json();
-        if(skuData&&skuData.length>0){
-          var priceMap={};
-          skuData.forEach(function(row){priceMap[row.sku]=row;});
-          var bomLines=[];var totalRetail=0;var totalContractor=0;var hasQuote=false;
-          r.matR.bom.forEach(function(b){
-            var pd=priceMap[b.s];
-            if(pd){
-              var rp=pd.retail_price?parseFloat(pd.retail_price):null;
-              var cp=pd.contractor_price?parseFloat(pd.contractor_price):null;
-              var pm=pd.pricing_model||'unknown';
-              if(pm==='quote_required'){hasQuote=true;}
-              var lineR=rp?Math.round(rp*b.qty*100)/100:null;
-              var lineC=cp?Math.round(cp*b.qty*100)/100:null;
-              if(lineR)totalRetail+=lineR;
-              if(lineC)totalContractor+=lineC;
-              bomLines.push(b.s+' x'+b.qty+(lineC?' =$'+lineC:(lineR?' =retail$'+lineR:' =quote_required')));
-            }
-          });
-          if(bomLines.length>0){
-            var today=new Date();
-            var staleSkus=[];
-            skuData.forEach(function(row){
-              if(row.verified_date){
-                var vd=new Date(row.verified_date);
-                var daysDiff=Math.floor((today-vd)/(1000*60*60*24));
-                if(daysDiff>30) staleSkus.push(row.sku+'('+daysDiff+'d)');
-              }
-            });
-            jctx+=' | MATERIAL COST ESTIMATE:'
-              +(totalContractor>0?' contractor=$'+Math.round(totalContractor*100)/100:'')
-              +(totalRetail>0?' retail=$'+Math.round(totalRetail*100)/100:'')
-              +(hasQuote?' (some items quote_required)':'')
-              +(staleSkus.length>0?' PRICE_WARNING: '+staleSkus.length+' SKUs unverified >30 days: '+staleSkus.join(','):'')
-              +' | BOM_LINES: '+bomLines.join(' | ');
-          }
-        }
-      }
-    }
-  }catch(_){}
-  var reply=await claude('You are Assist in Hardsaw v3.1 â field AI for Hardsaw Fence LLC, KC Metro premium fence contractor. Subordinate to the engine â never re-estimate, trust engine output. Answer field questions from install doctrine: KC frost line 36in, bell-shaped holes, concrete 3-4in below grade, gate posts 42-48in deep, CL tension bands = height minus 1 minimum 3, ornamental rack limit 12in per panel, cantilever posts 3-4-6in OD by opening size, stair-step needs end posts not line posts, gate sag check post plumb first. Contractor language. Direct answers.',
-    jctx+' | Q: '+msg);
-  S.loading=false;S.chat.push({role:'assist',text:reply});renderChat();
-}
-
-function setRailStep(id,state){
-  var el=document.getElementById('rail-'+id);
-  if(!el)return;
-  el.className='rail-step'+(state==='active'?' active':state==='done'?' done':'');
-}
-
-function reset(){
-  hideAssistFab();
-  S={result:null,log:[],chat:[],tab:'BOM',loading:false};vault=[];extracted=null;
-  document.getElementById('gc').textContent='LUNA Â· 0';
-  document.getElementById('edges-container').innerHTML='';
-  ['ends','corners','wg','dg','og'].forEach(function(id){
-    var el=document.getElementById(id);if(el)el.value=id==='ends'?'2':'0';
-  });
-  document.querySelectorAll('.flag-btn.on').forEach(function(b){b.classList.remove('on');});
-  document.getElementById('lc').classList.add('hidden');
-  document.getElementById('up-wrap').classList.add('hidden');
-  document.getElementById('ext-box').classList.add('hidden');
-  // Reset evidence cards
-  ['quote','sketch','site'].forEach(function(t){
-    var st=document.getElementById('ev-'+t+'-st');var ft=document.getElementById('ev-'+t+'-facts');
-    if(st){st.textContent='MISSING';st.className='ev-status';}if(ft)ft.textContent='';
-  });
-  // Reset rail
-  ['JOB INFO','FENCE STYLE','BUILD IT','REVIEW','SAVE'].forEach(function(id){setRailStep(id,'');});
-  setRailStep('JOB INFO','active');
-  // Reset gov panel
-  document.getElementById('gv-proof').textContent='AWAITING INPUT';document.getElementById('gv-proof').className='gov-v dim';
-  document.getElementById('gv-ready').textContent='â';document.getElementById('gv-ready').className='gov-v dim';
+  document.getElementById('gv-ready').textContent='—';document.getElementById('gv-ready').className='gov-v dim';
   edgeN=0;show('s-idle');addEdge('fence');liveUpdate();
 }
 
