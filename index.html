@@ -2086,91 +2086,32 @@ function renderLog(){
 
 async function saveJob(){ var customerName=prompt('Customer name or job reference (e.g. "Smith - Oak Grove"):'); if(!customerName||!customerName.trim())return; var r=S.result; if(!r){alert('Run a job first.');return;} var spec={ decision_hash:r.outHash, geometry_hash:r.geo.geoHash, style:r.styleId, height_ft:r.ht, build_lf:r.geo.buildLft, opening_lf:r.geo.openingLft, total_lf:r.geo.totalLft, sections:r.posts.totalSecs, terminal_posts:r.posts.terminalPosts, line_posts:r.posts.linePosts, total_posts:r.posts.totalPosts, walk_gates:r.posts.walkGates, drive_gates:r.posts.driveGates, other_gates:r.posts.otherGates, concrete_bags:r.conc&&r.conc.totalBags?r.conc.totalBags:0, readiness:r.rdy.st, customer_ref:customerName.trim(), versions:r.versions, bom_items:r.matR.bom.length, saved_at:new Date().toISOString() }; var payload={ id:crypto.randomUUID(), contractor_id:'ce43db8b-1bd1-44fd-aece-c4ad7c26efcd', intent_id:'HARDSAW_JOB_'+r.outHash, trace_id:r.outHash.substring(0,8), state:'PACKETS_READY', canonical_spec:spec, ruleset_version:r.versions.styleRulepackVersion||'unknown', vendor_profile_version:r.versions.vendorProfileVersion||'unknown', core_engine_version:r.versions.coreEngineVersion||'unknown' }; try{ var resp=await fetch( 'https://unddklhbrmqvyqagomtn.supabase.co/rest/v1/jobs', { method:'POST', headers:{ 'apikey':window.HARDSAW_CONFIG.SUPABASE_ANON_KEY, 'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY, 'Content-Type':'application/json', 'Accept-Profile':'hardsaw', 'Content-Profile':'hardsaw', 'Prefer':'return=minimal' }, body:JSON.stringify(payload) } ); if(resp.ok||resp.status===201){ alert('Job saved. Decision: '+r.outHash+'\nCustomer: '+customerName.trim()); document.getElementById('btn-save-job').textContent='JOB SAVED \u2713'; document.getElementById('btn-save-job').disabled=true; } else { var err=await resp.text(); alert('Save failed: '+err); } }catch(e){ alert('Save error: '+e.message); } } async function sendChat(){
   var inp=document.getElementById('ci');var msg=inp.value.trim();if(!msg||S.loading)return;
-  inp.value='';S.loading=true;S.chat.push({role:'user',text:msg});renderChat();gate('assist_chat');
+  inp.value='';S.loading=true;S.chat.push({role:'user',text:msg});renderChat();
+  lunaGate('assist_chat');
   var r=S.result;
-  var jctx='CURRENT JOB: '+r.style.label+' | '+r.ht+'ft height | '+r.geo.buildLft+'lf build | '+r.geo.openingLft+'lf openings | '
-    +'posts: '+r.posts.terminalPosts+' terminal + '+r.posts.linePosts+' line = '+r.posts.totalPosts+' total | '
-    +'spacing: '+r.posts.S+'ft O.C. | '
-    +'gates: '+r.posts.walkGates+'W '+r.posts.driveGates+'D '+r.posts.otherGates+'O | '
-    +'concrete: '+(r.conc&&r.conc.totalBags?r.conc.totalBags:'0')+' bags | '
-    +'sections: '+r.geo.totalLft+'lf total | '
-    +'readiness: '+r.rdy.st+' | decision: '+r.outHash;
-  try{
-    var mapResp=await fetch(
-      'https://unddklhbrmqvyqagomtn.supabase.co/rest/v1/vendor_product_mappings'
-      +'?select=rulepack_id,notes,product_lines!vendor_product_mappings_product_line_id_fkey(name,family,grade,coating,warranty_years,concrete_depth_in,colors_standard,notes),manufacturers!vendor_product_mappings_manufacturer_id_fkey(name,website)'
-      +'&rulepack_id=eq.'+encodeURIComponent(r.versions.styleRulepackVersion||r.versions.familyRulepackVersion||''),
-      {headers:{'apikey':window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,'Accept-Profile':'hardsaw'}}
-    );
-    if(mapResp.ok){
-      var mapData=await mapResp.json();
-      if(mapData&&mapData[0]){
-        var pl=mapData[0].product_lines||{};
-        var mfr=mapData[0].manufacturers||{};
-        jctx+=' | MANUFACTURER: '+mfr.name
-          +' ('+mfr.website+')'
-          +' | PRODUCT LINE: '+pl.name
-          +' | GRADE: '+(pl.grade||'residential')
-          +' | COATING: '+(pl.coating||'standard')
-          +' | WARRANTY: '+(pl.warranty_years===99?'lifetime':pl.warranty_years+'yr')
-          +' | FOOTER DEPTH: '+(pl.concrete_depth_in||36)+'in'
-          +' | COLORS: '+(pl.colors_standard||[]).join(', ')
-          +' | MFR NOTES: '+(pl.notes||'');
-      }
-    }
-  }catch(_){}
-  try{
-    var skus=(r.matR&&r.matR.bom?r.matR.bom:[]).map(function(b){return b.s;}).filter(Boolean);
-    if(skus.length>0){
-      var skuResp=await fetch(
-        'https://unddklhbrmqvyqagomtn.supabase.co/rest/v1/product_skus'
-        +'?select=sku,description,retail_price,contractor_price,pricing_model'
-        +'&sku=in.('+skus.map(function(s){return encodeURIComponent(s);}).join(',')+')',
-        {headers:{'apikey':window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,'Accept-Profile':'hardsaw'}}
-      );
-      if(skuResp.ok){
-        var skuData=await skuResp.json();
-        if(skuData&&skuData.length>0){
-          var priceMap={};
-          skuData.forEach(function(row){priceMap[row.sku]=row;});
-          var bomLines=[];var totalRetail=0;var totalContractor=0;var hasQuote=false;
-          r.matR.bom.forEach(function(b){
-            var pd=priceMap[b.s];
-            if(pd){
-              var rp=pd.retail_price?parseFloat(pd.retail_price):null;
-              var cp=pd.contractor_price?parseFloat(pd.contractor_price):null;
-              var pm=pd.pricing_model||'unknown';
-              if(pm==='quote_required'){hasQuote=true;}
-              var lineR=rp?Math.round(rp*b.qty*100)/100:null;
-              var lineC=cp?Math.round(cp*b.qty*100)/100:null;
-              if(lineR)totalRetail+=lineR;
-              if(lineC)totalContractor+=lineC;
-              bomLines.push(b.s+' x'+b.qty+(lineC?' =$'+lineC:(lineR?' =retail$'+lineR:' =quote_required')));
-            }
-          });
-          if(bomLines.length>0){
-            var today=new Date();
-            var staleSkus=[];
-            skuData.forEach(function(row){
-              if(row.verified_date){
-                var vd=new Date(row.verified_date);
-                var daysDiff=Math.floor((today-vd)/(1000*60*60*24));
-                if(daysDiff>30) staleSkus.push(row.sku+'('+daysDiff+'d)');
-              }
-            });
-            jctx+=' | MATERIAL COST ESTIMATE:'
-              +(totalContractor>0?' contractor=$'+Math.round(totalContractor*100)/100:'')
-              +(totalRetail>0?' retail=$'+Math.round(totalRetail*100)/100:'')
-              +(hasQuote?' (some items quote_required)':'')
-              +(staleSkus.length>0?' PRICE_WARNING: '+staleSkus.length+' SKUs unverified >30 days: '+staleSkus.join(','):'')
-              +' | BOM_LINES: '+bomLines.join(' | ');
-          }
-        }
-      }
-    }
-  }catch(_){}
-  var reply=await claude('You are Assist in Hardsaw v3.1 — field AI for Hardsaw Fence LLC, KC Metro premium fence contractor. Subordinate to the engine — never re-estimate, trust engine output. Answer field questions from install doctrine: KC frost line 36in, bell-shaped holes, concrete 3-4in below grade, gate posts 42-48in deep, CL tension bands = height minus 1 minimum 3, ornamental rack limit 12in per panel, cantilever posts 3-4-6in OD by opening size, stair-step needs end posts not line posts, gate sag check post plumb first. Contractor language. Direct answers.',
-    jctx+' | Q: '+msg);
+  var bomLines=r.matR.bom.map(function(i){return i.qty+'x '+i.label+' ('+i.s+') formula: '+i.formula;}).join(' | ');
+  var warnLines=(r.matR.warn&&r.matR.warn.length)?r.matR.warn.join('; '):'none';
+  var priceLine=(window.PRICING&&PRICING.enabled&&r.pricingResult)?'Contractor total: $'+r.pricingResult.total.toLocaleString()+' ('+r.pricingResult.coverage+'% priced)'  :'Pricing off';
+  var overrides=Object.keys(FIELD_OVERRIDES).length?JSON.stringify(FIELD_OVERRIDES):'none';
+  var proofLines=r.matR.bom.map(function(i){return i.s+': '+i.formula+' = '+i.qty;}).join(' | ');
+  var reply=await claude(
+    'You are Assist inside Hardsaw Fence -- a governed fence estimating engine used by a contractor in the field. '
+    +'The engine has already computed the BOM. Your only job is to explain it clearly in plain contractor language. '
+    +'Never estimate independently. Never invent SKUs. Never override what the engine computed. Never suggest prices without data. '
+    +'You can explain any BOM line, show the formula derivation, explain post count, explain bracket count, compare to a quote, explain a warning, or explain trust gate status. '
+    +'Keep answers to 2-3 sentences max. Plain English. Contractor is reading this on a phone at a job site.',
+    'JOB: '+r.style.label+' '+r.ht+'ft '+r.geo.buildLft+'ft build'
+    +' | POSTS: '+r.posts.totalPosts+' total ('+r.posts.terminalPosts+' terminal + '+r.posts.linePosts+' line) at '+r.posts.S+'ft OC'
+    +' | SECTIONS: '+r.posts.totalSecs
+    +' | TRUST: '+(r.rdy.trustLevel||r.rdy.level||'--')
+    +' | DECISION: '+r.outHash
+    +' | BOM: '+bomLines
+    +' | FORMULAS: '+proofLines
+    +' | PRICING: '+priceLine
+    +' | WARNINGS: '+warnLines
+    +' | FIELD OVERRIDES: '+overrides
+    +' | QUESTION: '+msg
+  );
   S.loading=false;S.chat.push({role:'assist',text:reply});renderChat();
 }
 
