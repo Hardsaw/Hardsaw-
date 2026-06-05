@@ -574,6 +574,16 @@ textarea,input{outline:none}
 .sup-total-coverage{font-size:8px;color:var(--dim);margin-top:2px;text-align:right}
 .sup-hash-line{font-size:7px;color:var(--dim);margin-top:14px;padding-top:10px;border-top:1px solid var(--border);line-height:1.8;word-break:break-all}
 .sup-watermark{text-align:center;font-size:7px;letter-spacing:3px;color:var(--border2);margin-top:20px;padding-top:10px}
+/* FIELD OVERRIDE */
+.bom-override-row{display:grid;grid-template-columns:1fr 40px 80px 28px;gap:4px;padding:5px 0;border-bottom:1px solid var(--border);font-size:11px;align-items:center}
+.bom-override-input{width:100%;background:var(--black);border:1px solid var(--border2);border-radius:1px;color:var(--amber);font-size:11px;font-family:var(--mono);padding:3px 6px;text-align:right;outline:none}
+.bom-override-input:focus{border-color:var(--amber)}
+.bom-override-btn{background:transparent;border:1px solid var(--border2);color:var(--muted);font-size:9px;padding:3px 4px;cursor:pointer;border-radius:1px;font-family:var(--mono)}
+.bom-override-btn.flagged{border-color:var(--amber);color:var(--amber)}
+.price-range-bar{margin-top:12px;padding:10px 12px;background:var(--panel2);border:1px solid var(--border2);border-left:3px solid var(--green)}
+.price-range-label{font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:4px}
+.price-range-val{font-size:20px;font-weight:bold;font-family:var(--sans);color:var(--green)}
+.price-range-note{font-size:8px;color:var(--dim);margin-top:3px}
 </style>
 </head>
 <body>
@@ -969,6 +979,31 @@ textarea,input{outline:none}
 </div>
 
 <script>
+// FIELD OVERRIDE SYSTEM
+var FIELD_OVERRIDES={};
+function flagOverride(sku,inputId){
+  var el=document.getElementById(inputId);
+  var val=parseInt(el.value);
+  if(!val||val<=0)return;
+  var btn=el.parentElement.querySelector('.bom-override-btn');
+  if(FIELD_OVERRIDES[sku]&&FIELD_OVERRIDES[sku].val===val){
+    delete FIELD_OVERRIDES[sku];
+    if(btn){btn.textContent='!';btn.classList.remove('flagged');}
+    renderTab();
+    return;
+  }
+  FIELD_OVERRIDES[sku]={val:val,engine_val:parseInt(el.dataset.engineVal),ts:Date.now(),decision_hash:S.result?S.result.outHash:'--'};
+  if(btn){btn.textContent='OK';btn.classList.add('flagged');}
+  if(typeof vadd==='function'&&S.result){
+    vadd('CLIF_CHANGE_REQUEST',{sku:sku,engine_qty:FIELD_OVERRIDES[sku].engine_val,field_qty:val,delta:val-FIELD_OVERRIDES[sku].engine_val,decision_hash:S.result.outHash,style_id:S.result.styleId,note:'Contractor field override - pending pattern confirmation'});
+  }
+  renderTab();
+}
+function calcPriceRange(total){
+  if(!total||total<=0)return null;
+  return{low:Math.round(total*1.40/50)*50,high:Math.round(total*1.65/50)*50};
+}
+
 // ── SUPPLIER VIEW ────────────────────────────────────────────────────────────────────
 var SUPPLIER_MODE = false;
 
@@ -1881,12 +1916,51 @@ function renderTab(){
     var h='<div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">QUANTITIES ONLY — PRICING DEFERRED</div>';
     var lastGrp='';
     h+='<div class="bom-head"><span>ITEM / SKU</span><span style="text-align:right">QTY</span><span>UNIT</span></div>';
+        var overrideN=0;
     matR.bom.forEach(function(i){
       if(i.group&&i.group!==lastGrp){h+='<div class="bom-grp">'+i.group+'</div>';lastGrp=i.group;}
-      h+='<div class="bom-row"><div><div>'+esc(i.label)+'</div><div class="bom-sku">'+esc(i.s)+'</div></div>'
-        +'<div style="color:var(--amber);font-weight:bold;text-align:right">'+i.qty+'</div>'
-        +'<div style="color:var(--dim)">'+i.u+'</div></div>';
+      var priceCell='';
+      if(pricingOn){
+        var pc=PRICING.calcLineCost(i.s,i.qty);
+        priceCell=pc.has_price
+          ?'<div style="color:var(--amber);font-weight:bold;text-align:right;font-size:10px">$'+pc.extended.toLocaleString()+'</div>'
+          :'<div style="color:var(--dim);text-align:right;font-size:9px">--</div>';
+      } else {
+        priceCell='<div style="color:var(--dim)">'+i.u+'</div>';
+      }
+      var inputId='ov-'+overrideN++;
+      var isOv=FIELD_OVERRIDES[i.s]!==undefined;
+      h+='<div class="bom-override-row">'
+        +'<div><div style="'+(isOv?'color:var(--amber)':'')+'">'+esc(i.label)+'</div>'
+        +'<div class="bom-sku">'+esc(i.s)+'</div></div>'
+        +'<div style="color:var(--amber);font-weight:bold;text-align:right">'
+        +(isOv?'<span style="text-decoration:line-through;color:var(--dim);font-size:9px">'+i.qty+'</span><br>'+FIELD_OVERRIDES[i.s].val:i.qty)
+        +'</div>'
+        +'<input class="bom-override-input" id="'+inputId+'" type="number" min="1" max="9999"'
+        +' value="'+(isOv?FIELD_OVERRIDES[i.s].val:i.qty)+'"'
+        +' data-engine-val="'+i.qty+'"'
+        +' placeholder="'+i.qty+'">'
+        +'<button class="bom-override-btn'+(isOv?' flagged':'')+'"'
+        +' onclick="flagOverride(\''+esc(i.s)+'\',\''+inputId+'\')">'
+        +(isOv?'OK':'!')+'</button>'
+        +'</div>';
     });
+    if(pricingOn&&r.pricingResult){
+      var pr2=r.pricingResult;
+      var prRange=calcPriceRange(pr2.total);
+      h+='<div style="margin-top:12px;padding:10px;background:var(--panel2);border:1px solid var(--amber)44">'
+        +'<div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:6px">MATERIAL COST - CONTRACTOR</div>'
+        +'<div style="font-size:20px;font-weight:bold;color:var(--amber);font-family:var(--sans)">$'+pr2.total.toLocaleString()+'</div>'
+        +'<div style="font-size:8px;color:var(--dim);margin-top:4px">'+pr2.priced_items+'/'+matR.bom.length+' items priced . '+pr2.coverage+'% SKU coverage . '+pr2.note+'</div>'
+        +'</div>';
+      if(prRange){
+        h+='<div class="price-range-bar">'
+          +'<div class="price-range-label">CUSTOMER ESTIMATE RANGE</div>'
+          +'<div class="price-range-val">$'+prRange.low.toLocaleString()+' - $'+prRange.high.toLocaleString()+'</div>'
+          +'<div class="price-range-note">Materials only. Final price set by wholesaler. Valid 14 days.</div>'
+          +'</div>';
+      }
+    }
     // Geometry facts
     h+='<div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border2)">'
       +'<div style="font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:8px">GEOMETRY FACTS</div>'
