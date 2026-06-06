@@ -1135,7 +1135,7 @@ function renderStyleCards(styleId){
       var vd=VERSIONS&&VERSIONS.styles?VERSIONS.styles[id]:null;
       var info=STYLE_PHOTOS[id]||{emoji:STYLE_ICONS[fam]||'◆',sub:s.note?s.note.substring(0,40):''};
       var active=id===curVer;
-      return '<div class="style-card'+(active?' active':'')+" onclick=\"selectVersion('"+id+"')\">'
+      return '<div class="style-card'+(active?' active':'')+' onclick="selectVersion(\''+id+'\')">'
         +'<div class="style-card-img">'+info.emoji+'</div>'
         +'<div class="style-card-body">'
         +'<div class="style-card-name">'+(s.label||id)+'</div>'
