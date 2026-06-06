@@ -1099,24 +1099,24 @@ var STYLE_ICONS = {
   'storage_cage':'⊟'
 };
 var STYLE_PHOTOS = {
-  'wood.privacy.tight_cedar':    {emoji:'🪵', sub:'Cedar 1x6 · 8ft O.C. · 3 rails'},
-  'wood.privacy.solid_board':    {emoji:'🪵', sub:'Wide board · 8ft O.C. · 3 rails'},
-  'wood.shadowbox.standard':     {emoji:'🌲', sub:'Shadowbox · alternating pickets'},
-  'wood.privacy.spaced_picket':  {emoji:'🌿', sub:'Spaced picket · 4ft · open style'},
-  'chain_link.residential.galvanized': {emoji:'🔗', sub:'Galvanized · residential · 4-6ft'},
-  'chain_link.residential.black':      {emoji:'⛓', sub:'Black vinyl · residential · 4-6ft'},
-  'chain_link.commercial.galvanized':  {emoji:'🔗', sub:'Galvanized · commercial · 6-8ft'},
-  'chain_link.commercial.black':       {emoji:'⛓', sub:'Black vinyl · commercial · 6-8ft'},
-  'ornamental.steel.flat_top_3rail':   {emoji:'✦', sub:'Steel DM · 8ft bays · flat top'},
-  'ornamental.steel.spear_top_3rail':  {emoji:'⚜', sub:'Steel DM · 8ft bays · spear top'},
-  'ornamental.steel.flat_top_pool':    {emoji:'🏊', sub:'Pool code · self-close hinge'},
-  'ornamental.aluminum.flat_top_3rail':{emoji:'◈', sub:'Aluminum · 6ft bays · inset panels'},
-  'ornamental.aluminum.spear_top_3rail':{emoji:'◇', sub:'Aluminum · 6ft bays · spear top'},
-  'vinyl.privacy.tongue_groove':       {emoji:'▭', sub:'Vinyl privacy · white/tan/gray'},
-  'vinyl.picket.scalloped':            {emoji:'▫', sub:'Vinyl semi-privacy · spaced'},
-  'farm.no_climb.horse':               {emoji:'⊞', sub:'Field fence · wire · farm'},
-  'farm.barbed.5strand':               {emoji:'⊟', sub:'Barbed wire · 5-strand'},
-  'storage_cage.standard':             {emoji:'⊟', sub:'Storage cage · flat mount brackets'},
+  'wood.privacy.tight_cedar':           {img:'/images/wood-privacy.jpg',    sub:'Cedar 1x6 · 8ft O.C. · solid privacy'},
+  'wood.privacy.solid_board':           {img:'/images/wood-privacy.jpg',    sub:'Wide board · 8ft O.C. · solid privacy'},
+  'wood.shadowbox.standard':            {emoji:'🌲',                         sub:'Shadowbox · alternating pickets'},
+  'wood.privacy.spaced_picket':         {emoji:'🌿',                         sub:'Spaced picket · 4ft · open style'},
+  'chain_link.residential.galvanized':  {emoji:'🔗',                         sub:'Galvanized · residential · 4-6ft'},
+  'chain_link.residential.black':       {img:'/images/chain-link-black.jpg', sub:'Black vinyl · residential · 4-6ft'},
+  'chain_link.commercial.galvanized':   {emoji:'🔗',                         sub:'Galvanized · commercial · heavy gauge'},
+  'chain_link.commercial.black':        {img:'/images/chain-link-black.jpg', sub:'Black vinyl · commercial · heavy gauge'},
+  'ornamental.steel.flat_top_3rail':    {img:'/images/ornamental-steel.jpg', sub:'Steel DM · 8ft bays · flat top'},
+  'ornamental.steel.spear_top_3rail':   {img:'/images/ornamental-steel.jpg', sub:'Steel DM · 8ft bays · spear top'},
+  'ornamental.steel.flat_top_pool':     {emoji:'🏊',                         sub:'Pool code · self-closing hinge'},
+  'ornamental.aluminum.flat_top_3rail': {emoji:'◈',                          sub:'Aluminum · 6ft bays · inset panels'},
+  'ornamental.aluminum.spear_top_3rail':{emoji:'◇',                          sub:'Aluminum · 6ft bays · spear top'},
+  'vinyl.privacy.tongue_groove':        {img:'/images/vinyl-privacy.jpg',    sub:'Vinyl privacy · white/tan/gray'},
+  'vinyl.picket.scalloped':             {emoji:'▫',                          sub:'Vinyl semi-privacy · spaced'},
+  'farm.no_climb.horse':                {emoji:'⊞',                          sub:'Field fence · wire · farm'},
+  'farm.barbed.5strand':                {emoji:'⊟',                          sub:'Barbed wire · 5-strand'},
+  'storage_cage.standard':              {emoji:'⊟',                          sub:'Storage cage · flat mount brackets'},
 };
 function selectVersion(id){
   var sel=document.getElementById('fam');
@@ -1136,7 +1136,9 @@ function renderStyleCards(styleId){
       var info=STYLE_PHOTOS[id]||{emoji:STYLE_ICONS[fam]||'◆',sub:s.note?s.note.substring(0,40):''};
       var active=id===curVer;
             return '<div class="style-card'+(active?' active':'')+'" onclick="selectVersion(\''+id+'\')">'
-        +'<div class="style-card-img">'+info.emoji+'</div>'
+        +(info.img
+            ? '<img src="'+info.img+'" style="width:100%;height:70px;object-fit:cover;display:block" loading="lazy">'
+            : '<div class="style-card-img">'+info.emoji+'</div>')
         +'<div class="style-card-body">'
         +'<div class="style-card-name">'+(s.label||id)+'</div>'
         +'<div class="style-card-sub">'+info.sub+'</div>'
