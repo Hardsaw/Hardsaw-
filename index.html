@@ -2102,7 +2102,7 @@ async function vaultRemote(input, data) {
                     return 'Assist error: '+(err.error||('HTTP '+r.status));
             }
             var d=await r.json();
-            return d.content&&d.content[0]?d.content[0].text:'Assist unavailable.';
+            return d.reply||'Assist unavailable.';
       }catch(e){
             return 'Assist offline — engine results valid.';
       }
