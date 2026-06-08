@@ -1,23 +1,37 @@
 name: Inject Maps Key
+
 on:
+
   push:
+
     branches: [main]
+
   workflow_dispatch:
+
 jobs:
+
   inject:
+
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+
     steps:
+
       - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Inject Maps API key
+
+      - name: Inject Maps API key into deployed copy only
+
         run: sed -i "s|PASTE_YOUR_GOOGLE_MAPS_API_KEY_HERE|${{ secrets.GOOGLE_MAPS_API_KEY }}|g" index.html
-      - name: Commit injected file
-        run: |
-          git config user.email "nate@hardsawfence.com"
-          git config user.name "Hardsaw Bot"
-          git add index.html
-          git diff --staged --quiet || git commit -m "build: inject Maps API key"
-          git push
+
+      - name: Deploy to Vercel with injected key
+
+        uses: amondnet/vercel-action@v25
+
+        with:
+
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+
+          working-directory: ./
