@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#FFB800"/>
 <meta namhe="apple-mobile-web-app-capable" content="yes"/>hhhhh
 <title>Hardsaw · Governed Decision Engine</title>
-<style>hhhh
+<style>hhhhh
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&display=swap');
 
 :root {
@@ -2238,7 +2238,7 @@ async function runJob(){
     if(el)el.classList.add('done');
   }
 
-  gate('FENCE STYLE_spec');
+  gate('FENCE STYLE_spec');  try {
   vadd('INTENT_JOB INFOD',{styleId,ht,edges:edges.length,walks,drives});
   gate('run_calculator');
 
@@ -2275,7 +2275,7 @@ document.getElementById('btn-save-job').style.display='inline-block';
   document.getElementById('gv-ready').textContent=rdy.st.replace('_',' ').toUpperCase();
   document.getElementById('gv-ready').className='gov-v '+(rdy.st==='ready'?'green':rdy.st==='not_ready'?'red':'locked');
 
-  setRailStep('BUILD IT','done');setRailStep('REVIEW','done');setRailStep('SAVE','active');
+  setRailStep('BUILD IT','done');setRailStep('REVIEW','done');setRailStep('SAVE','active'); } catch(e){console.error('[runJob]',e);document.getElementById('readiness-label').textContent='ENGINE ERROR: '+e.message;}
   renderResultUI();
   if (SUPPLIER_MODE) {
     show('s-supplier');
@@ -2322,7 +2322,7 @@ function renderResultUI(){
   badge.style.color=STC[st];badge.style.borderColor=STC[st];badge.style.border='1px solid';
   document.getElementById('readiness-label').textContent=STL[st];
   document.getElementById('result-meta').textContent=
-    r.style.label+' · '+r.ht+'ft · build '+r.geo.buildLft+'ft · openings '+r.geo.openingLft+'ft · '
+    (r.style||{label:'?'}).label+' · '+r.ht+'ft · build '+r.geo.buildLft+'ft · openings '+r.geo.openingLft+'ft · '
     +r.posts.totalPosts+' posts · '+r.posts.totalSecs+' sections';
   document.getElementById('hash-strip').textContent='GEO: '+r.geo.geoHash+' · DECISION: '+r.outHash;
   var heroEl = document.getElementById('result-hero');
@@ -2502,7 +2502,7 @@ function renderTab(){
   } else if(t==='PACKETS'){
     var oh=r.outHash;
     var h='<div class="pkt-sec"><div class="pkt-hdr">CONTRACTOR PACKET</div><div class="pkt-body">'
-      +'Job: '+oh+'<br>'+r.style.label+' · '+r.ht+'ft<br>'
+      +'Job: '+oh+'<br>'+(r.style||{label:'?'}).label+' · '+r.ht+'ft<br>'
       +'Build: '+geo.buildLft+'ft · Openings: '+geo.openingLft+'ft<br>'
       +'Posts: '+posts.totalPosts+' ('+posts.terminalPosts+' terminal, '+posts.linePosts+' line)<br>'
       +'Sections: '+posts.totalSecs+' · '+posts.S+'ft O.C. · Gates: '+posts.walkGates+'W/'+posts.driveGates+'D<br>'
