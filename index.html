@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#FFB800"/>
 <meta namhe="apple-mobile-web-app-capable" content="yes"/>hhhhh
 <title>Hardsaw · Governed Decision Engine</title>
-<style>hhhhh
+<style>hhhhhh
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&display=swap');
 
 :root {
@@ -2087,7 +2087,7 @@ async function vaultRemote(input, data) {
     console.warn('[vault] remote write exception:', e && e.message ? e.message : e);
   }
 }
-  async function claude(sys,msg){
+  async function claude(sys,msg,ctx){
       try{
             var r=await fetch(window.HARDSAW_CONFIG.ASSIST_URL,{
                     method:'POST',
@@ -2095,7 +2095,7 @@ async function vaultRemote(input, data) {
                               'Content-Type':'application/json',
                               'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY
                     },
-                    body:JSON.stringify({system:sys,message:msg})
+                    body:JSON.stringify({system:sys,message:msg,job_context:ctx||null})
             });
             if(!r.ok){
                     var err=await r.json().catch(function(){return{error:'unknown'};});
@@ -2559,7 +2559,7 @@ async function saveJob(){ var customerName=prompt('Customer name or job referenc
     +' | WARNINGS: '+warnLines
     +' | FIELD OVERRIDES: '+overrides
     +' | QUESTION: '+msg
-  );
+  ,msg,{style_id:r.styleId,geo_hash:r.outHash||"",decision_hash:r.invars&&r.invars.geo_hash||"",proof_pass:r.rdy&&r.rdy.allPass||false,trust_score:r.flags&&r.flags.trust_score||0,immune_score:r.flags&&r.flags.immune_score||0,readiness:r.rdy&&r.rdy.state||"UNKNOWN",post_count:r.posts&&r.posts.totalPosts||0,section_count:r.posts&&r.posts.totalSecs||0,bom_count:r.matR&&r.matR.bom&&r.matR.bom.length||0,build_lf:S.lf||0,height_ft:S.ht||0,pricing_mode:S.pricingOn?"ON":"OFF",warn_count:r.matR&&r.matR.warn&&r.matR.warn.length||0,override_count:Object.keys(FIELD_OVERRIDES||{}).length,cal_source:r.sv&&r.sv.cal||"",cal_date:r.sv&&r.sv.calDate||"",identity_version:"assist_v1.1"});
   S.loading=false;S.chat.push({role:'assist',text:reply});renderChat();
 }
 
