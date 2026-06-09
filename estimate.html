@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hardsaw Fence -- Free Instant Estimate</title>
+<meta name="description" content="Draw your fence on the map and get an instant material estimate range. Hardsaw Fence LLC -- Kansas City Metro.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#0a0a0a;--panel:#111;--panel2:#1a1a1a;
+  --text:#e8e8e8;--dim:#888;--muted:#444;
+  --border:#222;--border2:#2a2a2a;
+  --amber:#FFB800;--green:#00C853;--red:#FF3B3B;
+  --mono:'Courier New',monospace;--sans:-apple-system,sans-serif;
+}
+body{background:var(--black);color:var(--text);font-family:var(--sans);min-height:100vh}
+.hdr{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--panel)}
+.hdr-logo{font-family:var(--mono);font-size:14px;font-weight:bold;letter-spacing:4px;color:var(--amber)}
+.hdr-sub{font-size:8px;letter-spacing:3px;color:var(--muted);margin-top:2px}
+.hdr-phone{font-family:var(--mono);font-size:11px;color:var(--dim);text-decoration:none}
+.hero{padding:24px 20px 16px;border-bottom:1px solid var(--border);background:var(--panel)}
+.hero-title{font-size:22px;font-weight:bold;line-height:1.2;margin-bottom:6px}
+.hero-title span{color:var(--amber)}
+.hero-sub{font-size:12px;color:var(--dim);line-height:1.6}
+.steps{display:flex;gap:0;border-bottom:2px solid var(--border);background:var(--panel);overflow-x:auto}
+.step{flex:1;min-width:0;padding:10px 8px;font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--muted);text-align:center;border-right:1px solid var(--border);white-space:nowrap}
+.step.active{color:var(--amber);border-bottom:2px solid var(--amber);margin-bottom:-2px}
+.step.done{color:var(--green)}
+.section{padding:20px}
+.section-hdr{font-family:var(--mono);font-size:8px;letter-spacing:4px;color:var(--muted);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.addr-row{display:flex;gap:8px;margin-bottom:12px}
+.addr-input{flex:1;background:var(--panel2);border:1px solid var(--border2);color:var(--text);padding:12px 14px;font-size:14px;font-family:var(--mono);outline:none;border-radius:2px}
+.addr-input:focus{border-color:var(--amber)}
+.addr-input::placeholder{color:var(--muted)}
+.go-btn{background:var(--amber);color:var(--black);border:none;padding:12px 18px;font-family:var(--mono);font-size:10px;letter-spacing:2px;cursor:pointer;border-radius:2px;font-weight:bold}
+#map-canvas{width:100%;height:280px;background:var(--panel2);border:1px solid var(--border2);border-radius:2px;margin-bottom:8px}
+.map-hint{font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:12px;text-align:center}
+.map-controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px}
+.map-ctrl-btn{background:var(--panel2);border:1px solid var(--border2);color:var(--dim);padding:8px;font-family:var(--mono);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:2px}
+.map-ctrl-btn.primary{border-color:var(--amber);color:var(--amber)}
+#map-segments{margin-bottom:8px}
+.seg-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:11px}
+#map-total{font-family:var(--mono);font-size:14px;color:var(--amber);font-weight:bold;text-align:center;padding:8px 0}
+.style-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.style-card{background:var(--panel2);border:2px solid var(--border2);border-radius:2px;padding:14px 12px;cursor:pointer;transition:border-color 0.2s}
+.style-card.active{border-color:var(--amber);background:#FFB80008}
+.style-card-icon{font-size:28px;margin-bottom:8px;display:block}
+.style-card-name{font-size:11px;font-weight:bold;color:var(--text);margin-bottom:3px}
+.style-card.active .style-card-name{color:var(--amber)}
+.style-card-sub{font-size:9px;color:var(--dim);line-height:1.4}
+.result-card{background:var(--panel);border:1px solid var(--border2);border-radius:2px;padding:20px;margin-bottom:16px}
+.result-label{font-family:var(--mono);font-size:7px;letter-spacing:4px;color:var(--muted);margin-bottom:4px}
+.result-lf{font-size:32px;font-weight:bold;color:var(--text);margin-bottom:16px}
+.result-range-label{font-family:var(--mono);font-size:7px;letter-spacing:3px;color:var(--muted);margin-bottom:6px}
+.result-range{font-size:28px;font-weight:bold;color:var(--green);margin-bottom:6px}
+.result-disclaimer{font-size:8px;color:var(--muted);padding:10px;background:var(--panel2);border-left:2px solid var(--border2);line-height:1.6}
+.lead-form{background:var(--panel2);border:1px solid var(--border2);border-radius:2px;padding:16px;margin-bottom:16px}
+.lead-title{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--amber);margin-bottom:12px}
+.lead-input{width:100%;background:var(--panel);border:1px solid var(--border2);color:var(--text);padding:10px 12px;font-size:13px;margin-bottom:8px;outline:none;border-radius:2px}
+.lead-input:focus{border-color:var(--amber)}
+.lead-input::placeholder{color:var(--muted)}
+.submit-btn{width:100%;background:var(--amber);color:var(--black);border:none;padding:14px;font-family:var(--mono);font-size:11px;letter-spacing:3px;cursor:pointer;border-radius:2px;font-weight:bold}
+.submit-btn:disabled{opacity:0.5;cursor:not-allowed}
+.success-card{background:#00C85312;border:1px solid var(--green);border-radius:2px;padding:20px;text-align:center}
+.success-icon{font-size:40px;margin-bottom:12px}
+.success-title{font-size:18px;font-weight:bold;color:var(--green);margin-bottom:8px}
+.success-sub{font-size:12px;color:var(--dim);line-height:1.6}
+.hidden{display:none!important}
+.divider{height:1px;background:var(--border);margin:0}
+</style>
+<script src="https://maps.googleapis.com/maps/api/js?key=PASTE_YOUR_GOOGLE_MAPS_API_KEY_HERE&libraries=geometry,places&callback=initEstimateMap" async defer></script>
+</head>
+<body>
+<div class="hdr">
+  <div>
+    <div class="hdr-logo">HARDSAW FENCE</div>
+    <div class="hdr-sub">KANSAS CITY METRO</div>
+  </div>
+  <a class="hdr-phone" href="tel:8168523623">816-852-FENCE</a>
+</div>
+<div class="hero">
+  <div class="hero-title">Free Instant<br><span>Fence Estimate</span></div>
+  <div class="hero-sub">Draw your fence on the map. Get a material cost range in 60 seconds. No signup required.</div>
+</div>
+<div class="steps">
+  <div class="step active" id="step-1">1 DRAW</div>
+  <div class="step" id="step-2">2 STYLE</div>
+  <div class="step" id="step-3">3 RESULT</div>
+  <div class="step" id="step-4">4 QUOTE</div>
+</div>
+<div id="panel-map" class="section">
+  <div class="section-hdr">DRAW YOUR FENCE LINE</div>
+  <div class="addr-row">
+    <input id="est-address" class="addr-input" type="text" placeholder="Enter your property address..." onkeydown="if(event.key==='Enter')estSearch()">
+    <button class="go-btn" onclick="estSearch()">GO</button>
+  </div>
+  <div id="map-canvas"></div>
+  <div class="map-hint">TAP MAP TO PLACE FENCE POINTS</div>
+  <div id="map-segments"></div>
+  <div id="map-total"></div>
+  <div class="map-controls">
+    <button class="map-ctrl-btn" onclick="estUndo()">UNDO</button>
+    <button class="map-ctrl-btn" onclick="estClear()">CLEAR</button>
+    <button class="map-ctrl-btn primary" id="next-to-style" onclick="goToStyle()" disabled>NEXT</button>
+  </div>
+</div>
+<div class="divider"></div>
+<div id="panel-style" class="section hidden">
+  <div class="section-hdr">SELECT FENCE TYPE</div>
+  <div class="style-grid">
+    <div class="style-card active" onclick="selectStyle(this,'ornamental')" data-style="ornamental">
+      <span class="style-card-icon">✦</span>
+      <div class="style-card-name">Ornamental Iron</div>
+      <div class="style-card-sub">Steel DM series · 8ft bays · 4-6ft</div>
+    </div>
+    <div class="style-card" onclick="selectStyle(this,'wood')" data-style="wood">
+      <span class="style-card-icon">🪵</span>
+      <div class="style-card-name">Wood Privacy</div>
+      <div class="style-card-sub">Cedar · 6ft · board on board</div>
+    </div>
+    <div class="style-card" onclick="selectStyle(this,'chain_link')" data-style="chain_link">
+      <span class="style-card-icon">🔗</span>
+      <div class="style-card-name">Chain Link</div>
+      <div class="style-card-sub">Galvanized or black · 4-6ft</div>
+    </div>
+    <div class="style-card" onclick="selectStyle(this,'vinyl')" data-style="vinyl">
+      <span class="style-card-icon">▭</span>
+      <div class="style-card-name">Vinyl Privacy</div>
+      <div class="style-card-sub">White · tongue and groove · 6ft</div>
+    </div>
+  </div>
+  <button class="go-btn" style="width:100%;padding:14px;font-size:11px;letter-spacing:3px" onclick="goToResult()">CALCULATE ESTIMATE</button>
+</div>
+<div class="divider"></div>
+<div id="panel-result" class="section hidden">
+  <div class="section-hdr">YOUR ESTIMATE</div>
+  <div class="result-card">
+    <div class="result-label">TOTAL LINEAR FEET</div>
+    <div class="result-lf" id="res-lf">-- LF</div>
+    <div class="result-range-label">ESTIMATED MATERIAL RANGE</div>
+    <div class="result-range" id="res-range">$-- - $--</div>
+    <div class="result-disclaimer">Materials only. Does not include labor, permits, or installation. Final price set by your Hardsaw estimator after site visit. Based on current AFC wholesale pricing. Valid approximately 14 days.</div>
+  </div>
+  <button class="go-btn" style="width:100%;padding:14px;font-size:11px;letter-spacing:3px" onclick="goToLead()">GET A FIRM QUOTE</button>
+</div>
+<div id="panel-lead" class="section hidden">
+  <div class="section-hdr">GET YOUR FIRM QUOTE</div>
+  <div class="lead-form">
+    <div class="lead-title">YOUR CONTACT INFO</div>
+    <input id="lead-name" class="lead-input" type="text" placeholder="Full name">
+    <input id="lead-phone" class="lead-input" type="tel" placeholder="Phone number">
+    <input id="lead-email" class="lead-input" type="email" placeholder="Email (optional)">
+    <input id="lead-address-display" class="lead-input" type="text" placeholder="Property address" readonly style="color:var(--dim)">
+    <button class="submit-btn" id="submit-btn" onclick="submitLead()">SEND MY PROJECT TO HARDSAW</button>
+  </div>
+  <div style="font-size:9px;color:var(--muted);line-height:1.6;padding:0 4px">By submitting you agree to receive SMS from Hardsaw Fence LLC. Reply STOP to opt out. <a href="https://hardsawfence.com/legal" style="color:var(--dim)">SMS Terms</a></div>
+</div>
+<div id="panel-success" class="section hidden">
+  <div class="success-card">
+    <div class="success-icon">🛡</div>
+    <div class="success-title">You are In The Queue</div>
+    <div class="success-sub">Jilly received your project details and Nate has been notified.<br><br>Expect a call or text within a few hours.<br><br><strong style="color:var(--amber)">816-852-FENCE</strong></div>
+  </div>
+</div>
+<script>
+var EST={map:null,ready:false,points:[],markers:[],polylines:[],totalLF:0,style:'ornamental',address:''};
+var PRICE_RANGES={ornamental:{low:38,high:48},wood:{low:18,high:26},chain_link:{low:12,high:18},vinyl:{low:28,high:38}};
+function initEstimateMap(){
+  EST.ready=true;
+  EST.map=new google.maps.Map(document.getElementById('map-canvas'),{
+    zoom:18,center:{lat:39.0997,lng:-94.5786},mapTypeId:'satellite',
+    disableDefaultUI:true,gestureHandling:'cooperative'
+  });
+  EST.map.addListener('click',function(e){estAddPoint(e.latLng);});
+}
+function estSearch(){
+  if(!EST.ready){initEstimateMap();}
+  var addr=document.getElementById('est-address').value.trim();
+  if(!addr)return;
+  EST.address=addr;
+  new google.maps.Geocoder().geocode({address:addr+' Kansas City MO'},function(r,s){
+    if(s==='OK'&&r[0]){
+      EST.map.setCenter(r[0].geometry.location);
+      EST.map.setZoom(19);
+      EST.address=r[0].formatted_address||addr;
+      document.getElementById('lead-address-display').value=EST.address;
+    }
+  });
+}
+function estAddPoint(latLng){
+  EST.points.push(latLng);
+  EST.markers.push(new google.maps.Marker({position:latLng,map:EST.map,
+    icon:{path:google.maps.SymbolPath.CIRCLE,scale:6,fillColor:'#FFB800',fillOpacity:1,strokeColor:'#000',strokeWeight:1}}));
+  if(EST.points.length>1){
+    var prev=EST.points[EST.points.length-2];
+    EST.polylines.push(new google.maps.Polyline({path:[prev,latLng],strokeColor:'#FFB800',strokeWeight:3,map:EST.map}));
+    EST.points[EST.points.length-1]._lf=Math.round(google.maps.geometry.spherical.computeDistanceBetween(prev,latLng)*3.28084);
+  }
+  updateEstSegments();
+}
+function updateEstSegments(){
+  var total=0,html='';
+  for(var i=1;i<EST.points.length;i++){
+    var lf=EST.points[i]._lf||0;total+=lf;
+    html+='<div class="seg-row"><span style="color:var(--dim)">Run '+i+'</span><span style="color:var(--amber);font-family:var(--mono);font-weight:bold">'+lf+' LF</span></div>';
+  }
+  document.getElementById('map-segments').innerHTML=html;
+  EST.totalLF=total;
+  var btn=document.getElementById('next-to-style');
+  if(total>0){
+    document.getElementById('map-total').textContent='TOTAL: '+total+' LF';
+    btn.disabled=false;
+  } else {
+    document.getElementById('map-total').textContent='';
+    btn.disabled=true;
+  }
+}
+function estUndo(){
+  if(!EST.points.length)return;
+  EST.points.pop();
+  var m=EST.markers.pop();if(m)m.setMap(null);
+  var l=EST.polylines.pop();if(l)l.setMap(null);
+  updateEstSegments();
+}
+function estClear(){
+  EST.points=[];
+  EST.markers.forEach(function(m){m.setMap(null);});
+  EST.polylines.forEach(function(l){l.setMap(null);});
+  EST.markers=[];EST.polylines=[];
+  updateEstSegments();
+}
+function selectStyle(el,styleId){
+  document.querySelectorAll('.style-card').forEach(function(c){c.classList.remove('active');});
+  el.classList.add('active');EST.style=styleId;
+}
+function setStep(n){
+  for(var i=1;i<=4;i++){
+    var el=document.getElementById('step-'+i);
+    el.className='step'+(i<n?' done':i===n?' active':'');
+  }
+}
+function goToStyle(){
+  document.getElementById('panel-map').classList.add('hidden');
+  document.getElementById('panel-style').classList.remove('hidden');
+  setStep(2);
+}
+function goToResult(){
+  var r=PRICE_RANGES[EST.style]||PRICE_RANGES.ornamental;
+  var low=Math.round(EST.totalLF*r.low/50)*50;
+  var high=Math.round(EST.totalLF*r.high/50)*50;
+  document.getElementById('res-lf').textContent=EST.totalLF+' LF';
+  document.getElementById('res-range').textContent='$'+low.toLocaleString()+' - $'+high.toLocaleString();
+  document.getElementById('panel-style').classList.add('hidden');
+  document.getElementById('panel-result').classList.remove('hidden');
+  setStep(3);
+}
+function goToLead(){
+  document.getElementById('panel-result').classList.add('hidden');
+  document.getElementById('panel-lead').classList.remove('hidden');
+  setStep(4);
+}
+function submitLead(){
+  var name=document.getElementById('lead-name').value.trim();
+  var phone=document.getElementById('lead-phone').value.trim();
+  if(!name||!phone){alert('Name and phone required.');return;}
+  var btn=document.getElementById('submit-btn');
+  btn.disabled=true;btn.textContent='SENDING...';
+  showSuccess();
+}
+function showSuccess(){
+  document.getElementById('panel-lead').classList.add('hidden');
+  document.getElementById('panel-success').classList.remove('hidden');
+  setStep(4);
+}
+</script>
+</body>
+</html>
