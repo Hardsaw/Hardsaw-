@@ -188,7 +188,8 @@ var NEIGHBORHOOD_TIERS = {
   'leawood':              1.25,
   'overland park':        1.25,
   'lenexa':               1.25,
-  'lee's summit':        1.20,
+  'lees summit':          1.20,
+  'lees summit new':      1.25,
   'olathe':               1.20,
   'shawnee':              1.18,
   'prairie village':      1.25,
@@ -328,7 +329,12 @@ function goToStyle(){
 function goToResult(){
   var r=calcPriceRange(EST.style,EST.height,EST.totalLF,EST.address);
   document.getElementById('res-lf').textContent=EST.totalLF+' LF';
-  document.getElementById('res-range').textContent='
+  document.getElementById('res-range').textContent='$'+r.low.toLocaleString()+' - $'+r.high.toLocaleString();
+  document.getElementById('res-note').textContent='Installed price estimate - '+EST.height+'ft - '+Math.round(r.base_per_lf*r.multiplier)+'$/LF base - Gates quoted separately - Final price after site visit';
+  document.getElementById('panel-style').classList.add('hidden');
+  document.getElementById('panel-result').classList.remove('hidden');
+  setStep(3);
+}
 function goToLead(){
   document.getElementById('panel-result').classList.add('hidden');
   document.getElementById('panel-lead').classList.remove('hidden');
