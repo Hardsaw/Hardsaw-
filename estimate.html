@@ -109,7 +109,7 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
 <div id="panel-style" class="section hidden">
   <div class="section-hdr">SELECT FENCE TYPE</div>
   <div class="style-grid">
-    <div class="style-card active" onclick="selectStyle(this,'ornamental')" data-style="ornamental">
+    <div class="style-card active" onclick="selectStyle(this,'ornamental_dm')" data-style="ornamental_dm">
       <span class="style-card-icon">✦</span>
       <div class="style-card-name">Ornamental Iron</div>
       <div class="style-card-sub">Steel DM series · 8ft bays · 4-6ft</div>
@@ -119,7 +119,7 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
       <div class="style-card-name">Wood Privacy</div>
       <div class="style-card-sub">Cedar · 6ft · board on board</div>
     </div>
-    <div class="style-card" onclick="selectStyle(this,'chain_link')" data-style="chain_link">
+    <div class="style-card" onclick="selectStyle(this,'chain_link_galv')" data-style="chain_link_galv">
       <span class="style-card-icon">🔗</span>
       <div class="style-card-name">Chain Link</div>
       <div class="style-card-sub">Galvanized or black · 4-6ft</div>
@@ -129,6 +129,12 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
       <div class="style-card-name">Vinyl Privacy</div>
       <div class="style-card-sub">White · tongue and groove · 6ft</div>
     </div>
+  </div>
+  <div class="section-hdr" style="margin-top:16px">FENCE HEIGHT</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:16px" id="height-chips">
+    <button class="map-ctrl-btn active" id="ht-4" onclick="selectHeight(4)" style="padding:12px;font-size:11px;border-color:var(--amber);color:var(--amber)">4 FT</button>
+    <button class="map-ctrl-btn" id="ht-5" onclick="selectHeight(5)" style="padding:12px;font-size:11px">5 FT</button>
+    <button class="map-ctrl-btn" id="ht-6" onclick="selectHeight(6)" style="padding:12px;font-size:11px">6 FT</button>
   </div>
   <button class="go-btn" style="width:100%;padding:14px;font-size:11px;letter-spacing:3px" onclick="goToResult()">CALCULATE ESTIMATE</button>
 </div>
@@ -140,7 +146,7 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
     <div class="result-lf" id="res-lf">-- LF</div>
     <div class="result-range-label">ESTIMATED MATERIAL RANGE</div>
     <div class="result-range" id="res-range">$-- - $--</div>
-    <div class="result-disclaimer">Materials only. Does not include labor, permits, or installation. Final price set by your Hardsaw estimator after site visit. Based on current AFC wholesale pricing. Valid approximately 14 days.</div>
+    <div class="result-disclaimer" id="res-note">Installed price estimate · Final price after site visit.</div>
   </div>
   <button class="go-btn" style="width:100%;padding:14px;font-size:11px;letter-spacing:3px" onclick="goToLead()">GET A FIRM QUOTE</button>
 </div>
@@ -164,8 +170,73 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
   </div>
 </div>
 <script>
-var EST={map:null,ready:false,points:[],markers:[],polylines:[],totalLF:0,style:'ornamental',address:''};
-var PRICE_RANGES={ornamental:{low:38,high:48},wood:{low:18,high:26},chain_link:{low:12,high:18},vinyl:{low:28,high:38}};
+var EST={map:null,ready:false,points:[],markers:[],polylines:[],totalLF:0,style:'ornamental_dm',height:4,address:''};
+// Installed price per LF (material + labor) by style and height
+// Source: Nate Marshall field pricing 2026-06-08
+var PRICE_PER_LF = {
+  ornamental_dm:   {4:42, 5:45, 6:47},
+  ornamental_afs:  {4:38, 5:40, 6:43},
+  ornamental_pool: {4:48, 6:52},
+  chain_link_galv: {4:26, 5:27, 6:28},
+  chain_link_blk:  {4:28, 5:29, 6:30},
+  wood:            {4:12, 6:15},
+  vinyl:           {4:28, 6:32},
+};
+// Neighborhood tier multipliers -- KC Metro
+var NEIGHBORHOOD_TIERS = {
+  // TIER 1 -- Premium
+  'leawood':              1.25,
+  'overland park':        1.25,
+  'lenexa':               1.25,
+  'lee's summit':        1.20,
+  'olathe':               1.20,
+  'shawnee':              1.18,
+  'prairie village':      1.25,
+  'mission hills':        1.30,
+  'stilwell':             1.22,
+  'parkville':            1.18,
+  // TIER 2 -- Standard
+  'blue springs':         1.10,
+  'independence':         1.10,
+  'grain valley':         1.10,
+  'oak grove':            1.10,
+  'liberty':              1.12,
+  'kearney':              1.10,
+  'belton':               1.08,
+  'raymore':              1.10,
+  'grandview':            1.05,
+  'pleasant hill':        1.08,
+  // TIER 3 -- Base
+  'kansas city':          1.00,
+  'raytown':              1.00,
+  'kansas city ks':       1.00,
+  'wyandotte':            1.00,
+  'kcmo':                 1.00,
+};
+function getNeighborhoodMultiplier(address) {
+  if (!address) return 1.00;
+  var addr = address.toLowerCase();
+  for (var city in NEIGHBORHOOD_TIERS) {
+    if (addr.indexOf(city) !== -1) return NEIGHBORHOOD_TIERS[city];
+  }
+  return 1.05; // default -- unknown KC suburb
+}
+function calcPriceRange(style, height, lf, address) {
+  var styleKey = style;
+  var prices = PRICE_PER_LF[styleKey];
+  if (!prices) prices = PRICE_PER_LF['ornamental_dm'];
+  // Find closest height
+  var heights = Object.keys(prices).map(Number).sort(function(a,b){return a-b;});
+  var ht = height || 4;
+  var closest = heights.reduce(function(prev,curr){
+    return Math.abs(curr-ht) < Math.abs(prev-ht) ? curr : prev;
+  });
+  var base = prices[closest] || prices[heights[0]];
+  var mult = getNeighborhoodMultiplier(address);
+  var low  = Math.round(base * lf * mult / 50) * 50;
+  var high = Math.round(base * lf * mult * 1.20 / 50) * 50;
+  return {low: low, high: high, base_per_lf: base, multiplier: mult};
+}
 function initEstimateMap(){
   EST.ready=true;
   EST.map=new google.maps.Map(document.getElementById('map-canvas'),{
@@ -234,6 +305,15 @@ function selectStyle(el,styleId){
   document.querySelectorAll('.style-card').forEach(function(c){c.classList.remove('active');});
   el.classList.add('active');EST.style=styleId;
 }
+function selectHeight(ht){
+  EST.height=ht;
+  [4,5,6].forEach(function(h){
+    var btn=document.getElementById('ht-'+h);
+    if(!btn)return;
+    if(h===ht){btn.style.borderColor='var(--amber)';btn.style.color='var(--amber)';}
+    else{btn.style.borderColor='var(--border2)';btn.style.color='var(--dim)';}
+  });
+}
 function setStep(n){
   for(var i=1;i<=4;i++){
     var el=document.getElementById('step-'+i);
@@ -246,11 +326,54 @@ function goToStyle(){
   setStep(2);
 }
 function goToResult(){
-  var r=PRICE_RANGES[EST.style]||PRICE_RANGES.ornamental;
-  var low=Math.round(EST.totalLF*r.low/50)*50;
-  var high=Math.round(EST.totalLF*r.high/50)*50;
+  var r=calcPriceRange(EST.style,EST.height,EST.totalLF,EST.address);
   document.getElementById('res-lf').textContent=EST.totalLF+' LF';
-  document.getElementById('res-range').textContent='$'+low.toLocaleString()+' - $'+high.toLocaleString();
+  document.getElementById('res-range').textContent='
+function goToLead(){
+  document.getElementById('panel-result').classList.add('hidden');
+  document.getElementById('panel-lead').classList.remove('hidden');
+  setStep(4);
+}
+function submitLead(){
+  var name=document.getElementById('lead-name').value.trim();
+  var phone=document.getElementById('lead-phone').value.trim();
+  if(!name||!phone){alert('Name and phone required.');return;}
+  var btn=document.getElementById('submit-btn');
+  btn.disabled=true;btn.textContent='SENDING...';
+  showSuccess();
+}
+function showSuccess(){
+  document.getElementById('panel-lead').classList.add('hidden');
+  document.getElementById('panel-success').classList.remove('hidden');
+  setStep(4);
+}
+</script>
+</body>
+</html>
++r.low.toLocaleString()+' - 
+function goToLead(){
+  document.getElementById('panel-result').classList.add('hidden');
+  document.getElementById('panel-lead').classList.remove('hidden');
+  setStep(4);
+}
+function submitLead(){
+  var name=document.getElementById('lead-name').value.trim();
+  var phone=document.getElementById('lead-phone').value.trim();
+  if(!name||!phone){alert('Name and phone required.');return;}
+  var btn=document.getElementById('submit-btn');
+  btn.disabled=true;btn.textContent='SENDING...';
+  showSuccess();
+}
+function showSuccess(){
+  document.getElementById('panel-lead').classList.add('hidden');
+  document.getElementById('panel-success').classList.remove('hidden');
+  setStep(4);
+}
+</script>
+</body>
+</html>
++r.high.toLocaleString();
+  document.getElementById('res-note').textContent='Installed price estimate · '+EST.height+'ft · '+Math.round(r.base_per_lf*r.multiplier)+'$/LF base · Gates quoted separately · Final price after site visit';
   document.getElementById('panel-style').classList.add('hidden');
   document.getElementById('panel-result').classList.remove('hidden');
   setStep(3);
