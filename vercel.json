@@ -1,9 +1,10 @@
 {
-  "version": 2,
-  "builds": [
-    { "src": "index.html", "use": "@vercel/static" }
-  ],
-  "routes": [
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
+    "version": 2,
+    "buildCommand": "sed -i 's|PASTE_YOUR_GOOGLE_MAPS_API_KEY_HERE|'\"$GOOGLE_MAPS_API_KEY\"'|g' index.html estimate.html",
+    "builds": [
+          { "src": "index.html", "use": "@vercel/static" }
+    ],
+    "routes": [
+          { "src": "/(.*)", "dest": "/index.html" }
+    ]
 }
