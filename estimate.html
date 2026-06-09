@@ -395,7 +395,29 @@ function submitLead(){
   if(!name||!phone){alert('Name and phone required.');return;}
   var btn=document.getElementById('submit-btn');
   btn.disabled=true;btn.textContent='SENDING...';
-  showSuccess();
+  var email=document.getElementById('lead-email').value.trim();
+  var payload={
+    name:name,
+    phone:phone,
+    email:email||null,
+    address:EST.address||null,
+    style:EST.style||null,
+    height:EST.height||null,
+    linear_ft:EST.totalLF||null,
+    neighborhood:EST.neighborhood||null,
+    estimated_price:EST.estimatedPrice||null
+  };
+  fetch('https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/lead-capture',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
+  }).then(function(r){return r.json();}).then(function(j){
+    if(j.success){showSuccess();}
+    else{btn.disabled=false;btn.textContent='SEND MY PROJECT TO HARDSAW';alert('Error: '+j.error);}
+  }).catch(function(){
+    btn.disabled=false;btn.textContent='SEND MY PROJECT TO HARDSAW';
+    alert('Network error. Please try again or call 816-852-FENCE.');
+  });
 }
 function showSuccess(){
   document.getElementById('panel-lead').classList.add('hidden');
