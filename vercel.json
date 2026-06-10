@@ -8,6 +8,7 @@
     }
   ],
   "routes": [
+    { "src": "/", "dest": "/estimate.html" },
     { "src": "/estimate", "dest": "/estimate.html" },
     { "src": "/estimate.html", "dest": "/estimate.html" },
     { "src": "/(.*)", "dest": "/index.html" }
