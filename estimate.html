@@ -66,6 +66,10 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
 .success-icon{font-size:40px;margin-bottom:12px}
 .success-title{font-size:18px;font-weight:bold;color:var(--green);margin-bottom:8px}
 .success-sub{font-size:12px;color:var(--dim);line-height:1.6}
+.removal-row{display:flex;align-items:center;gap:10px;padding:12px;background:var(--panel2);border:1px solid var(--border2);border-radius:2px;margin-bottom:16px;cursor:pointer}
+.removal-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--amber);cursor:pointer}
+.removal-row-label{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--text)}
+.removal-row-sub{font-size:9px;color:var(--dim);margin-top:2px}
 .hidden{display:none!important}
 .divider{height:1px;background:var(--border);margin:0}
 </style>
@@ -136,6 +140,10 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
     <button class="map-ctrl-btn" id="ht-5" onclick="selectHeight(5)" style="padding:12px;font-size:11px">5 FT</button>
     <button class="map-ctrl-btn" id="ht-6" onclick="selectHeight(6)" style="padding:12px;font-size:11px">6 FT</button>
   </div>
+  <div class="removal-row" onclick="this.querySelector('input').click()">
+    <input type="checkbox" id="removal-chk" onchange="EST.removal=this.checked" onclick="event.stopPropagation()">
+    <div><div class="removal-row-label">REMOVE EXISTING FENCE</div><div class="removal-row-sub">+$6/LF · Demo &amp; haul away</div></div>
+  </div>
   <button class="go-btn" style="width:100%;padding:14px;font-size:11px;letter-spacing:3px" onclick="goToResult()">CALCULATE ESTIMATE</button>
 </div>
 <div class="divider"></div>
@@ -170,7 +178,7 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
   </div>
 </div>
 <script>
-var EST={map:null,ready:false,points:[],markers:[],polylines:[],totalLF:0,style:'ornamental_dm',height:4,address:''};
+var EST={map:null,ready:false,points:[],markers:[],polylines:[],totalLF:0,style:'ornamental_dm',height:4,address:'',removal:false};
 // Installed price per LF (material + labor) by style and height
 // Source: Nate Marshall field pricing 2026-06-08
 var PRICE_PER_LF = {
@@ -235,8 +243,9 @@ function calcPriceRange(style, height, lf, address) {
   });
   var base = prices[closest] || prices[heights[0]];
   var mult = getNeighborhoodMultiplier(address);
-  var low  = Math.round(base * lf * mult / 50) * 50;
-  var high = Math.round(base * lf * mult * 1.20 / 50) * 50;
+  var remSurcharge = EST.removal ? REMOVAL_SURCHARGE * lf : 0;
+  var low  = Math.round((base * lf * mult + remSurcharge) / 50) * 50;
+  var high = Math.round((base * lf * mult * 1.20 + remSurcharge) / 50) * 50;
   return {low: low, high: high, base_per_lf: base, multiplier: mult};
 }
 function initEstimateMap(){
