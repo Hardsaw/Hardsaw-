@@ -83,14 +83,14 @@ serve(async (req: Request) => {
     .schema("hardsaw")
     .from("lifevault_memory")
     .insert({
-    .insert({
-      content: body.content,
+      content: typeof body.content === 'string' ? body.content : JSON.stringify(body.content),
+      domain: 'operational',
+      tier: 1,
+      owner: 'luna',
+      source: body.source || 'claude_web',
+      session_ref: body.session_ref || body.session_date || null,
+      tags: [body.memory_type],
     })
-    .select("id, memory_type, created_at")
-    .single();
-
-  if (error) {
-    console.error("[vault] Database insert failed:", error);
     return new Response(JSON.stringify({ success: false, error: "Database insert failed" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
