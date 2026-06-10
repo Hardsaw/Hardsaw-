@@ -83,7 +83,7 @@ serve(async (req: Request) => {
     .schema("hardsaw")
     .from("lifevault_memory")
     .insert({
-      memory_type: body.memory_type,
+    .insert({
       content: body.content,
     })
     .select("id, memory_type, created_at")
