@@ -176,12 +176,13 @@ var EST={map:null,ready:false,points:[],markers:[],polylines:[],totalLF:0,style:
 var PRICE_PER_LF = {
   ornamental_dm:   {4:42, 5:45, 6:47},
   ornamental_afs:  {4:38, 5:40, 6:43},
-  ornamental_pool: {4:48, 6:52},
+  ornamental_pool: {4:50, 6:65},
   chain_link_galv: {4:26, 5:27, 6:28},
   chain_link_blk:  {4:28, 5:29, 6:30},
-  wood:            {4:12, 6:15},
+  wood:            {4:28, 5:36, 6:32},
   vinyl:           {4:28, 6:32},
-};
+};var REMOVAL_SURCHARGE = 6; // per LF for existing fence removal
+
 // Neighborhood tier multipliers -- KC Metro
 var NEIGHBORHOOD_TIERS = {
   // TIER 1 -- Premium
