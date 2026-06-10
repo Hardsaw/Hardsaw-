@@ -1,14 +1,7 @@
 /**
  * Hardsaw LifeVault Memory Logger
- *
  * POST endpoint for structured event capture into hardsaw.lifevault_memory.
  * Append-only by table trigger. Service role insert.
- *
- * Accepts: { memory_type: string, content: object }
- * Returns: { success: boolean, id?: uuid, memory_type?: string, inserted_at?: timestamp, error?: string }
- *
- * Deployed with --no-verify-jwt (anon callable).
- * Used by Luna sessions for Daily Reports, Move reports, ADRs, conversation captures.
  */
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
@@ -26,20 +19,20 @@ serve(async (req: Request) => {
   }
 
   if (req.method !== "POST") {
-    return new Response(JSON.stringify({ success: false, error: "Method not allowed" }), {
-      status: 405,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ success: false, error: "Method not allowed" }),
+      { status: 405, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   }
 
   let body: Record<string, unknown>;
   try {
     body = await req.json();
   } catch {
-    return new Response(JSON.stringify({ success: false, error: "Invalid JSON body" }), {
-      status: 400,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ success: false, error: "Invalid JSON body" }),
+      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   }
 
   // Validate memory_type
@@ -51,10 +44,7 @@ serve(async (req: Request) => {
   ) {
     return new Response(
       JSON.stringify({ success: false, error: "memory_type is required and must be a non-empty string" }),
-      {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
+      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 
@@ -62,15 +52,12 @@ serve(async (req: Request) => {
   if (
     body.content === undefined ||
     body.content === null ||
-    typeof body.content !== "object" ||
+    (typeof body.content !== "object" && typeof body.content !== "string") ||
     Array.isArray(body.content)
   ) {
     return new Response(
-      JSON.stringify({ success: false, error: "content is required and must be a JSON object" }),
-      {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
+      JSON.stringify({ success: false, error: "content is required and must be a JSON object or string" }),
+      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 
@@ -83,32 +70,32 @@ serve(async (req: Request) => {
     .schema("hardsaw")
     .from("lifevault_memory")
     .insert({
-      content: typeof body.content === 'string' ? body.content : JSON.stringify(body.content),
-      domain: 'operational',
+      content: typeof body.content === "string" ? body.content : JSON.stringify(body.content),
+      domain: "operational",
       tier: 1,
-      owner: 'luna',
-      source: body.source || 'claude_web',
-      session_ref: body.session_ref || body.session_date || null,
-      tags: [body.memory_type],
+      owner: "luna",
+      source: (body.source as string) || "claude_web",
+      session_ref: (body.session_ref as string) || (body.session_date as string) || null,
+      tags: [body.memory_type as string],
     })
-    return new Response(JSON.stringify({ success: false, error: "Database insert failed" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    .select("id, created_at")
+    .single();
+
+  if (error) {
+    console.error("[vault] Database insert failed:", error);
+    return new Response(
+      JSON.stringify({ success: false, error: "Database insert failed" }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   }
 
   return new Response(
     JSON.stringify({
       success: true,
       id: data.id,
-      memory_type: data.memory_type,
+      memory_type: body.memory_type,
       inserted_at: data.created_at,
     }),
-    {
-      status: 201,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    }
+    { status: 201, headers: { ...corsHeaders, "Content-Type": "application/json" } }
   );
 });
-
-
