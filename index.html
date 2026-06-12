@@ -1571,9 +1571,9 @@ var VERSIONS = {
     'chain_link.residential.black':      {v:'CL-RES-BK-v2.1', cal:null,         calDate:null},
     'chain_link.commercial.galvanized':  {v:'CL-COM-GL-v1.0', cal:null,         calDate:null},
     'chain_link.commercial.black':       {v:'CL-COM-BK-v1.0', cal:null,         calDate:null},
-        'ornamental.steel.flat_top_3rail':    {v:'OR-ST-FT3-v1.2',  cal:'KAN005201', calDate:'2026-04-10'},
+        'ornamental.steel.flat_top_3rail':    {v:'OR-ST-FT3-v1.3',  cal:'KAN005201', calDate:'2026-04-10'},
     'ornamental.steel.flat_top_pool':     {v:'OR-ST-POOL-v1.0', cal:'KAN005124', calDate:'2026-04-16'},
-    'ornamental.steel.spear_top_3rail':   {v:'OR-ST-ST3-v1.0',  cal:null,        calDate:null},
+    'ornamental.steel.spear_top_3rail':   {v:'OR-ST-ST3-v1.1',  cal:null,        calDate:null},
     'ornamental.aluminum.flat_top_3rail': {v:'OR-AL-FT3-v1.0',  cal:null,        calDate:null},
     'ornamental.aluminum.spear_top_3rail':{v:'OR-AL-ST3-v1.0',  cal:null,        calDate:null},
     
@@ -1628,6 +1628,7 @@ var STYLES = {
       hingef:{s:'8HB404',u:'each',d:'Blk Hinge Female 1-1/4"'},
       latch:{s:'8HB402',u:'each',d:'Blk Latch Fork 2" Orn Sq'},
       lhanger:{s:'8HB301',u:'each',d:'Blk Latch Hanger 1-1/4"'},
+      cane_bolt:{s:'8HB316',u:'each',d:'Blk Cane Bolt 48"'},
     }
   },
   'ornamental.steel.spear_top_3rail': {
@@ -1664,6 +1665,7 @@ var STYLES = {
       hingef:{s:'8HB404',u:'each',d:'Blk Hinge Female 1-1/4"'},
       latch:{s:'8HB402',u:'each',d:'Blk Latch Fork 2" Orn Sq'},
       lhanger:{s:'8HB301',u:'each',d:'Blk Latch Hanger 1-1/4"'},
+      cane_bolt:{s:'8HB316',u:'each',d:'Blk Cane Bolt 48"'},
     }
   },
   'ornamental.steel.flat_top_pool':  {family:'ornamental_pool',label:'Ornamental Steel Flat Top — Pool (DM)',note:'Steel DM pool: self-closing hinge 50383 · magna latch 50139 · S:8 · KAN005124 ✓ (Apr 2026)',rp:{S:8,panel_w:8,con_line:1,con_term:2,pool:true,bracket_system:'external'},skus:{panel:{s:'8W14X83FT',u:'each',d:'Dm Blk Flat Top 3 Rail Panel 4\'×8\''},post:{s:'8W12P69',u:'each',d:'Blk Sq Post 2"×16Ga×72"'},bracket_line:{s:'8BFLINE00',u:'each',d:'Afs/Beta Blk Line Bracket'},bracket_univ:{s:'8BB102IWI',u:'each',d:'Blk Universal Bracket'},cap:{s:'8AB506',u:'each',d:'Blk Flat Cap 2"'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'DM4X4BLKFT',u:'each',d:'DM Gate 4W×4H Single Swing Black'},hinge:{s:'50383',u:'pair',d:'Hinge — Fully Adjustable Self Closing'},latch:{s:'50139',u:'each',d:'Blk Latch — Magna Top Pullback W/Safety Lock'}}  },
@@ -1802,9 +1804,10 @@ function calcDEH(styleId,geo,posts,conc,ht){
     var skPanel=rp.height_keyed&&sk.panel[orHt]?sk.panel[orHt]:sk.panel;
     var skPost=rp.height_keyed&&sk.post[orHt]?sk.post[orHt]:sk.post;
     var skWg=rp.height_keyed&&sk.wg&&sk.wg[orHt]?sk.wg[orHt]:sk.wg;
-    var skDg=rp.height_keyed&&sk.dg&&sk.dg[orHt]?sk.dg[orHt]:sk.dg;
-    var pnlQ=ts,pstQ=tp+lp,orCon=conc.totalBags;
-    var gateAdj=walks+drives+others; var brkUnivQ=(posts.endPosts*3)+(posts.cornerPosts*6)+(gateAdj*6)+(gateAdj*6); var brkLineQ=Math.max(0,(lp-gateAdj)*3); var brkTermQ=tp*4,brkFmQ=ts*6;
+    var skDg=rp.height_keyed&&sk.dg&&sk.dg[orHt]?sk.dg[orHt]:sk.dg;          var orTp=ts+1+posts.cornerPosts;var orLp=Math.max(0,orTp-posts.endPosts-posts.cornerPosts-(walks+drives+others)*2);
+          var orTp=ts+1+posts.cornerPosts;var orLp=Math.max(0,orTp-posts.endPosts-posts.cornerPosts-(walks+drives+others)*2);
+    var pnlQ=ts,pstQ=orTp,orCon=conc.totalBags;
+    var gateAdj=walks+drives+others; var brkUnivQ=(posts.endPosts*3)+(posts.cornerPosts*6)+(gateAdj*3); var brkLineQ=Math.max(0,orLp*3); var brkTermQ=orTp*4,brkFmQ=ts*6;
     add(skPanel,pnlQ,skPanel.d,ts+' sec (no +1)','PANELS');
     add(skPost,pstQ,skPost.d,pstQ+' posts','POSTS');
     if(rp.bracket_system==='flat_mount'&&sk.bracket_fm)add(sk.bracket_fm,brkFmQ,sk.bracket_fm.d,ts+'×6 flat mount','HARDWARE');
@@ -1852,6 +1855,7 @@ function calcDEH(styleId,geo,posts,conc,ht){
           if(sk.hingef)add(sk.hingef,drives*2,sk.hingef.d,drives+'x2 female hinge/gate','GATE HW');
           if(sk.lhanger)add(sk.lhanger,drives,sk.lhanger.d,drives+'x1 latch hanger/gate','GATE HW');
           if(sk.latch) add(sk.latch,drives,sk.latch.d,drives+'x1 latch fork/gate','GATE HW');
+          if(sk.cane_bolt)add(sk.cane_bolt,drives,sk.cane_bolt.d,drives+'x1 cane bolt/drive gate','GATE HW');
         }
       }
     }     if(others>0){if(sk.cant_roller)add(sk.cant_roller,others*4,sk.cant_roller.d,others+'x4 rollers','CANTILEVER HARDWARE');if(sk.cant_cover)add(sk.cant_cover,others*4,sk.cant_cover.d,others+'x4 covers','CANTILEVER HARDWARE');if(sk.cant_latch)add(sk.cant_latch,others,sk.cant_latch.d,others+'x1 latch','CANTILEVER HARDWARE');if(sk.cant_gate)add(sk.cant_gate,others,sk.cant_gate.d,others+'x1 cantilever gate','CANTILEVER HARDWARE');}   } else if(fam==='vinyl'){
