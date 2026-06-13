@@ -6,7 +6,7 @@
 <title>Hardsaw Fence -- Free Instant Estimate</title>
 <meta name="description" content="Draw your fence on the map and get an instant material estimate range. Hardsaw Fence LLC -- Kansas City Metro.">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+*{margin:0;padding:0;box-sizing:border-box}h
 :root{
   --black:#0a0a0a;--panel:#111;--panel2:#1a1a1a;
   --text:#e8e8e8;--dim:#888;--muted:#444;
@@ -108,6 +108,7 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
     <button class="map-ctrl-btn" onclick="estClear()">CLEAR</button>
     <button class="map-ctrl-btn primary" id="next-to-style" onclick="goToStyle()" disabled>NEXT</button>
   </div>
+<button id="gate-mode-btn" onclick="toggleGateMode()" style="display:none;width:100%;margin-top:6px;padding:11px;background:transparent;border:1px solid var(--amber);color:var(--amber);font-family:var(--mono);font-size:9px;letter-spacing:2px;cursor:pointer;border-radius:2px">+ ADD GATE</button>
 </div>
 <div class="divider"></div>
 <div id="panel-style" class="section hidden">
@@ -178,7 +179,7 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
   </div>
 </div>
 <script>
-var EST={map:null,ready:false,points:[],markers:[],polylines:[],totalLF:0,style:'ornamental_dm',height:4,address:'',removal:false};
+var EST={map:null,ready:false,points:[],markers:[],polylines:[],totalLF:0,style:'ornamental_dm',height:4,address:'',removal:false,gates:[],gateMode:false};
 // Installed price per LF (material + labor) by style and height
 // Source: Nate Marshall field pricing 2026-06-08
 var PRICE_PER_LF = {
@@ -287,15 +288,26 @@ function updateEstSegments(){
     var lf=EST.points[i]._lf||0;total+=lf;
     html+='<div class="seg-row"><span style="color:var(--dim)">Run '+i+'</span><span style="color:var(--amber);font-family:var(--mono);font-weight:bold">'+lf+' LF</span></div>';
   }
+  if(EST.gates.length>0){
+    var walks=EST.gates.filter(function(g){return g.type==='walk';}).length;
+    var drives=EST.gates.filter(function(g){return g.type==='drive';}).length;
+    var gateLF=EST.gates.reduce(function(s,g){return s+g.lf;},0);
+    html+='<div class="seg-row" style="border-top:1px solid #FFB80033;margin-top:4px;padding-top:8px"><span style="color:var(--dim)">Gates ('+EST.gates.length+')</span><span style="color:var(--red);font-family:var(--mono);font-weight:bold">-'+gateLF+' LF</span></div>';
+    if(walks>0)html+='<div class="seg-row"><span style="color:var(--dim);font-size:9px">Walk gates</span><span style="color:var(--dim);font-size:9px">'+walks+' x 4ft</span></div>';
+    if(drives>0)html+='<div class="seg-row"><span style="color:var(--dim);font-size:9px">Drive gates</span><span style="color:var(--dim);font-size:9px">'+drives+' x 10ft</span></div>';
+    total=Math.max(0,total-gateLF);
+  }
   document.getElementById('map-segments').innerHTML=html;
   EST.totalLF=total;
   var btn=document.getElementById('next-to-style');
+  var gateBtn=document.getElementById('gate-mode-btn');
+  if(EST.points.length>=2){if(gateBtn)gateBtn.style.display='block';}
+  else{if(gateBtn)gateBtn.style.display='none';}
   if(total>0){
-    document.getElementById('map-total').textContent='TOTAL: '+total+' LF';
+    document.getElementById('map-total').textContent='TOTAL: '+total+' LF'+(EST.gates.length>0?' ('+EST.gates.length+' gate'+(EST.gates.length>1?'s':'')+' deducted)':'');
     btn.disabled=false;
   } else {
-    document.getElementById('map-total').textContent='';
-    btn.disabled=true;
+    document.getElementById('map-total').textContent='';btn.disabled=true;
   }
 }
 function estUndo(){
@@ -310,6 +322,12 @@ function estClear(){
   EST.markers.forEach(function(m){m.setMap(null);});
   EST.polylines.forEach(function(l){l.setMap(null);});
   EST.markers=[];EST.polylines=[];
+  EST.gates.forEach(function(g){if(g.marker)g.marker.setMap(null);});
+  EST.gates=[];EST.gateMode=false;
+  var popup=document.getElementById('gate-popup');
+  if(popup)popup.style.display='none';
+  var btn=document.getElementById('gate-mode-btn');
+  if(btn){btn.style.display='none';}
   updateEstSegments();
 }
 function selectStyle(el,styleId){
@@ -337,13 +355,75 @@ function goToStyle(){
   setStep(2);
 }
 function goToResult(){
+  var walks=EST.gates.filter(function(g){return g.type==='walk';}).length;
+  var drives=EST.gates.filter(function(g){return g.type==='drive';}).length;
   var r=calcPriceRange(EST.style,EST.height,EST.totalLF,EST.address);
   document.getElementById('res-lf').textContent=EST.totalLF+' LF';
   document.getElementById('res-range').textContent='$'+r.low.toLocaleString()+' - $'+r.high.toLocaleString();
-  document.getElementById('res-note').textContent='Installed price estimate - '+EST.height+'ft - '+Math.round(r.base_per_lf*r.multiplier)+'$/LF base - Gates quoted separately - Final price after site visit';
+  var gateNote='';
+  if(walks>0||drives>0){
+    var parts=[];
+    if(walks>0)parts.push(walks+' walk gate'+(walks>1?'s':''));
+    if(drives>0)parts.push(drives+' drive gate'+(drives>1?'s':''));
+    gateNote=' · '+parts.join(', ')+' quoted separately';
+  }
+  document.getElementById('res-note').textContent='Installed price estimate · '+EST.height+'ft · '+Math.round(r.base_per_lf*r.multiplier)+'$/LF base'+gateNote+' · Final price after site visit';
   document.getElementById('panel-style').classList.add('hidden');
   document.getElementById('panel-result').classList.remove('hidden');
   setStep(3);
+}
+function toggleGateMode(){
+  EST.gateMode=!EST.gateMode;
+  var btn=document.getElementById('gate-mode-btn');
+  if(EST.gateMode){
+    btn.textContent='TAP FENCE LINE TO PLACE GATE';
+    btn.style.borderColor='var(--green)';btn.style.color='var(--green)';btn.style.background='#00C85315';
+    EST.polylines.forEach(function(pl,idx){
+      pl.setOptions({strokeWeight:8,strokeOpacity:0.7});
+      google.maps.event.clearListeners(pl,'click');
+      google.maps.event.addListener(pl,'click',function(e){showGatePopup(e.latLng,idx);});
+    });
+  } else {
+    btn.textContent='+ ADD GATE';
+    btn.style.borderColor='var(--amber)';btn.style.color='var(--amber)';btn.style.background='transparent';
+    EST.polylines.forEach(function(pl){
+      pl.setOptions({strokeWeight:3,strokeOpacity:1});
+      google.maps.event.clearListeners(pl,'click');
+    });
+  }
+  var popup=document.getElementById('gate-popup');
+  if(popup)popup.style.display='none';
+}
+function showGatePopup(latLng,segIdx){
+  var popup=document.getElementById('gate-popup');
+  popup.style.display='block';
+  popup._latLng=latLng;popup._segIdx=segIdx;
+}
+function hideGatePopup(){
+  var popup=document.getElementById('gate-popup');
+  if(popup)popup.style.display='none';
+}
+function placeGate(type){
+  var popup=document.getElementById('gate-popup');
+  var latLng=popup._latLng;
+  var segIdx=popup._segIdx;
+  var lf=type==='walk'?4:10;
+  var color=type==='walk'?'#00C853':'#FF3B3B';
+  var label=type==='walk'?'W':'D';
+  var marker=new google.maps.Marker({
+    position:latLng,map:EST.map,
+    icon:{path:google.maps.SymbolPath.CIRCLE,scale:12,fillColor:color,fillOpacity:0.9,strokeColor:'#fff',strokeWeight:2},
+    label:{text:label,color:'#fff',fontSize:'11px',fontWeight:'bold'},
+    title:(type==='walk'?'Walk':'Drive')+' Gate ('+lf+'ft) — tap to remove'
+  });
+  google.maps.event.addListener(marker,'click',function(){
+    marker.setMap(null);
+    EST.gates=EST.gates.filter(function(g){return g.marker!==marker;});
+    updateEstSegments();
+  });
+  EST.gates.push({type:type,lf:lf,latLng:latLng,segIdx:segIdx,marker:marker});
+  popup.style.display='none';
+  updateEstSegments();
 }
 function goToLead(){
   document.getElementById('panel-result').classList.add('hidden');
@@ -364,5 +444,17 @@ function showSuccess(){
   setStep(4);
 }
 </script>
+<div id="gate-popup" style="display:none;position:fixed;bottom:140px;left:50%;transform:translateX(-50%);background:#111;border:1px solid var(--amber);border-radius:8px;padding:20px;z-index:9999;min-width:280px;box-shadow:0 8px 32px rgba(0,0,0,0.8)">
+  <div style="font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:14px;text-align:center">SELECT GATE TYPE</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+    <button onclick="placeGate('walk')" style="background:#00C85318;border:1px solid #00C853;color:#00C853;padding:14px 8px;font-family:var(--mono);font-size:8px;letter-spacing:1px;cursor:pointer;border-radius:4px;line-height:1.6">
+      🚶<br>WALK GATE<br><span style="font-size:8px;opacity:0.6">4ft · tap to remove</span>
+    </button>
+    <button onclick="placeGate('drive')" style="background:#FF3B3B18;border:1px solid #FF3B3B;color:#FF3B3B;padding:14px 8px;font-family:var(--mono);font-size:8px;letter-spacing:1px;cursor:pointer;border-radius:4px;line-height:1.6">
+      🚗<br>DRIVE GATE<br><span style="font-size:8px;opacity:0.6">10ft · tap to remove</span>
+    </button>
+  </div>
+  <button onclick="hideGatePopup()" style="width:100%;background:transparent;border:1px solid var(--muted);color:var(--muted);padding:9px;font-family:var(--mono);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:4px">CANCEL</button>
+</div>
 </body>
 </html>
