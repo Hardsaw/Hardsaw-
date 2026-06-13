@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<title>HARDSAW FENCE · Free Estimate</title>
+
+<style>
+
+  :root {
+
+    --amber:   #C8A96E;
+
+    --green:   #00E87A;
+
+    --red:     #FF3030;
+
+    --bg:      #050508;
+
+    --panel:   #0F172A;
+
+    --panel2:  #161B2E;
+
+    --border:  #1E293B;
+
+    --border2: #2D3B52;
+
+    --text:    #E2E8F0;
+
+    --muted:   #475569;
+
+    --dim:     #334155;
+
+    --mono:    'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body { background: var(--bg); color: var(--text); font-family: var(--mono); min-height: 100vh; padding-bottom: 100px; }
+
+  .header { background: var(--panel); border-bottom: 1px solid var(--border); padding: 16px 18px 14px; position: sticky; top: 0; z-index: 50; }
+
+  .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+
+  .wordmark { font-size: 18px; font-weight: 800; color: var(--amber); letter-spacing: 3px; }
+
+  .phone-link { font-size: 10px; color: var(--green); text-decoration: none; letter-spacing: 1px; border: 1px solid var(--green); padding: 4px 10px; border-radius: 2px; }
+
+  .header-sub { font-size: 8px; letter-spacing: 3px; color: var(--muted); }
+
+  .progress { display: flex; gap: 2px; padding: 10px 18px; background: var(--panel2); border-bottom: 1px solid var(--border); }
+
+  .progress-step { flex: 1; height: 3px; background: var(--dim); border-radius: 2px; transition: background 0.3s; }
+
+  .progress-step.done { background: var(--green); }
+
+  .progress-step.active { background: var(--amber); }
+
+  .section { padding: 20px 18px 0; }
+
+  .section-hdr { font-size: 8px; letter-spacing: 4px; color: var(--amber); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+
+  .section-num { width: 18px; height: 18px; background: var(--amber); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; flex-shrink: 0; }
+
+  .lbl { display: block; font-size: 8px; letter-spacing: 2px; color: var(--muted); margin-bottom: 6px; }
+
+  .inp { width: 100%; background: var(--panel2); border: 1px solid var(--border2); color: var(--text); padding: 12px 14px; font-family: var(--mono); font-size: 14px; border-radius: 2px; outline: none; transition: border-color 0.15s; -webkit-appearance: none; }
+
+  .inp:focus { border-color: var(--amber); }
+
+  .inp.filled { border-color: var(--green); }
+
+  .inp::placeholder { color: var(--dim); }
+
+  .inp-group { margin-bottom: 14px; }
+
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+
+  .family-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+
+  .family-btn { background: var(--panel2); border: 1px solid var(--border2); border-radius: 3px; padding: 14px 10px; cursor: pointer; text-align: center; transition: all 0.15s; -webkit-appearance: none; }
+
+  .family-btn:active { transform: scale(0.98); }
+
+  .family-btn.selected { background: #0D2B1D; border-color: var(--green); }
+
+  .family-btn .fam-icon { font-size: 24px; display: block; margin-bottom: 6px; }
+
+  .family-btn .fam-label { font-size: 9px; letter-spacing: 1px; color: var(--muted); font-family: var(--mono); }
+
+  .family-btn.selected .fam-label { color: var(--green); }
+
+  .ht-group { display: flex; gap: 6px; margin-bottom: 14px; }
+
+  .ht-btn { flex: 1; padding: 11px 4px; background: var(--panel2); border: 1px solid var(--border2); color: var(--muted); font-family: var(--mono); font-size: 11px; border-radius: 2px; cursor: pointer; text-align: center; transition: all 0.15s; -webkit-appearance: none; }
+
+  .ht-btn.selected { background: #0D2B1D; border-color: var(--green); color: var(--green); font-weight: 700; }
+
+  .gate-row { display: grid; grid-template-columns: 1fr 100px; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+
+  .gate-label { font-size: 11px; color: var(--text); }
+
+  .gate-sub { font-size: 8px; color: var(--muted); margin-top: 2px; }
+
+  .counter { display: flex; align-items: center; gap: 6px; justify-content: flex-end; }
+
+  .counter-btn { width: 32px; height: 32px; background: var(--panel2); border: 1px solid var(--border2); color: var(--text); font-family: var(--mono); font-size: 18px; border-radius: 2px; cursor: pointer; display: flex; align-items: center; justify-content: center; -webkit-appearance: none; line-height: 1; }
+
+  .counter-btn:active { background: var(--border2); }
+
+  .counter-val { font-size: 18px; font-weight: 700; color: var(--text); min-width: 20px; text-align: center; font-family: var(--mono); }
+
+  .flags-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+
+  .flag-btn { background: var(--panel2); border: 1px solid var(--border2); border-radius: 3px; padding: 12px 10px; cursor: pointer; display: flex; align-items: center; gap: 8px; -webkit-appearance: none; transition: all 0.15s; }
+
+  .flag-btn.on { background: #1A1503; border-color: var(--amber); }
+
+  .flag-icon { font-size: 18px; }
+
+  .flag-text { font-size: 9px; letter-spacing: 1px; color: var(--muted); font-family: var(--mono); }
+
+  .flag-btn.on .flag-text { color: var(--amber); }
+
+  .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+
+  .photo-card { background: var(--panel2); border: 1px dashed var(--border2); border-radius: 3px; overflow: hidden; cursor: pointer; }
+
+  .photo-card label { display: block; padding: 16px 10px; text-align: center; cursor: pointer; }
+
+  .photo-card input { display: none; }
+
+  .photo-icon { font-size: 22px; display: block; margin-bottom: 6px; }
+
+  .photo-label { font-size: 8px; letter-spacing: 1px; color: var(--muted); font-family: var(--mono); }
+
+  .photo-preview { width: 100%; height: 80px; object-fit: cover; display: block; }
+
+  .photo-captured { font-size: 7px; color: var(--green); letter-spacing: 1px; text-align: center; padding: 4px; font-family: var(--mono); }
+
+  textarea.inp { resize: none; height: 80px; font-size: 13px; line-height: 1.5; }
+
+  .sticky-bar { position: fixed; bottom: 0; left: 0; right: 0; padding: 12px 18px; background: #070B14; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 12px; z-index: 100; }
+
+  .sticky-info { flex: 1; }
+
+  .sticky-lf { font-size: 20px; font-weight: 700; color: var(--green); font-family: var(--mono); line-height: 1; }
+
+  .sticky-sub { font-size: 8px; color: var(--muted); letter-spacing: 1px; margin-top: 3px; }
+
+  .submit-btn { padding: 14px 24px; background: var(--green); color: #000; border: none; border-radius: 3px; font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 2px; cursor: pointer; -webkit-appearance: none; transition: opacity 0.15s; }
+
+  .submit-btn:disabled { background: var(--dim); color: var(--muted); cursor: default; }
+
+  .confirm-screen { display: none; padding: 40px 24px; text-align: center; }
+
+  .confirm-screen.show { display: block; }
+
+  .confirm-icon { font-size: 48px; margin-bottom: 16px; }
+
+  .confirm-title { font-size: 20px; font-weight: 700; color: var(--green); margin-bottom: 8px; letter-spacing: 2px; }
+
+  .confirm-sub { font-size: 11px; color: var(--muted); line-height: 1.6; max-width: 300px; margin: 0 auto 24px; }
+
+  .confirm-id { font-size: 9px; color: var(--dim); letter-spacing: 2px; margin-top: 16px; font-family: var(--mono); }
+
+  .divider { height: 14px; }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+  <div class="header-top">
+
+    <div class="wordmark">HARDSAW</div>
+
+    <a href="tel:8168523623" class="phone-link">816-852-FENCE</a>
+
+  </div>
+
+  <div class="header-sub">FREE FENCE ESTIMATE · KC METRO</div>
+
+</div>
+
+<div class="progress" id="progress-bar">
+
+  <div class="progress-step active" id="ps-1"></div>
+
+  <div class="progress-step" id="ps-2"></div>
+
+  <div class="progress-step" id="ps-3"></div>
+
+  <div class="progress-step" id="ps-4"></div>
+
+</div>
+
+<form id="jilly-form" onsubmit="handleSubmit(event)">
+
+  <div class="section">
+
+    <div class="section-hdr"><div class="section-num">1</div>CONTACT INFO</div>
+
+    <div class="inp-group">
+
+      <label class="lbl" for="name">FULL NAME</label>
+
+      <input class="inp" type="text" id="name" name="name" placeholder="First Last" autocomplete="name" oninput="updateProgress()" required>
+
+    </div>
+
+    <div class="inp-group">
+
+      <label class="lbl" for="phone">PHONE NUMBER</label>
+
+      <input class="inp" type="tel" id="phone" name="phone" placeholder="(816) 555-0100" autocomplete="tel" inputmode="tel" oninput="formatPhone(this); updateProgress()" required>
+
+    </div>
+
+    <div class="inp-group">
+
+      <label class="lbl" for="email">EMAIL (optional)</label>
+
+      <input class="inp" type="email" id="email" name="email" placeholder="you@email.com" autocomplete="email" inputmode="email">
+
+    </div>
+
+    <div class="inp-group">
+
+      <label class="lbl" for="address">PROPERTY ADDRESS</label>
+
+      <input class="inp" type="text" id="address" name="address" placeholder="123 Main St, Kansas City MO" autocomplete="street-address" oninput="updateProgress()" required>
+
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+
+    <div class="section-hdr"><div class="section-num">2</div>FENCE TYPE</div>
+
+    <label class="lbl">FENCE FAMILY</label>
+
+    <div class="family-grid">
+
+      <button type="button" class="family-btn selected" data-family="wood" onclick="selectFamily(this)">
+
+        <span class="fam-icon">🪵</span><span class="fam-label">WOOD</span>
+
+      </button>
+
+      <button type="button" class="family-btn" data-family="chain_link" onclick="selectFamily(this)">
+
+        <span class="fam-icon">⛓️</span><span class="fam-label">CHAIN LINK</span>
+
+      </button>
+
+      <button type="button" class="family-btn" data-family="ornamental" onclick="selectFamily(this)">
+
+        <span class="fam-icon">🔲</span><span class="fam-label">ORNAMENTAL</span>
+
+      </button>
+
+      <button type="button" class="family-btn" data-family="other" onclick="selectFamily(this)">
+
+        <span class="fam-icon">❓</span><span class="fam-label">NOT SURE</span>
+
+      </button>
+
+    </div>
+
+    <label class="lbl">HEIGHT</label>
+
+    <div class="ht-group">
+
+      <button type="button" class="ht-btn" data-ht="4" onclick="selectHt(this)">4ft</button>
+
+      <button type="button" class="ht-btn" data-ht="5" onclick="selectHt(this)">5ft</button>
+
+      <button type="button" class="ht-btn selected" data-ht="6" onclick="selectHt(this)">6ft</button>
+
+      <button type="button" class="ht-btn" data-ht="7" onclick="selectHt(this)">7ft</button>
+
+      <button type="button" class="ht-btn" data-ht="8" onclick="selectHt(this)">8ft</button>
+
+    </div>
+
+    <label class="lbl">APPROXIMATE LENGTH (LINEAR FEET)</label>
+
+    <div class="inp-group">
+
+      <input class="inp" type="number" id="lf" name="lf" placeholder="300" inputmode="numeric" min="50" max="5000" oninput="updateLF(this); updateProgress()" required>
+
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+
+    <div class="section-hdr"><div class="section-num">3</div>GATES</div>
+
+    <div class="gate-row">
+
+      <div><div class="gate-label">Walk Gate</div><div class="gate-sub">Single swing · person access</div></div>
+
+      <div class="counter">
+
+        <button type="button" class="counter-btn" onclick="adjustGate('walk', -1)">−</button>
+
+        <span class="counter-val" id="walk-count">0</span>
+
+        <button type="button" class="counter-btn" onclick="adjustGate('walk', 1)">+</button>
+
+      </div>
+
+    </div>
+
+    <div class="gate-row">
+
+      <div><div class="gate-label">Drive Gate</div><div class="gate-sub">Double swing · vehicle access</div></div>
+
+      <div class="counter">
+
+        <button type="button" class="counter-btn" onclick="adjustGate('drive', -1)">−</button>
+
+        <span class="counter-val" id="drive-count">0</span>
+
+        <button type="button" class="counter-btn" onclick="adjustGate('drive', 1)">+</button>
+
+      </div>
+
+    </div>
+
+    <div class="gate-row" style="border-bottom:none">
+
+      <div><div class="gate-label">Other / Cantilever</div><div class="gate-sub">Sliding · cantilever · special</div></div>
+
+      <div class="counter">
+
+        <button type="button" class="counter-btn" onclick="adjustGate('other', -1)">−</button>
+
+        <span class="counter-val" id="other-count">0</span>
+
+        <button type="button" class="counter-btn" onclick="adjustGate('other', 1)">+</button>
+
+      </div>
+
+    </div>
+
+    <div class="divider"></div>
+
+  </div>
+
+  <div class="section">
+
+    <div class="section-hdr"><div class="section-num">4</div>SITE INFO</div>
+
+    <label class="lbl">SITE CONDITIONS</label>
+
+    <div class="flags-grid">
+
+      <button type="button" class="flag-btn" data-flag="hoa" onclick="toggleFlag(this)"><span class="flag-icon">🏘️</span><span class="flag-text">HOA</span></button>
+
+      <button type="button" class="flag-btn" data-flag="rocky" onclick="toggleFlag(this)"><span class="flag-icon">🪨</span><span class="flag-text">ROCKY SOIL</span></button>
+
+      <button type="button" class="flag-btn" data-flag="sloped" onclick="toggleFlag(this)"><span class="flag-icon">📐</span><span class="flag-text">SLOPED GRADE</span></button>
+
+      <button type="button" class="flag-btn" data-flag="permit" onclick="toggleFlag(this)"><span class="flag-icon">📋</span><span class="flag-text">PERMIT REQ.</span></button>
+
+      <button type="button" class="flag-btn" data-flag="pool" onclick="toggleFlag(this)"><span class="flag-icon">🏊</span><span class="flag-text">POOL CODE</span></button>
+
+      <button type="button" class="flag-btn" data-flag="existing" onclick="toggleFlag(this)"><span class="flag-icon">🔧</span><span class="flag-text">REMOVE OLD</span></button>
+
+    </div>
+
+    <label class="lbl">PHOTOS (optional but helpful)</label>
+
+    <div class="photo-grid">
+
+      <div class="photo-card" id="card-sketch">
+
+        <label><input type="file" accept="image/*" capture="environment" onchange="capturePhoto(this,'card-sketch','✏️','SKETCH')">
+
+        <span class="photo-icon">✏️</span><span class="photo-label">LAYOUT SKETCH</span></label>
+
+      </div>
+
+      <div class="photo-card" id="card-site">
+
+        <label><input type="file" accept="image/*,video/*" capture="environment" onchange="capturePhoto(this,'card-site','📷','SITE PHOTO')">
+
+        <span class="photo-icon">📷</span><span class="photo-label">SITE PHOTO</span></label>
+
+      </div>
+
+      <div class="photo-card" id="card-quote">
+
+        <label><input type="file" accept="image/*" onchange="capturePhoto(this,'card-quote','📄','AFC QUOTE')">
+
+        <span class="photo-icon">📄</span><span class="photo-label">EXISTING QUOTE</span></label>
+
+      </div>
+
+      <div class="photo-card" id="card-blueprint">
+
+        <label><input type="file" accept="application/pdf,image/*" onchange="capturePhoto(this,'card-blueprint','📐','BLUEPRINT')">
+
+        <span class="photo-icon">📐</span><span class="photo-label">BLUEPRINT / PDF</span></label>
+
+      </div>
+
+    </div>
+
+    <label class="lbl">ADDITIONAL NOTES</label>
+
+    <div class="inp-group">
+
+      <textarea class="inp" id="notes" name="notes" placeholder="Any details about the job — existing fence, HOA rules, access constraints..."></textarea>
+
+    </div>
+
+  </div>
+
+</form>
+
+<div class="confirm-screen" id="confirm-screen">
+
+  <div class="confirm-icon">✅</div>
+
+  <div class="confirm-title">ESTIMATE RECEIVED</div>
+
+  <div class="confirm-sub">We'll call you back within 2 hours during business hours to confirm your details and schedule a site visit.<br><br><strong style="color:#C8A96E">Hardsaw Fence · Kansas City Metro</strong><br>Weekend crews · Minimum 300 linear feet</div>
+
+  <a href="tel:8168523623" style="display:block;padding:14px 24px;background:#00E87A;color:#000;text-decoration:none;border-radius:3px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:2px;margin:0 auto;max-width:200px;">CALL US NOW</a>
+
+  <div class="confirm-id" id="confirm-id"></div>
+
+</div>
+
+<div class="sticky-bar" id="sticky-bar">
+
+  <div class="sticky-info">
+
+    <div class="sticky-lf" id="sticky-lf">— LF</div>
+
+    <div class="sticky-sub" id="sticky-sub">FILL OUT DETAILS ABOVE</div>
+
+  </div>
+
+  <button class="submit-btn" id="submit-btn" onclick="handleSubmit(event)" disabled>GET ESTIMATE ↗</button>
+
+</div>
+<script>
+
+var STATE = {
+
+  family: 'wood', height: 6, lf: 0,
+
+  walks: 0, drives: 0, others: 0,
+
+  flags: [], photos: {},
+
+};
+
+function selectFamily(btn) {
+
+  document.querySelectorAll('.family-btn').forEach(function(b) { b.classList.remove('selected'); });
+
+  btn.classList.add('selected');
+
+  STATE.family = btn.dataset.family;
+
+  updateProgress();
+
+}
+
+function selectHt(btn) {
+
+  document.querySelectorAll('.ht-btn').forEach(function(b) { b.classList.remove('selected'); });
+
+  btn.classList.add('selected');
+
+  STATE.height = parseInt(btn.dataset.ht);
+
+}
+
+function adjustGate(type, delta) {
+
+  STATE[type + 's'] = Math.max(0, STATE[type + 's'] + delta);
+
+  document.getElementById(type + '-count').textContent = STATE[type + 's'];
+
+}
+
+function toggleFlag(btn) {
+
+  btn.classList.toggle('on');
+
+  var flag = btn.dataset.flag;
+
+  var idx = STATE.flags.indexOf(flag);
+
+  if (idx > -1) STATE.flags.splice(idx, 1);
+
+  else STATE.flags.push(flag);
+
+}
+
+function formatPhone(inp) {
+
+  var v = inp.value.replace(/\D/g, '').slice(0, 10);
+
+  if (v.length >= 6) v = '(' + v.slice(0,3) + ') ' + v.slice(3,6) + '-' + v.slice(6);
+
+  else if (v.length >= 3) v = '(' + v.slice(0,3) + ') ' + v.slice(3);
+
+  inp.value = v;
+
+  inp.classList.toggle('filled', v.length === 14);
+
+}
+
+function updateLF(inp) {
+
+  STATE.lf = parseInt(inp.value) || 0;
+
+  var el = document.getElementById('sticky-lf');
+
+  el.textContent = STATE.lf > 0 ? STATE.lf + ' LF' : '— LF';
+
+  el.style.color = STATE.lf >= 300 ? '#00E87A' : STATE.lf > 0 ? '#C8A96E' : '#475569';
+
+  if (STATE.lf > 0 && STATE.lf < 300) {
+
+    document.getElementById('sticky-sub').textContent = 'MIN 300 LF · ADD MORE RUNS';
+
+    document.getElementById('sticky-sub').style.color = '#C8A96E';
+
+  }
+
+}
+
+function capturePhoto(input, cardId, icon, label) {
+
+  var file = input.files[0];
+
+  if (!file) return;
+
+  STATE.photos[cardId] = file;
+
+  var card = document.getElementById(cardId);
+
+  var reader = new FileReader();
+
+  reader.onload = function(e) {
+
+    if (file.type.startsWith('image/')) {
+
+      card.innerHTML = '<img class="photo-preview" src="' + e.target.result + '">' +
+
+        '<div class="photo-captured">' + icon + ' ' + label + ' CAPTURED</div>';
+
+    } else {
+
+      card.innerHTML = '<div style="padding:20px;text-align:center">' +
+
+        '<div style="font-size:22px;margin-bottom:6px">' + icon + '</div>' +
+
+        '<div class="photo-captured">' + label + ' ATTACHED</div></div>';
+
+    }
+
+  };
+
+  reader.readAsDataURL(file);
+
+}
+
+function updateProgress() {
+
+  var name = document.getElementById('name').value.trim();
+
+  var phone = document.getElementById('phone').value.length >= 14;
+
+  var address = document.getElementById('address').value.trim();
+
+  var lf = STATE.lf > 0;
+
+  var steps = [name, phone || address, lf, STATE.family !== ''];
+
+  var done = steps.filter(Boolean).length;
+
+  steps.forEach(function(complete, i) {
+
+    var el = document.getElementById('ps-' + (i+1));
+
+    if (!el) return;
+
+    el.className = 'progress-step ' + (i < done ? 'done' : i === done ? 'active' : '');
+
+  });
+
+  var ready = name && phone && address && lf;
+
+  document.getElementById('submit-btn').disabled = !ready;
+
+  if (ready) {
+
+    document.getElementById('sticky-sub').textContent = 'READY TO SUBMIT';
+
+    document.getElementById('sticky-sub').style.color = '#00E87A';
+
+  }
+
+  ['name','address'].forEach(function(id) {
+
+    var el = document.getElementById(id);
+
+    el.classList.toggle('filled', el.value.trim().length > 0);
+
+  });
+
+}
+
+function handleSubmit(e) {
+
+  e.preventDefault();
+
+  var name    = document.getElementById('name').value.trim();
+
+  var phone   = document.getElementById('phone').value.trim();
+
+  var email   = document.getElementById('email').value.trim();
+
+  var address = document.getElementById('address').value.trim();
+
+  var notes   = document.getElementById('notes').value.trim();
+
+  if (!name || !phone || !address || STATE.lf < 1) return;
+
+  var lead = {
+
+    name: name, phone: phone, email: email || null,
+
+    address: address, family: STATE.family,
+
+    height_ft: STATE.height, lf: STATE.lf,
+
+    walk_gates: STATE.walks, drive_gates: STATE.drives,
+
+    other_gates: STATE.others, flags: STATE.flags,
+
+    notes: notes || null, source: 'jilly_form',
+
+    submitted_at: new Date().toISOString(),
+
+  };
+
+  var leadId = 'JL-' + Date.now().toString(36).toUpperCase();
+
+  fetch('https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/lead-capture', {
+
+    method: 'POST',
+
+    headers: { 'Content-Type': 'application/json' },
+
+    body: JSON.stringify(lead),
+
+  })
+
+  .then(function(r) { return r.json(); })
+
+  .then(function(data) { console.log('[Jilly] Lead captured:', data); })
+
+  .catch(function(err) { console.warn('[Jilly] Lead capture failed:', err); });
+
+  document.getElementById('jilly-form').style.display = 'none';
+
+  document.getElementById('sticky-bar').style.display = 'none';
+
+  document.getElementById('confirm-screen').classList.add('show');
+
+  document.getElementById('confirm-id').textContent = 'REF: ' + leadId;
+
+  var calcUrl = '/calc?name=' + encodeURIComponent(name) +
+
+    '&lf=' + STATE.lf + '&family=' + STATE.family +
+
+    '&ht=' + STATE.height + '&walks=' + STATE.walks +
+
+    '&drives=' + STATE.drives + '&address=' + encodeURIComponent(address);
+
+  console.log('[Jilly] Calc URL:', calcUrl);
+
+}
+
+</script>
+
+</body>
+
+</html>
