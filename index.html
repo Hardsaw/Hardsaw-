@@ -840,9 +840,9 @@ textarea,input{outline:none}
   <!-- MAP PERIMETER TOOL -->
   <div class="section-hdr" id="map-hdr" style="cursor:pointer" onclick="toggleMapTool()">
     MAP PERIMETER TOOL
-    <span id="map-toggle-badge" style="font-size:7px;letter-spacing:2px;color:var(--dim);margin-left:8px">TAP TO OPEN</span>
+    <span id="map-toggle-badge" style="font-size:7px;letter-spacing:2px;color:var(--amber);margin-left:8px">OPEN</span>
   </div>
-  <div id="map-tool-wrap" style="display:none;margin-bottom:12px">
+  <div id="map-tool-wrap" style="display:block;margin-bottom:12px">
     <div style="display:flex;gap:4px;margin-bottom:6px">
       <input id="map-address" type="text" placeholder="Enter job site address..."
         style="flex:1;background:var(--black);border:1px solid var(--border2);color:var(--text);
@@ -1099,23 +1099,28 @@ var STYLE_ICONS = {
   'storage_cage':'⊟'
 };
 var STYLE_PHOTOS = {
-  'wood.privacy.tight_cedar':           {img:'/images/wood-privacy.jpg',    sub:'Cedar 1x6 · 8ft O.C. · solid privacy'},
-  'wood.privacy.solid_board':           {img:'/images/wood-privacy.jpg',    sub:'Wide board · 8ft O.C. · solid privacy'},
-  'wood.privacy.shadowbox':             {emoji:'🌲',                         sub:'Shadowbox · alternating pickets'},
-  'wood.spaced_picket':                 {emoji:'🌿',                         sub:'Spaced picket · 4ft · open style'},
-  'chain_link.residential.galv':        {emoji:'🔗',                         sub:'Galvanized · residential · 4-6ft'},
-  'chain_link.residential.blk':         {img:'/images/chain-link-black.jpg', sub:'Black vinyl · residential · 4-6ft'},
-  'chain_link.commercial.galv':         {emoji:'🔗',                         sub:'Galvanized · commercial · heavy gauge'},
-  'chain_link.commercial.blk':          {img:'/images/chain-link-black.jpg', sub:'Black vinyl · commercial · heavy gauge'},
-  'ornamental.steel.flat_top_3rail':    {img:'/images/ornamental-steel.jpg', sub:'Steel DM · 8ft bays · flat top'},
-  'ornamental.steel.spear_top_3rail':   {img:'/images/ornamental-steel.jpg', sub:'Steel DM · 8ft bays · spear top'},
-  'ornamental.steel.flat_top_pool':     {emoji:'🏊',                         sub:'Pool code · self-closing hinge'},
-  'ornamental.aluminum.flat_top_3rail': {emoji:'◈',                          sub:'Aluminum · 6ft bays · inset panels'},
-  'ornamental.aluminum.spear_top_3rail':{emoji:'◇',                          sub:'Aluminum · 6ft bays · spear top'},
-  'vinyl.privacy':                      {img:'/images/vinyl-privacy.jpg',    sub:'Vinyl privacy · white/tan/gray'},
-  'vinyl.semi_privacy':                 {emoji:'▫',                          sub:'Vinyl semi-privacy · spaced'},
-  'farm.field_fence':                   {emoji:'⊞',                          sub:'Field fence · wire · farm'},
-  'storage_cage.standard':              {emoji:'⊟',                          sub:'Storage cage · flat mount brackets'},
+  'wood.privacy.tight_cedar':          {emoji:'🪵', sub:'Cedar 1x6 · 8ft O.C. · solid privacy'},
+  'wood.privacy.spaced_picket':        {emoji:'🌿', sub:'Spaced picket · pointed tops · gaps'},
+  'wood.privacy.solid_board':          {emoji:'🪵', sub:'Wide board · 8ft O.C. · solid privacy'},
+  'wood.shadowbox.standard':           {emoji:'🪵', sub:'Shadowbox · alternating pickets'},
+  'wood.spaced_picket':                {emoji:'🌿', sub:'Spaced picket · 4ft · open style'},
+  'chain_link.residential.galvanized': {emoji:'🔗', sub:'Galvanized · residential · 4-6ft'},
+  'chain_link.residential.black':      {emoji:'⛓️', sub:'Black vinyl · residential · 4-6ft'},
+  'chain_link.commercial.galvanized':  {emoji:'🔗', sub:'Galvanized · commercial · heavy gauge'},
+  'chain_link.commercial.black':       {emoji:'⛓️', sub:'Black vinyl · commercial · heavy gauge'},
+  'chain_link.residential.galv':       {emoji:'🔗', sub:'Galvanized · residential · 4-6ft'},
+  'chain_link.residential.blk':        {emoji:'⛓️', sub:'Black vinyl · residential · 4-6ft'},
+  'chain_link.commercial.galv':        {emoji:'🔗', sub:'Galvanized · commercial · heavy gauge'},
+  'chain_link.commercial.blk':         {emoji:'⛓️', sub:'Black vinyl · commercial · heavy gauge'},
+  'ornamental.steel.flat_top_3rail':   {emoji:'✦', sub:'Steel DM · 8ft bays · flat top'},
+  'ornamental.steel.spear_top_3rail':  {emoji:'✦', sub:'Steel DM · 8ft bays · spear top'},
+  'ornamental.steel.flat_top_pool':    {emoji:'🏊', sub:'Pool code · self-closing hinge'},
+  'ornamental.aluminum.flat_top_3rail':{emoji:'◈', sub:'Aluminum · 6ft bays · inset panels'},
+  'ornamental.aluminum.spear_top_3rail':{emoji:'◇', sub:'Aluminum · 6ft bays · spear top'},
+  'vinyl.privacy':                     {emoji:'▭', sub:'Vinyl privacy · white/tan/gray'},
+  'vinyl.semi_privacy':                {emoji:'▫', sub:'Vinyl semi-privacy · spaced'},
+  'farm.field_fence':                  {emoji:'⊞', sub:'Field fence · wire · farm'},
+  'storage_cage.standard':             {emoji:'⊟', sub:'Storage cage · flat mount brackets'},
 };
 function selectVersion(id){
   var sel=document.getElementById('fam');
