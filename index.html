@@ -776,32 +776,47 @@ textarea,input{outline:none}
   <button class="fam-tab" data-fam="farm" onclick="selectFamTab(this,'farm')" style="flex-shrink:0;padding:6px 12px;font-family:var(--mono);font-size:8px;letter-spacing:1px;border:1px solid var(--border2);background:transparent;color:var(--muted);border-radius:2px;cursor:pointer">FARM</button>
 </div>
         <select class="sel" id="fam" onchange="onStyleChange()">
-      <optgroup label="── WOOD PRIVACY ──">
-        <option value="wood.privacy.tight_cedar">Wood -- Solid Privacy (6ft)</option>
-        <option value="wood.privacy.spaced_picket">Wood — Spaced Picket (4ft)</option>
-        <option value="wood.privacy.solid_board">Wood -- Wide Board Privacy (6ft)</option>
-        <option value="wood.shadowbox.standard">Wood — Shadowbox Standard</option>
+      <optgroup label="── WOOD ──">
+        <optgroup label="  Privacy">
+          <option value="wood.privacy.tight_cedar">Tight Cedar</option>
+          <option value="wood.privacy.solid_board">Wide Board</option>
+          <option value="wood.shadowbox.standard">Shadowbox</option>
+        </optgroup>
+        <optgroup label="  Picket">
+          <option value="wood.privacy.spaced_picket">Spaced Picket</option>
+        </optgroup>
+        <optgroup label="  Special">
+          <option value="wood.metal_post.8ft">8ft Metal Post</option>
+        </optgroup>
       </optgroup>
       <optgroup label="── CHAIN LINK ──">
-        <option value="chain_link.residential.galvanized">Chain Link — Residential Galvanized</option>
-        <option value="chain_link.residential.black">Chain Link — Residential Black</option>
-        <option value="chain_link.commercial.galvanized">Chain Link — Commercial Galvanized</option>
-        <option value="chain_link.commercial.black">Chain Link — Commercial Black</option>
+        <optgroup label="  Residential">
+          <option value="chain_link.residential.galvanized">Galvanized</option>
+          <option value="chain_link.residential.black">Black</option>
+        </optgroup>
+        <optgroup label="  Commercial">
+          <option value="chain_link.commercial.galvanized">Galvanized</option>
+          <option value="chain_link.commercial.black">Black</option>
+        </optgroup>
       </optgroup>
       <optgroup label="── ORNAMENTAL ──">
-        <option value="ornamental.steel.flat_top_3rail">Ornamental — Steel Flat Top 3-Rail (DM)</option>
-        <option value="ornamental.steel.spear_top_3rail">Ornamental — Steel Spear Top 3-Rail (DM)</option>
-        <option value="ornamental.steel.flat_top_pool">Ornamental — Steel Flat Top Pool (DM)</option>
-        <option value="ornamental.aluminum.flat_top_3rail">Ornamental — Aluminum Flat Top 3-Rail</option>
-        <option value="ornamental.aluminum.spear_top_3rail">Ornamental — Aluminum Spear Top 3-Rail</option>
+        <optgroup label="  Steel">
+          <option value="ornamental.steel.flat_top_3rail">Flat Top</option>
+          <option value="ornamental.steel.spear_top_3rail">Spear Top</option>
+          <option value="ornamental.steel.flat_top_pool">Pool</option>
+        </optgroup>
+        <optgroup label="  Aluminum">
+          <option value="ornamental.aluminum.flat_top_3rail">Flat Top</option>
+          <option value="ornamental.aluminum.spear_top_3rail">Spear Top</option>
+        </optgroup>
       </optgroup>
       <optgroup label="── VINYL ──">
-        <option value="vinyl.privacy.tongue_groove">Vinyl — Privacy Tongue &amp; Groove</option>
-        <option value="vinyl.picket.scalloped">Vinyl — Scalloped Picket</option>
+        <option value="vinyl.privacy.tongue_groove">Tongue &amp; Groove Privacy</option>
+        <option value="vinyl.picket.scalloped">Scalloped Picket</option>
       </optgroup>
-      <optgroup label="── FARM &amp; RANCH ──">
-        <option value="farm.no_climb.horse">Farm — No-Climb Horse Fence</option>
-        <option value="farm.barbed.5strand">Farm — Barbed Wire 5-Strand</option>
+      <optgroup label="── FARM ──">
+        <option value="farm.no_climb.horse">No-Climb</option>
+        <option value="farm.barbed.5strand">Barbed Wire</option>
       </optgroup>
     </select>
     <div class="style-note" id="style-note" style="margin-top:6px">Tight cedar 6ft: 2.50 pickets/lf · 3 rails/section · 8ft O.C. · KAN004247 ✓</div>
