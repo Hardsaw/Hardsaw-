@@ -721,33 +721,44 @@ textarea,input{outline:none}
     EVIDENCE INTAKE
     <span class="editable-badge">EDITABLE</span>
   </div>
-  <input id="fi" type="file" accept="image/*" class="hidden" onchange="handleImg(this.files[0],'file')">
-  <input id="fi-cam" type="file" accept="image/*" JOB INFO="environment" class="hidden" onchange="handleImg(this.files[0],'camera')">
+  <input id="fi-file"    type="file" accept="image/*,application/pdf" class="hidden" onchange="handleImg(this.files[0],'file')">
+  <input id="fi-cam"     type="file" accept="image/*" capture="environment" class="hidden" onchange="handleImg(this.files[0],'camera')">
+  <input id="fi-video"   type="file" accept="video/*" capture="environment" class="hidden" onchange="handleVideo(this.files[0])">
   <div class="evidence-grid">
-    <div class="evidence-card" id="ev-quote" onclick="document.getElementById('fi').click()">
-      <span class="ev-icon">📄</span>
-      <div class="ev-type">QUOTE</div>
-      <div class="ev-status" id="ev-quote-st">MISSING</div>
-      <div class="ev-facts" id="ev-quote-facts"></div>
+    <!-- SEND QUOTE (replaces old QUOTE card) -->
+    <div class="evidence-card" id="ev-quote" onclick="handleSendQuote()">
+      <span class="ev-icon">📤</span>
+      <div class="ev-type">SEND QUOTE</div>
+      <div class="ev-status" id="ev-quote-st">READY</div>
+      <div class="ev-facts" id="ev-quote-facts">Wholesaler → contractor</div>
     </div>
-    <div class="evidence-card" id="ev-sketch" onclick="document.getElementById('fi-cam').click()">
+    <!-- LAYOUT SKETCH — picker sheet -->
+    <div class="evidence-card" id="ev-sketch" onclick="openPicker('sketch')">
       <span class="ev-icon">✏️</span>
       <div class="ev-type">LAYOUT SKETCH</div>
       <div class="ev-status" id="ev-sketch-st">MISSING</div>
       <div class="ev-facts" id="ev-sketch-facts"></div>
     </div>
-    <div class="evidence-card" id="ev-blueprint" style="opacity:0.5">
+    <!-- BLUEPRINT — picker sheet -->
+    <div class="evidence-card" id="ev-blueprint" onclick="openPicker('blueprint')">
       <span class="ev-icon">📐</span>
       <div class="ev-type">BLUEPRINT</div>
-      <div class="ev-status">MISSING</div>
-      <div class="ev-facts">Upload coming soon</div>
+      <div class="ev-status" id="ev-blueprint-st">MISSING</div>
+      <div class="ev-facts" id="ev-blueprint-facts"></div>
     </div>
-    <div class="evidence-card" id="ev-site" onclick="document.getElementById('fi').click()">
-      <span class="ev-icon">📷</span>
-      <div class="ev-type">SITE PHOTO</div>
+    <!-- SITE MEDIA — picker sheet -->
+    <div class="evidence-card" id="ev-site" onclick="openPicker('site')">
+      <span class="ev-icon">🎥</span>
+      <div class="ev-type">SITE MEDIA</div>
       <div class="ev-status" id="ev-site-st">MISSING</div>
       <div class="ev-facts" id="ev-site-facts"></div>
     </div>
+  </div>
+  <!-- Picker bottom sheet -->
+  <div id="picker-sheet" style="display:none;position:fixed;bottom:0;left:0;right:0;background:var(--panel);border-top:2px solid var(--amber);padding:16px;z-index:999">
+    <div style="font-size:8px;letter-spacing:3px;color:var(--amber);margin-bottom:12px" id="picker-title">SELECT SOURCE</div>
+    <div id="picker-options" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
+    <button onclick="closePicker()" style="margin-top:12px;width:100%;background:transparent;border:1px solid var(--border2);color:var(--muted);padding:8px;font-size:8px;letter-spacing:2px">CANCEL</button>
   </div>
 
   <!-- Upload preview -->
@@ -771,22 +782,22 @@ textarea,input{outline:none}
 <div id="fam-tabs" style="display:flex;gap:4px;margin-bottom:10px;overflow-x:auto;padding-bottom:2px">
   <button class="fam-tab on" data-fam="wood" onclick="selectFamTab(this,'wood')" style="flex-shrink:0;padding:6px 12px;font-family:var(--mono);font-size:8px;letter-spacing:1px;border:1px solid var(--amber);background:#FFB80015;color:var(--amber);border-radius:2px;cursor:pointer">WOOD</button>
   <button class="fam-tab" data-fam="chain_link" onclick="selectFamTab(this,'chain_link')" style="flex-shrink:0;padding:6px 12px;font-family:var(--mono);font-size:8px;letter-spacing:1px;border:1px solid var(--border2);background:transparent;color:var(--muted);border-radius:2px;cursor:pointer">CHAIN LINK</button>
-  <button class="fam-tab" data-fam="ornamental" onclick="selectFamTab(this,'ornamental')" style="flex-shrink:0;padding:6px 12px;font-family:var(--mono);font-size:8px;letter-spacing:1px;border:1px solid var(--border2);background:transparent;color:var(--muted);border-radius:2px;cursor:pointer">ORNAMENTAL</button>
+  <button class="fam-tab" data-fam="ornamental" onclick="selectFamTab(this,'ornamental')" style="flex-shrink:0;padding:6px 12px;font-family:var(--mono);font-size:8px;letter-spacing:1px;border:1px solid var(--border2);background:transparent;color:var(--muted);border-radius:2px;cursor:pointer">⬡ ORNAMENTAL</button>
   <button class="fam-tab" data-fam="vinyl" onclick="selectFamTab(this,'vinyl')" style="flex-shrink:0;padding:6px 12px;font-family:var(--mono);font-size:8px;letter-spacing:1px;border:1px solid var(--border2);background:transparent;color:var(--muted);border-radius:2px;cursor:pointer">VINYL</button>
   <button class="fam-tab" data-fam="farm" onclick="selectFamTab(this,'farm')" style="flex-shrink:0;padding:6px 12px;font-family:var(--mono);font-size:8px;letter-spacing:1px;border:1px solid var(--border2);background:transparent;color:var(--muted);border-radius:2px;cursor:pointer">FARM</button>
 </div>
         <select class="sel" id="fam" onchange="onStyleChange()">
       <optgroup label="── WOOD ──">
         <optgroup label="  Privacy">
-          <option value="wood.privacy.tight_cedar">Tight Cedar</option>
-          <option value="wood.privacy.solid_board">Wide Board</option>
-          <option value="wood.shadowbox.standard">Shadowbox</option>
+          <option value="wood.privacy.tight_cedar">Wood — Solid Privacy (6ft)</option>
+          <option value="wood.privacy.solid_board">Wood — Wide Board Privacy (6ft)</option>
+          <option value="wood.shadowbox.standard">Wood Shadowbox</option>
         </optgroup>
         <optgroup label="  Picket">
-          <option value="wood.privacy.spaced_picket">Spaced Picket</option>
+          <option value="wood.privacy.spaced_picket">Wood Privacy — Spaced Picket</option>
         </optgroup>
         <optgroup label="  Special">
-          <option value="wood.metal_post.8ft">8ft Metal Post</option>
+          <option value="wood.metal_post.8ft">Wood — 8ft Metal Post</option>
         </optgroup>
       </optgroup>
       <optgroup label="── CHAIN LINK ──">
@@ -854,6 +865,10 @@ textarea,input{outline:none}
         <button class="flag-btn" data-flag="permit" onclick="this.classList.toggle('on');updateGov()">
           <span class="flag-icon">📋</span>
           <span class="flag-label">PERMIT</span>
+        </button>
+        <button class="flag-btn" data-flag="pool"   onclick="this.classList.toggle('on');updateGov()">
+          <span class="flag-icon">🏊</span>
+          <span class="flag-label">POOL</span>
         </button>
       </div>
     </div>
@@ -2738,6 +2753,39 @@ renderStyleCards = function(styleId) {
       }).join('')
     + '</div>';
 };
+
+var _pickerTarget = null;
+function openPicker(target){
+  _pickerTarget = target;
+  var sheet = document.getElementById('picker-sheet');
+  var title = document.getElementById('picker-title');
+  var opts  = document.getElementById('picker-options');
+  sheet.style.display = 'block';
+  function mkBtn(id,emoji,label){ return '<button class="flag-btn" onclick="document.getElementById(&quot;'+id+'&quot;).click();closePicker()">'+emoji+' '+label+'</button>'; }
+  var disBtn = function(emoji,label){ return '<button class="flag-btn" style="opacity:0.4" disabled>'+emoji+' '+label+'<br><span style="font-size:7px">COMING SOON</span></button>'; };
+  if(target === 'sketch' || target === 'blueprint'){
+    title.textContent = (target==='sketch'?'LAYOUT SKETCH':'BLUEPRINT') + ' — SELECT SOURCE';
+    opts.innerHTML = mkBtn('fi-cam','📷','CAMERA')+mkBtn('fi-file','🖼','GALLERY')+mkBtn('fi-file','📁','FILE / PDF')+disBtn('👓','SMART GLASS');
+  } else if(target === 'site'){
+    title.textContent = 'SITE MEDIA — SELECT SOURCE';
+    opts.innerHTML = mkBtn('fi-video','🎥','VIDEO')+mkBtn('fi-cam','📷','PHOTO')+disBtn('👓','SMART GLASS')+disBtn('🚁','DRONE');
+  }
+}
+function closePicker(){
+  document.getElementById('picker-sheet').style.display='none';
+  _pickerTarget = null;
+}
+function handleSendQuote(){
+  alert('Send Quote — wholesaler → contractor flow coming soon.');
+}
+function handleVideo(file){
+  if(!file) return;
+  var st = document.getElementById('ev-site-st');
+  var ft = document.getElementById('ev-site-facts');
+  if(st){ st.textContent='CAPTURED'; st.className='ev-status parsed'; }
+  if(ft) ft.textContent = file.name + ' · ' + (file.size/1024/1024).toFixed(1)+'MB';
+  document.getElementById('ev-site').classList.add('has-data');
+}
 </script>
 </body>
 </html>
