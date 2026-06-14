@@ -1184,6 +1184,9 @@ var MAP_READY = false;
 
 function initHardsawMap() {
   MAP_READY = true;
+  if(document.getElementById('map-tool-wrap') && document.getElementById('map-tool-wrap').style.display !== 'none') {
+    initMap();
+  }
 }
 
 function toggleMapTool() {
@@ -2702,7 +2705,7 @@ renderStyleCards = function(styleId) {
         var svgHtml = svgKey && FENCE_SVG[svgKey]
           ? '<div style="width:100%;height:70px;overflow:hidden;background:var(--panel2);display:flex;align-items:center;justify-content:center;padding:4px">' + FENCE_SVG[svgKey] + '</div>'
           : '<div class="style-card-img">' + (STYLE_ICONS[fam] || '◆') + '</div>';
-        return '<div class="style-card' + (active ? ' active' : '') + '" onclick="selectVersion('' + id + '')">'
+        return '<div class="style-card' + (active ? ' active' : '') + '" onclick="selectVersion(\'' + id + '\'')">'
           + svgHtml
           + '<div class="style-card-body">'
           + '<div class="style-card-name">' + (s.label || id) + '</div>'
