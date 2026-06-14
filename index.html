@@ -1143,6 +1143,7 @@ var STYLE_PHOTOS = {
   'vinyl.semi_privacy':                {emoji:'▫', sub:'Vinyl semi-privacy · spaced'},
   'farm.field_fence':                  {emoji:'⊞', sub:'Field fence · wire · farm'},
   'storage_cage.standard':             {emoji:'⊟', sub:'Storage cage · flat mount brackets'},
+  'wood.metal_post.8ft':              {family:'wood',label:'Wood 8ft Metal Post',note:'8ft cedar pickets · AFS line post · metal post system',rp:{S:8,con_line:1,con_term:2},skus:{picket:{s:'WD-CED-8FT',u:'each',d:'Cedar Picket 8ft'},post:{s:'8BFLINE00',u:'each',d:'AFS Line Post'},rail:{s:'WD-RAIL-8FT',u:'each',d:'2×4 Rail 8ft'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'WD-WG',u:'each',d:'Walk Gate'},dg:{s:'WD-DG',u:'each',d:'Drive Gate'}}},
 };
 function selectVersion(id){
   var sel=document.getElementById('fam');
@@ -1611,6 +1612,7 @@ var VERSIONS = {
     'vinyl.picket.scalloped':            {v:'VN-PICK-SC-v1.0',cal:null,         calDate:null},
     'farm.no_climb.horse':               {v:'FM-NC-HR-v1.0',  cal:null,         calDate:null},
     'farm.barbed.5strand':               {v:'FM-BR-5S-v1.0',  cal:null,         calDate:null},
+    'wood.metal_post.8ft':              {v:'WD-MP-8FT-v1.0', cal:'KAN004244',  calDate:'2026-01-01'},
   },
   vendor: 'amerifence_v3.0.0',
 };
@@ -2679,6 +2681,7 @@ var STYLE_SVG_MAP = {
 'vinyl.picket.scalloped':            'vinyl_picket',
 'farm.no_climb.horse':               'farm_noclimb',
 'farm.barbed.5strand':               'farm_barbed',
+'wood.metal_post.8ft':               'wood',
 };
 // ── FAMILY TAB LOGIC ──────────────────────────────────────────
 function selectFamTab(btn, fam) {
