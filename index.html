@@ -1846,7 +1846,7 @@ function calcDEH(styleId,geo,posts,conc,ht){
     // BRACE ASSEMBLY: per terminal post — 2 brace bands + truss rod + tightener
     // TENSION WIRE: ceil(lf/1000)×1000ft rolls
     var sk2=style.skus; var rp3=style.rp; var hookups2=posts.hookups;
-    var tb_per_hookup = Math.max(ht_val - 1, 3); // Hoover: height-1, min 3
+    var tb_per_hookup = Math.max(ht - 1, 3); // Hoover: height-1, min 3
     add(sk2.fab, lf, 'Fabric Commercial ('+sk2.fab.s+')','build_lf='+lf+'ft [exact]','FABRIC');
     pf('Fabric',lf,'build_lf exact');
     var railSt2=Math.ceil(lf/21); var railFt2=railSt2*21;
