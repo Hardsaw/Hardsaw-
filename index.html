@@ -1851,12 +1851,12 @@ function calcDEH(styleId,geo,posts,conc,ht){
     pf('Fabric',lf,'build_lf exact');
     var railSt2=Math.ceil(lf/21); var railFt2=railSt2*21;
     add(sk2.rail, railFt2, 'Top Rail Commercial ('+railSt2+' sticks)','ceil('+lf+'/21)×21='+railFt2+'ft','RAILS');
-    add(sk2.tp, tp, 'Terminal Post 3"×9' Commercial', posts.F.tp,'POSTS');
+    add(sk2.tp, tp, 'Terminal Post 3"×9\' Commercial', posts.F.tp,'POSTS');
     add(sk2.tc, tp, 'Terminal Cap 3" Steel Dome', tp+' caps','POSTS');
-    add(sk2.lp, lp, 'Line Post 2-1/2"×8' Commercial', posts.F.lp,'POSTS');
+    add(sk2.lp, lp, 'Line Post 2-1/2"×8\' Commercial', posts.F.lp,'POSTS');
     add(sk2.lt, lp, 'Line Top 2-1/2"×1-5/8"', lp+' line tops','POSTS');
     pf('Terminal posts',tp,posts.F.tp); pf('Line posts',lp,posts.F.lp);
-    add(sk2.bar, hookups2, 'Tension Bar 6' Commercial','hookups='+hookups2,'HARDWARE');
+    add(sk2.bar, hookups2, 'Tension Bar 6\' Commercial','hookups='+hookups2,'HARDWARE');
     var tb_total = tp * tb_per_hookup;
     add(sk2.tb, tb_total,'Tension Band 3"','terminal×(ht-1)='+tp+'×'+tb_per_hookup+'='+tb_total+' [Hoover doctrine]','HARDWARE');
     var eb3 = tp * 2;
