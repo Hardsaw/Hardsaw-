@@ -2187,30 +2187,8 @@ async function handleImg(file,source){
     gate('vision_parse');
     var statusEl=source==='camera'?document.getElementById('ev-sketch-st'):document.getElementById('ev-quote-st');
     var factsEl=source==='camera'?document.getElementById('ev-sketch-facts'):document.getElementById('ev-quote-facts');
-    if(statusEl)statusEl.textContent='PARSING...';
-    try{
-      var raw=await claude(
-        'You are the MIRE vision parser for Hardsaw. Extract fence layout. Return ONLY valid JSON: '
-        +'{"styleId":"wood.privacy.tight_cedar"|"wood.privacy.spaced_picket"|"chain_link.residential.galvanized"|"chain_link.residential.black"|"ornamental.aluminum.flat_top_3rail"|"vinyl.privacy.tongue_groove"|"farm.no_climb.horse"|null,'
-        +'"height_ft":number|null,"fenceEdges":[{"length":number,"note":"string"}],"openingEdges":[{"length":number,"note":"string"}],'
-        +'"ends":number|null,"corners":number|null,"walkGates":number|null,"driveGates":number|null,'
-        +'"vendor":string|null,"quoteNumber":string|null,"quoteTotal":number|null,'
-        +'"layoutDescription":"every dimension label you see","lineItems":[{"sku":string,"description":string,"qty":number,"unit":string}],'
-        +'"confidence":"high"|"medium"|"low","notes":string}. '
-        +'CRITICAL: For sketches, read EVERY number near a line as a run length ft. Separate fence runs (solid) from gate gaps (openings).',
-        [{type:'image',source:{type:'base64',media_type:file.type||'image/jpeg',data:dataUrl.split(',')[1]}},
-         {type:'text',text:'Extract fence layout. Return only JSON.'}]
-      );
-      var data=JSON.parse(raw.replace(/```json|```/g,'').trim());
-      extracted=data;
-      var total=(data.fenceEdges||[]).length+(data.lineItems||[]).length;
-      if(statusEl){statusEl.textContent='PARSED';statusEl.className='ev-status parsed';}
-      if(factsEl){factsEl.textContent=total+' extracted facts · '+data.confidence+' confidence';}
-      renderExtracted(data);
-    }catch(err){
-      if(statusEl){statusEl.textContent='PARSE ERROR';statusEl.className='ev-status conflict';}
-      if(factsEl){factsEl.textContent='Could not parse — enter layout below';}
-    }
+    if(statusEl){statusEl.textContent='UPLOADED';statusEl.className='ev-status parsed';}
+    if(factsEl){factsEl.textContent=file.name+' · ready';}
   };
   reader.readAsDataURL(file);
 }
