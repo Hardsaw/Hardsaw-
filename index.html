@@ -2849,36 +2849,17 @@ function closePicker(){
     var st = document.getElementById('ev-sketch-st');
     if(st){ st.textContent = 'PARSING...'; }
     try {
-      var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      var resp = await fetch('https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/vision-parse', {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 500,
-          messages:[{
-            role:'user',
-            content:[
-              {
-                type:'image',
-                source:{
-                  type:'base64',
-                  media_type: window._sketchMime || 'image/jpeg',
-                  data: window._sketchBase64
-                }
-              },
-              {
-                type:'text',
-                text:'This is a fence layout sketch. Extract ONLY these fields and return ONLY valid JSON, no other text:\n{"total_lf":number,"runs":[{"lf":number,"note":"string"}],"corners":number,"end_posts":number,"walk_gates":number,"drive_gates":number,"height_ft":number,"fence_type":"wood|chain_link|ornamental|vinyl|farm","finish":"galvanized|black|cedar|aluminum|steel","notes":"string","confidence":"high|medium|low"}\nIf a value is not visible or legible, use null. Do not guess.'
-              }
-            ]
-          }]
+          image_base64: window._sketchBase64,
+          media_type: window._sketchMime || 'image/jpeg'
         })
       });
       var data = await resp.json();
-      var text = data.content && data.content[0] && data.content[0].text;
-      if(!text) throw new Error('No response');
-      var clean = text.replace(/```json|```/g,'').trim();
-      var parsed = JSON.parse(clean);
+      if(data.error) throw new Error(data.error);
+      var parsed = data;
       // Auto-fill calc fields
       if(parsed.total_lf){
         var runInputs = document.querySelectorAll('.fence-run-input');
