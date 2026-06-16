@@ -733,7 +733,7 @@ textarea,input{outline:none}
       <div class="ev-facts" id="ev-quote-facts">Wholesaler → contractor</div>
     </div>
     <!-- LAYOUT SKETCH — picker sheet -->
-    <div class="evidence-card" id="ev-sketch" onclick="openPicker('sketch')">
+    <div class="evidence-card" id="ev-sketch" onclick="document.getElementById('fi-cam').click()">
     <span class="ev-icon">✏️</span>
     <div class="ev-type">LAYOUT SKETCH</div>
     <div class="ev-status" id="ev-sketch-st">MISSING</div>
@@ -2828,7 +2828,7 @@ function openPicker(target){
   var disBtn = function(emoji,label){ return '<button class="flag-btn" style="opacity:0.4" disabled>'+emoji+' '+label+'<br><span style="font-size:7px">COMING SOON</span></button>'; };
   if(target === 'sketch' || target === 'blueprint'){
     title.textContent = (target==='sketch'?'LAYOUT SKETCH':'BLUEPRINT') + ' — SELECT SOURCE';
-    opts.innerHTML = mkBtn('fi-cam','📷','CAMERA')+mkBtn('fi-file','🖼','GALLERY')+mkBtn('fi-file','📁','FILE / PDF')+disBtn('👓','SMART GLASS');
+    opts.innerHTML = mkBtn('fi-cam','📷','CAMERA')+disBtn('👓','SMART GLASS COMING SOON');
   } else if(target === 'site'){
     title.textContent = 'SITE MEDIA — SELECT SOURCE';
     opts.innerHTML = mkBtn('fi-video','🎥','VIDEO')+mkBtn('fi-cam','📷','PHOTO')+disBtn('👓','SMART GLASS')+disBtn('🚁','DRONE');
