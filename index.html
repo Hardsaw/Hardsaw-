@@ -734,11 +734,16 @@ textarea,input{outline:none}
     </div>
     <!-- LAYOUT SKETCH — picker sheet -->
     <div class="evidence-card" id="ev-sketch" onclick="openPicker('sketch')">
-      <span class="ev-icon">✏️</span>
-      <div class="ev-type">LAYOUT SKETCH</div>
-      <div class="ev-status" id="ev-sketch-st">MISSING</div>
-      <div class="ev-facts" id="ev-sketch-facts"></div>
-    </div>
+    <span class="ev-icon">✏️</span>
+    <div class="ev-type">LAYOUT SKETCH</div>
+    <div class="ev-status" id="ev-sketch-st">MISSING</div>
+    <div class="ev-facts" id="ev-sketch-facts"></div>
+    <button id="ev-extract-btn" 
+      onclick="event.stopPropagation();extractMeasurements()" 
+      style="display:none;margin-top:8px;width:100%;background:#FFB800;color:#000;border:none;padding:8px;font-size:9px;letter-spacing:2px;font-weight:bold;cursor:pointer">
+      EXTRACT MEASUREMENTS →
+    </button>
+  </div>
     <!-- BLUEPRINT — picker sheet -->
     <div class="evidence-card" id="ev-blueprint" onclick="openPicker('blueprint')">
       <span class="ev-icon">📐</span>
@@ -2237,7 +2242,15 @@ async function handleImg(file,source){
     gate('vision_parse');
     var statusEl=source==='camera'?document.getElementById('ev-sketch-st'):document.getElementById('ev-quote-st');
     var factsEl=source==='camera'?document.getElementById('ev-sketch-facts'):document.getElementById('ev-quote-facts');
-    if(statusEl){statusEl.textContent='UPLOADED';statusEl.className='ev-status parsed';}
+    var reader = new FileReader();
+  reader.onload = function(ev){
+    window._sketchBase64 = ev.target.result.split(',')[1];
+    window._sketchMime = file.type || 'image/jpeg';
+    var extractBtn = document.getElementById('ev-extract-btn');
+    if(extractBtn) extractBtn.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+  if(statusEl){statusEl.textContent='UPLOADED';statusEl.className='ev-status parsed';}
     if(factsEl){factsEl.textContent=file.name+' · ready';}
   };
   reader.readAsDataURL(file);
@@ -2825,6 +2838,111 @@ function closePicker(){
   document.getElementById('picker-sheet').style.display='none';
   _pickerTarget = null;
 }
+
+  async function extractMeasurements(){
+    if(!window._sketchBase64){
+      alert('No sketch uploaded yet.');
+      return;
+    }
+    var btn = document.getElementById('ev-extract-btn');
+    if(btn){ btn.textContent = 'READING SKETCH...'; btn.disabled = true; }
+    var st = document.getElementById('ev-sketch-st');
+    if(st){ st.textContent = 'PARSING...'; }
+    try {
+      var resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 500,
+          messages:[{
+            role:'user',
+            content:[
+              {
+                type:'image',
+                source:{
+                  type:'base64',
+                  media_type: window._sketchMime || 'image/jpeg',
+                  data: window._sketchBase64
+                }
+              },
+              {
+                type:'text',
+                text:'This is a fence layout sketch. Extract ONLY these fields and return ONLY valid JSON, no other text:\n{"total_lf":number,"runs":[{"lf":number,"note":"string"}],"corners":number,"end_posts":number,"walk_gates":number,"drive_gates":number,"height_ft":number,"fence_type":"wood|chain_link|ornamental|vinyl|farm","finish":"galvanized|black|cedar|aluminum|steel","notes":"string","confidence":"high|medium|low"}\nIf a value is not visible or legible, use null. Do not guess.'
+              }
+            ]
+          }]
+        })
+      });
+      var data = await resp.json();
+      var text = data.content && data.content[0] && data.content[0].text;
+      if(!text) throw new Error('No response');
+      var clean = text.replace(/```json|```/g,'').trim();
+      var parsed = JSON.parse(clean);
+      // Auto-fill calc fields
+      if(parsed.total_lf){
+        var runInputs = document.querySelectorAll('.fence-run-input');
+        if(runInputs.length > 0) runInputs[0].value = parsed.total_lf;
+      }
+      if(parsed.height_ft){
+        var htSel = document.getElementById('ht-sel');
+        if(htSel) htSel.value = parsed.height_ft;
+      }
+      if(parsed.end_posts != null){
+        var epEl = document.getElementById('end-posts');
+        if(epEl) epEl.value = parsed.end_posts;
+      }
+      if(parsed.corners != null){
+        var cornEl = document.getElementById('corners');
+        if(cornEl) cornEl.value = parsed.corners;
+      }
+      if(parsed.walk_gates != null){
+        var wgEl = document.getElementById('walk-gates');
+        if(wgEl) wgEl.value = parsed.walk_gates;
+      }
+      if(parsed.drive_gates != null){
+        var dgEl = document.getElementById('drive-gates');
+        if(dgEl) dgEl.value = parsed.drive_gates;
+      }
+      // Auto-select fence family if detected
+      if(parsed.fence_type){
+        var famBtns = document.querySelectorAll('.fam-btn');
+        famBtns.forEach(function(b){
+          if(b.dataset.fam && parsed.fence_type.indexOf(b.dataset.fam) > -1){
+            selectFamTab(b);
+          }
+        });
+      }
+      // Show result
+      var confidence = parsed.confidence || 'low';
+      var confColor = confidence==='high'?'var(--green)':confidence==='medium'?'var(--amber)':'var(--red)';
+      if(st){ 
+        st.textContent = 'EXTRACTED · '+confidence.toUpperCase()+' CONFIDENCE';
+        st.style.color = confColor;
+      }
+      var factsEl = document.getElementById('ev-sketch-facts');
+      if(factsEl){
+        factsEl.textContent = 
+          (parsed.total_lf||'?')+'ft · '
+          +(parsed.fence_type||'?')+' · '
+          +(parsed.height_ft||'?')+'ft tall · '
+          +(parsed.walk_gates||0)+' walk · '
+          +(parsed.drive_gates||0)+' drive';
+      }
+      if(btn){ btn.textContent = '✓ EXTRACTED — REVIEW & CALCULATE'; btn.disabled = false; }
+      // Show assist prompt if confidence is low or fields missing
+      if(confidence !== 'high' || !parsed.total_lf){
+        var assistMsg = 'I extracted what I could from your sketch. ';
+        if(!parsed.total_lf) assistMsg += 'I couldn\'t read the total linear feet — please enter it manually. ';
+        if(confidence === 'low') assistMsg += 'Confidence is low — please review all fields before calculating.';
+        setTimeout(function(){ alert('ASSIST: ' + assistMsg); }, 300);
+      }
+    } catch(err) {
+      if(st){ st.textContent = 'READ ERROR — enter manually'; st.className='ev-status conflict'; }
+      if(btn){ btn.textContent = 'EXTRACT MEASUREMENTS →'; btn.disabled = false; }
+      console.error('Vision parse error:', err);
+    }
+  }
 function handleSendQuote(){
   alert('Send Quote — wholesaler → contractor flow coming soon.');
 }
