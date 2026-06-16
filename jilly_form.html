@@ -695,13 +695,14 @@ function handleSubmit(e) {
 
   document.getElementById('confirm-id').textContent = 'REF: ' + leadId;
 
-  var calcUrl = '/calc?name=' + encodeURIComponent(name) +
-
-    '&lf=' + STATE.lf + '&family=' + STATE.family +
-
-    '&ht=' + STATE.height + '&walks=' + STATE.walks +
-
-    '&drives=' + STATE.drives + '&address=' + encodeURIComponent(address);
+  var calcUrl = 'https://hardsaw.vercel.app/calc'
+  + '?name='    + encodeURIComponent(STATE.name    || name || '')
+  + '&lf='      + encodeURIComponent(STATE.lf      || 0)
+  + '&family='  + encodeURIComponent(STATE.family  || 'wood')
+  + '&ht='      + encodeURIComponent(STATE.height  || 6)
+  + '&walks='   + encodeURIComponent(STATE.walks   || 0)
+  + '&drives='  + encodeURIComponent(STATE.drives  || 0)
+  + '&address=' + encodeURIComponent(STATE.address || address || '');
 
   console.log('[Jilly] Calc URL:', calcUrl);
 
