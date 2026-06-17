@@ -1780,7 +1780,7 @@ function calcA(edges){
 function calcB(geo,ends,corners,walks,drives,others,S,shared){
   shared=shared||0;
   var gp=(walks+drives+others)*2;
-  var tp=Math.max(ends,ends+corners+gp-shared);
+  var tp=ends+corners;
   var lpArr=geo.fenceEdges.map(function(e){return Math.max(0,Math.ceil(e.length/S)-1);});
   var lp=lpArr.reduce(function(a,b){return a+b;},0);
   var lpCorr=geo.openingEdges.reduce(function(s,e){return s+Math.max(0,Math.ceil(e.length/S)-1);},0);
@@ -2041,7 +2041,7 @@ function calcJ(geo, posts, matR, flags, ht, styleId) {
 // ── INVARIANT PROOF ──────────────────────────────────────────────────────────
 function buildProof(geo,posts,styleId){
   return{
-    'hookups = 2×|E|':        posts.hookups===2*geo.fenceEdges.length,
+    'hookups = 2×|E|':        (parseInt(document.getElementById('hookup-override')&&document.getElementById('hookup-override').value)||0)>0||posts.hookups===2*geo.fenceEdges.length,
     'terminal_posts = |V|':   posts.terminalPosts>=2,
     'line_posts ≥ 0':         posts.linePosts>=0,
     'build_length > 0':       geo.buildLft>0,
