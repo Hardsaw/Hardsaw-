@@ -969,6 +969,8 @@ textarea,input{outline:none}
   <div class="row2">
     <div><label class="lbl">DRIVE GATES</label><input class="inp" id="dg" type="number" min="0" value="0" oninput="liveUpdate()"></div>
     <div><label class="lbl">OTHER OPENINGS</label><input class="inp" id="og" type="number" min="0" value="0" oninput="liveUpdate()"></div>
+        <div><label class="lbl">LINE POSTS <span style="font-size:9px;opacity:0.5">(OVERRIDE)</span></label><input class="inp" id="lp-override" type="number" min="0" placeholder="auto" oninput="liveUpdate()"></div>
+    <div><label class="lbl">HOOKUPS <span style="font-size:9px;opacity:0.5">(OVERRIDE)</span></label><input class="inp" id="hookup-override" type="number" min="0" placeholder="auto" oninput="liveUpdate()"></div>
   </div>
     <div class="row2" style="margin-top:4px">
       <div><label class="lbl" style="color:var(--amber)">SHARED POSTS</label><input class="inp" id="sp" type="number" min="0" value="0" oninput="liveUpdate()" title="Gate posts that share a location with a corner or end post"></div>
@@ -1786,7 +1788,11 @@ function calcB(geo,ends,corners,walks,drives,others,S,shared){
   var secsArr=geo.fenceEdges.map(function(e){return Math.ceil(e.length/S);});
   var ts=secsArr.reduce(function(a,b){return a+b;},0);
   var hookups=2*geo.fenceEdges.length;
-  return{terminalPosts:tp,linePosts:lpAdj,linePosts_raw:lp,gatePosts:gp,endPosts:ends,cornerPosts:corners,walkGates:walks,driveGates:drives,otherGates:others,hookups:hookups,totalSecs:ts,lpArr:lpArr,secsArr:secsArr,S:S,totalPosts:tp+lpAdj,F:{tp:ends+'(ends)+'+corners+'(corners)+'+(walks+drives+others)+'×2(gate)='+tp,lp:lpArr.map(function(v,i){return 'ceil('+geo.fenceEdges[i].length+'/'+S+')-1='+v;}).join(' + ')+'='+lp+' −'+lpCorr+'(gate corr)='+lpAdj,hookups:'2×'+geo.fenceEdges.length+'='+hookups,secs:secsArr.map(function(v,i){return 'ceil('+geo.fenceEdges[i].length+'/'+S+')='+v;}).join(' + ')+'='+ts}};
+var lpOvr=parseInt(document.getElementById('lp-override')&&document.getElementById('lp-override').value)||0;
+  var hkOvr=parseInt(document.getElementById('hookup-override')&&document.getElementById('hookup-override').value)||0;
+  if(lpOvr>0)lpAdj=lpOvr,lp=lpOvr;
+  if(hkOvr>0)hookups=hkOvr;
+    return{terminalPosts:tp,linePosts:lpAdj,linePosts_raw:lp,gatePosts:gp,endPosts:ends,cornerPosts:corners,walkGates:walks,driveGates:drives,otherGates:others,hookups:hookups,totalSecs:ts,lpArr:lpArr,secsArr:secsArr,S:S,totalPosts:tp+lpAdj,F:{tp:ends+'(ends)+'+corners+'(corners)+'+(walks+drives+others)+'×2(gate)='+tp,lp:lpArr.map(function(v,i){return 'ceil('+geo.fenceEdges[i].length+'/'+S+')-1='+v;}).join(' + ')+'='+lp+' −'+lpCorr+'(gate corr)='+lpAdj,hookups:'2×'+geo.fenceEdges.length+'='+hookups,secs:secsArr.map(function(v,i){return 'ceil('+geo.fenceEdges[i].length+'/'+S+')='+v;}).join(' + ')+'='+ts}};
 }
 function calcF(posts,rp,family){
   if(family==='wood'){var b=posts.totalPosts*rp.con_line;return{totalBags:b,F:posts.totalPosts+'×'+rp.con_line+'='+b+' [wood: 1/post calibrated]'};}
