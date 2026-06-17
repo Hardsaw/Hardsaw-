@@ -1972,6 +1972,7 @@ function calcDEH(styleId,geo,posts,conc,ht){
         }
       }
       if(drives>0){
+        if(drives>0)warn.push('DD gates ≥10ft are custom order — obtain panel # from AFC before ordering (no standard SKU)');
         add(skDg,drives,skDg.d,drives+' drive gate'+(drives>1?'s':''),'GATES');
         if(use6ftHW){
           add(sk.hinge6,drives,sk.hinge6.d,drives+'x1 self-closing hinge pair/gate','GATE HW');
