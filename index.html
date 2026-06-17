@@ -2238,8 +2238,8 @@ async function vaultRemote(input, data) {
 
 // ── VISION ────────────────────────────────────────────────────────────────────
 function showCaptureGuide(){
-  var o=document.getElementById('capture-guide-overlay');
-  if(o){o.style.display='flex';return;}
+  var og=document.getElementById('capture-guide-overlay');
+  if(og){og.style.display='flex';return;}
   var el=document.createElement('div');
   el.id='capture-guide-overlay';
   el.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;';
