@@ -733,7 +733,7 @@ textarea,input{outline:none}
       <div class="ev-facts" id="ev-quote-facts">Wholesaler → contractor</div>
     </div>
     <!-- LAYOUT SKETCH — picker sheet -->
-    <div class="evidence-card" id="ev-sketch" onclick="document.getElementById('fi-cam').click()">
+    <div class="evidence-card" id="ev-sketch" onclick="showCaptureGuide()">
     <span class="ev-icon">✏️</span>
     <div class="ev-type">LAYOUT SKETCH</div>
     <div class="ev-status" id="ev-sketch-st">MISSING</div>
@@ -2237,6 +2237,32 @@ async function vaultRemote(input, data) {
   }
 
 // ── VISION ────────────────────────────────────────────────────────────────────
+function showCaptureGuide(){
+  var o=document.getElementById('capture-guide-overlay');
+  if(o){o.style.display='flex';return;}
+  var el=document.createElement('div');
+  el.id='capture-guide-overlay';
+  el.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;';
+  el.innerHTML=''
+    +'<div style="font-size:11px;letter-spacing:3px;color:var(--amber);margin-bottom:20px">LAYOUT SKETCH CAPTURE</div>'
+    +'<div style="font-size:13px;color:var(--text);line-height:2;margin-bottom:24px;text-align:left;max-width:320px">'
+    +'✅ Hold phone directly above sketch<br>'
+    +'✅ Fill the frame — sketch edge to edge<br>'
+    +'✅ Good lighting — no shadows<br>'
+    +'✅ All numbers visible and legible<br>'
+    +'❌ No dark backgrounds or table edges<br>'
+    +'❌ No blurry or angled shots'
+    +'</div>'
+    +'<button onclick="document.getElementById('capture-guide-overlay').style.display='none';document.getElementById('fi-cam').click();" '
+    +'style="width:100%;max-width:320px;background:var(--amber);color:#000;border:none;padding:14px;font-size:11px;letter-spacing:3px;cursor:pointer;margin-bottom:12px">'
+    +'📷 OPEN CAMERA →'
+    +'</button>'
+    +'<button onclick="document.getElementById('capture-guide-overlay').style.display='none';" '
+    +'style="width:100%;max-width:320px;background:transparent;color:var(--muted);border:1px solid var(--border);padding:10px;font-size:10px;letter-spacing:2px;cursor:pointer">'
+    +'CANCEL'
+    +'</button>';
+  document.body.appendChild(el);
+}
 async function handleImg(file,source){
   if(!file)return;
   document.getElementById('up-img').src='';
