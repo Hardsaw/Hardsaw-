@@ -2312,6 +2312,7 @@ function renderExtracted(d){
 function applyExtracted(){
   if(!extracted)return;var d=extracted;
   if(d.styleId){var s=document.getElementById('fam');for(var i=0;i<s.options.length;i++){if(s.options[i].value===d.styleId){s.selectedIndex=i;break;}}onStyleChange();}
+  if(!d.styleId&&d.styleHint){var famMap={'ornamental':'ornamental.steel.flat_top_3rail','chain_link':'chain_link.commercial.black','wood':'wood.tight_cedar.6ft','vinyl':'vinyl.privacy.6ft','farm':'farm.wire.4strand'};var sid=famMap[d.styleHint];if(sid){var s2=document.getElementById('fam');for(var i=0;i<s2.options.length;i++){if(s2.options[i].value===sid){s2.selectedIndex=i;break;}}onStyleChange();}}
   if(d.height_ft){var h=document.getElementById('ht');for(var i=0;i<h.options.length;i++){if(parseInt(h.options[i].value)===d.height_ft){h.selectedIndex=i;break;}}}
   if(d.fenceEdges&&d.fenceEdges.length){document.getElementById('edges-container').innerHTML='';edgeN=0;d.fenceEdges.forEach(function(e){addEdge('fence',e.length,e.note);});}
   if(d.openingEdges&&d.openingEdges.length){d.openingEdges.forEach(function(e){addEdge('opening',e.length,e.note||'gate opening');});}
