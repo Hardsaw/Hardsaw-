@@ -2206,6 +2206,7 @@ async function vaultRemote(input, data) {
         contractor_id: cfg.CONTRACTOR_ID,
         job_id: cfg.SESSION_JOB_ID,
         event_type: eventType,
+        memory_type: eventType,
         payload: { local_action: input, data: data },
         version_manifest: { lifevault_protocol: '1.0', hardsaw_commit: 'step_6_3_bridge_fix' }
       })
