@@ -2230,7 +2230,7 @@ async function vaultRemote(input, data) {
                               'Content-Type':'application/json',
                               'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY
                     },
-                    body:JSON.stringify({system:sys,message:msg,job_context:ctx||null})
+                    body:JSON.stringify({question:msg,jobContext:ctx||null,sessionRef:'calc-'+Date.now()})
             });
             if(!r.ok){
                     var err=await r.json().catch(function(){return{error:'unknown'};});
