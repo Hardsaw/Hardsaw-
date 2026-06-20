@@ -1995,6 +1995,10 @@ function calcDEH(styleId,geo,posts,conc,ht){
     add(skPanel,pnlQ,skPanel.d,ts+' sec (no +1)','PANELS');
     add(skPost,pstQ,skPost.d,pstQ+' posts','POSTS');
     if(rp.bracket_system==='flat_mount'&&sk.bracket_fm)add(sk.bracket_fm,brkFmQ,sk.bracket_fm.d,ts+'×6 flat mount','HARDWARE');
+    else if(rp.bracket_system==='external'){
+      if(sk.bracket_univ&&brkUnivQ>0)add(sk.bracket_univ,brkUnivQ,sk.bracket_univ.d,'hookups×rails='+brkUnivQ+' univ','HARDWARE');
+      if(sk.bracket_line&&brkLineQ>0)add(sk.bracket_line,brkLineQ,sk.bracket_line.d,'linePosts×rails='+brkLineQ+' line','HARDWARE');
+    }
     else if(rp.bracket_system==='integrated'){
       if(sk.bracket_univ&&brkUnivQ>0)add(sk.bracket_univ,brkUnivQ,sk.bracket_univ.d,'(tp×3)+(midRun×6)='+brkUnivQ+' univ','HARDWARE');
       if(sk.bracket_line&&brkLineQ>0)add(sk.bracket_line,brkLineQ,sk.bracket_line.d,'(lp×3)-(midRun×6)='+brkLineQ+' line','HARDWARE');
