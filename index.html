@@ -1223,7 +1223,7 @@ var MAP_READY = false;
 function initHardsawMap() {
   MAP_READY = true;
   if(document.getElementById('map-tool-wrap') && document.getElementById('map-tool-wrap').style.display !== 'none') {
-    initMap();
+    requestAnimationFrame(function(){ initMap(); });
   }
 }
 
@@ -1239,7 +1239,7 @@ function toggleMapTool() {
     wrap.style.display = 'block';
     badge.textContent = 'OPEN';
     badge.style.color = 'var(--amber)';
-    if (MAP_READY && !MAP) initMap();
+    if (MAP_READY && !MAP) initMap(); else if (MAP) setTimeout(function(){ google.maps.event.trigger(MAP,'resize'); },50);
   }
 }
 
@@ -1254,6 +1254,7 @@ function initMap() {
     styles: [{featureType:'all',elementType:'labels',stylers:[{visibility:'on'}]}]
   });
   MAP.addListener('click', function(e) { mapAddPoint(e.latLng); });
+  setTimeout(function(){ google.maps.event.trigger(MAP,'resize'); },200);
 }
 
 function searchAddress() {
