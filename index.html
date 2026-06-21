@@ -1223,7 +1223,10 @@ var MAP_READY = false;
 function initHardsawMap() {
   MAP_READY = true;
   if(document.getElementById('map-tool-wrap') && document.getElementById('map-tool-wrap').style.display !== 'none') {
-    requestAnimationFrame(function(){ initMap(); });
+    setTimeout(function(){
+      initMap();
+      setTimeout(function(){ if(MAP) google.maps.event.trigger(MAP,'resize'); },300);
+    },150);
   }
 }
 
