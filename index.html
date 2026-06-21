@@ -2168,7 +2168,9 @@ function onStyleChange(){
   var style=STYLES[styleId];
   if(!style)return;
   var sv=VERSIONS.styles[styleId]||{v:'unknown'};
-  document.getElementById('style-note').textContent=style.note;
+  var htNote=''; var htVal=parseInt(document.getElementById('ht').value||'4'); if((styleId==='ornamental.steel.flat_top_3rail'||styleId==='ornamental.steel.spear_top_3rail')&&htVal===6){htNote=' · ⚠️ 6ft: confirm availability with AFC before quoting';}
+
+    document.getElementById('style-note').textContent=style.note+htNote;
   document.getElementById('gv-ruleset').textContent=sv.v;
   document.getElementById('gv-vendor').textContent=style.skus.con?'AmeriFence':'Generic';
   document.getElementById('tb-ruleset').textContent=sv.v;
