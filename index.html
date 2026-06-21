@@ -1985,7 +1985,7 @@ function calcDEH(styleId,geo,posts,conc,ht){
     var skWg=rp.height_keyed&&sk.wg&&sk.wg[orHt]?sk.wg[orHt]:sk.wg;
     var skDg=rp.height_keyed&&sk.dg&&sk.dg[orHt]?sk.dg[orHt]:sk.dg;          var orRails=rp.rails||3;
 
-    var orTp=posts.endPosts+posts.cornerPosts;
+    var orTp=posts.endPosts+posts.cornerPosts+posts.gatePosts;
 
     var orLp=posts.linePosts_raw!==undefined?posts.linePosts_raw:posts.linePosts;
 
