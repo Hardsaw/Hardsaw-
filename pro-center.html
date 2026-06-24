@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Pro Center - AFS Contractor Onboarding</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f5f5;color:#222;min-height:100vh}
+header{background:#1a1a1a;color:#fff;padding:20px 32px;display:flex;align-items:center;gap:16px}
+header h1{font-size:1.4rem;font-weight:700;letter-spacing:.04em}
+header span{font-size:.85rem;color:#aaa;margin-left:auto}
+.progress-bar{height:6px;background:#ddd;position:sticky;top:0;z-index:10}
+.progress-fill{height:100%;background:#FFB800;transition:width .4s;width:0%}
+main{max-width:860px;margin:0 auto;padding:32px 24px}
+h2{font-size:1.1rem;font-weight:700;color:#1a1a1a;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.step-num{background:#FFB800;color:#000;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;flex-shrink:0}
+.step-num.done{background:#00C853;color:#fff}
+.card{background:#fff;border:1px solid #e0e0e0;border-radius:10px;padding:24px;margin-bottom:20px}
+.card p{color:#444;line-height:1.6;font-size:.95rem;margin-bottom:12px}
+.card ul{padding-left:18px;color:#444;line-height:1.8;font-size:.95rem}
+.action-btn{display:inline-block;background:#FFB800;color:#000;font-weight:700;padding:10px 22px;border-radius:6px;border:none;cursor:pointer;font-size:.9rem;text-decoration:none;margin-top:8px}
+.check-wrap{display:flex;align-items:center;gap:10px;margin-top:12px}
+input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:#FFB800}
+.check-label{font-size:.9rem;color:#555}
+.tag{display:inline-block;background:#fff3cd;color:#856404;border:1px solid #ffc107;padding:2px 8px;border-radius:4px;font-size:.78rem;font-weight:600;margin-left:8px}
+.summary{background:#1a1a1a;color:#fff;border-radius:10px;padding:24px;margin-bottom:20px}
+.summary h3{color:#FFB800;font-size:1rem;margin-bottom:12px}
+.summary ul{padding-left:18px;line-height:1.9;font-size:.9rem;color:#ccc}
+footer{text-align:center;padding:24px;color:#999;font-size:.8rem;border-top:1px solid #e0e0e0;margin-top:32px}
+</style>
+</head>
+<body>
+<header>
+  <div style="width:36px;height:36px;background:#FFB800;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem">A</div>
+  <h1>AFS Pro Center - Contractor Onboarding</h1>
+  <span id="pct">0% complete</span>
+</header>
+<div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+<main>
+<div class="summary">
+  <h3>What you get as a Pro Center contractor</h3>
+  <ul>
+    <li>Instant material BOM - no manual takeoffs</li>
+    <li>Live AFS pricing tied to your account tier</li>
+    <li>Digital quote delivery + customer approval</li>
+    <li>Net 30 terms (after approval)</li>
+    <li>Dealer network pricing on qualifying volume</li>
+    <li>Dedicated rep + priority order fulfillment</li>
+  </ul>
+</div>
+<div class="card">
+  <h2><span class="step-num" id="n1">1</span> Create your AFS contractor account</h2>
+  <p>Sign up at amerifence.com or call your local AFS branch. You will need your business name, EIN or SSN, contractor license number, and primary billing address.</p>
+  <a class="action-btn" href="https://amerifence.com" target="_blank">Go to AFS</a>
+  <div class="check-wrap"><input type="checkbox" class="step-cb" data-step="1" id="c1"/><label class="check-label" for="c1">Account created</label></div>
+</div>
+<div class="card">
+  <h2><span class="step-num" id="n2">2</span> Get your account number <span class="tag">Required for orders</span></h2>
+  <p>Your AFS account number (format: KAN######) is required to place orders and receive contractor pricing. You will receive it by email after your account is approved - usually within 1 business day.</p>
+  <div class="check-wrap"><input type="checkbox" class="step-cb" data-step="2" id="c2"/><label class="check-label" for="c2">Account number received</label></div>
+</div>
+<div class="card">
+  <h2><span class="step-num" id="n3">3</span> Choose your pricing tier</h2>
+  <p>AFS offers several contractor pricing tiers set by annual purchase volume: Standard (5-10% below retail), Pro Center/XLContractor (~15% below retail), and Dealer Network (best pricing + priority stock). Contact your AFS rep to confirm your tier.</p>
+  <div class="check-wrap"><input type="checkbox" class="step-cb" data-step="3" id="c3"/><label class="check-label" for="c3">Pricing tier confirmed with rep</label></div>
+</div>
+<div class="card">
+  <h2><span class="step-num" id="n4">4</span> Apply for Net 30 terms</h2>
+  <p>Net 30 credit terms let you receive materials and pay within 30 days. Complete the AFS credit application with 3 trade references. Allow 3-5 business days for approval.</p>
+  <div class="check-wrap"><input type="checkbox" class="step-cb" data-step="4" id="c4"/><label class="check-label" for="c4">Net 30 application submitted</label></div>
+</div>
+<div class="card">
+  <h2><span class="step-num" id="n5">5</span> Place your first order using a BOM</h2>
+  <p>Every quote generates a complete Bill of Materials with AFS SKUs and quantities. Call your AFS branch or submit via their portal. Reference your KAN account number on every order.</p>
+  <div class="check-wrap"><input type="checkbox" class="step-cb" data-step="5" id="c5"/><label class="check-label" for="c5">First order placed</label></div>
+</div>
+<div class="card">
+  <h2><span class="step-num" id="n6">6</span> Enroll in the AFS Dealer Network</h2>
+  <p>High-volume contractors (typically 50K+ annual volume) can apply for Dealer Network status: best pricing, priority fulfillment, dedicated rep, and marketing co-op support. Ask your AFS rep about eligibility.</p>
+  <div class="check-wrap"><input type="checkbox" class="step-cb" data-step="6" id="c6"/><label class="check-label" for="c6">Dealer Network inquiry submitted</label></div>
+</div>
+</main>
+<footer>AFS Pro Center Onboarding - Questions? Contact your AFS branch or rep.</footer>
+<script>
+var cbs=document.querySelectorAll('.step-cb');
+var fill=document.getElementById('progFill');
+var pct=document.getElementById('pct');
+function update(){
+  var done=[].filter.call(cbs,function(c){return c.checked}).length;
+  var p=Math.round(done/cbs.length*100);
+  fill.style.width=p+'%';
+  pct.textContent=p+'% complete';
+  [].forEach.call(cbs,function(cb){
+    var num=document.getElementById('n'+cb.dataset.step);
+    if(cb.checked)num.classList.add('done');
+    else num.classList.remove('done');
+  });
+}
+[].forEach.call(cbs,function(cb){cb.addEventListener('change',update)});
+update();
+</script>
+</body>
+</html>
