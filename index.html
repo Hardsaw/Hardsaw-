@@ -1836,7 +1836,7 @@ function calcA(edges){
 function calcB(geo,ends,corners,walks,drives,others,S,shared){
   shared=shared||0;
   var gp=(walks+drives+others)*2;
-  var tp=ends+corners;
+  var tp=ends+corners+gp;
   var lpArr=geo.fenceEdges.map(function(e){return Math.max(0,Math.ceil(e.length/S)-1);});
   var lp=lpArr.reduce(function(a,b){return a+b;},0);
   var lpCorr=geo.openingEdges.reduce(function(s,e){return s+Math.max(0,Math.ceil(e.length/S)-1);},0);
