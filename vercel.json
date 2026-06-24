@@ -12,6 +12,8 @@
     { "src": "/estimate", "dest": "/estimate.html" },
     { "src": "/estimate.html", "dest": "/estimate.html" },
     { "src": "/quote", "dest": "/jilly_form.html" },
+    { "src": "/pro-center", "dest": "/pro-center.html" },
+    { "src": "/pro-center.html", "dest": "/pro-center.html" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
