@@ -2001,7 +2001,7 @@ function calcDEH(styleId,geo,posts,conc,ht){
 
     var orLp=posts.linePosts_raw!==undefined?posts.linePosts_raw:posts.linePosts;
 
-    var pnlQ=ts,pstQ=orTp+orLp,orCon=conc.totalBags;
+    var pnlQ=Math.ceil(lf/rp.S),pstQ=orTp+orLp,orCon=conc.totalBags;
 
     var brkUnivQ=posts.hookups*orRails; var brkLineQ=orLp*orRails; var brkTermQ=orTp*4,brkFmQ=ts*6;
     add(skPanel,pnlQ,skPanel.d,ts+' sec (no +1)','PANELS');
