@@ -107,6 +107,13 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
     <button class="map-ctrl-btn" onclick="estClear()">CLEAR</button>
     <button class="map-ctrl-btn primary" id="next-to-style" onclick="goToStyle()" disabled>NEXT</button>
   </div>
+  <div style="margin-bottom:8px;display:flex;gap:6px;">
+    <button class="map-ctrl-btn" id="house-flag-btn"
+      onclick="toggleHouseMode()"
+      style="flex:1;background:var(--panel2);border-color:var(--border2);color:var(--dim);">
+      🏠 FLAG HOUSE / STRUCTURE
+    </button>
+  </div>
 <button id="gate-mode-btn" onclick="toggleGateMode()" style="display:none;width:100%;margin-top:6px;padding:11px;background:transparent;border:1px solid var(--amber);color:var(--amber);font-family:var(--mono);font-size:9px;letter-spacing:2px;cursor:pointer;border-radius:2px">+ ADD GATE</button>
 </div>
 <div class="divider"></div>
@@ -114,24 +121,24 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
   <div class="section-hdr">SELECT FENCE TYPE</div>
   <div class="style-grid">
     <div class="style-card active" onclick="selectStyle(this,'ornamental_dm')" data-style="ornamental_dm">
-      <span class="style-card-icon">✦</span>
+      <span class="style-card-icon">â¦</span>
       <div class="style-card-name">Ornamental Iron</div>
-      <div class="style-card-sub">Steel DM series · 8ft bays · 4-6ft</div>
+      <div class="style-card-sub">Steel DM series Â· 8ft bays Â· 4-6ft</div>
     </div>
     <div class="style-card" onclick="selectStyle(this,'wood')" data-style="wood">
-      <span class="style-card-icon">🪵</span>
+      <span class="style-card-icon">ðªµ</span>
       <div class="style-card-name">Wood Privacy</div>
-      <div class="style-card-sub">Cedar · 6ft · board on board</div>
+      <div class="style-card-sub">Cedar Â· 6ft Â· board on board</div>
     </div>
     <div class="style-card" onclick="selectStyle(this,'chain_link_galv')" data-style="chain_link_galv">
-      <span class="style-card-icon">🔗</span>
+      <span class="style-card-icon">ð</span>
       <div class="style-card-name">Chain Link</div>
-      <div class="style-card-sub">Galvanized or black · 4-6ft</div>
+      <div class="style-card-sub">Galvanized or black Â· 4-6ft</div>
     </div>
     <div class="style-card" onclick="selectStyle(this,'vinyl')" data-style="vinyl" style="display:none">
-      <span class="style-card-icon">▭</span>
+      <span class="style-card-icon">â­</span>
       <div class="style-card-name">Vinyl Privacy</div>
-      <div class="style-card-sub">White · tongue and groove · 6ft</div>
+      <div class="style-card-sub">White Â· tongue and groove Â· 6ft</div>
     </div>
   </div>
   <div class="section-hdr" style="margin-top:16px">FENCE HEIGHT</div>
@@ -142,7 +149,7 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
   </div>
   <div class="removal-row" onclick="this.querySelector('input').click()">
     <input type="checkbox" id="removal-chk" onchange="EST.removal=this.checked" onclick="event.stopPropagation()">
-    <div><div class="removal-row-label">REMOVE EXISTING FENCE</div><div class="removal-row-sub">+$6/LF · Demo &amp; haul away</div></div>
+    <div><div class="removal-row-label">REMOVE EXISTING FENCE</div><div class="removal-row-sub">+$6/LF Â· Demo &amp; haul away</div></div>
   </div>
   <button class="go-btn" style="width:100%;padding:14px;font-size:11px;letter-spacing:3px" onclick="goToResult()">CALCULATE ESTIMATE</button>
 </div>
@@ -154,7 +161,7 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
     <div class="result-lf" id="res-lf">-- LF</div>
     <div class="result-range-label">ESTIMATED MATERIAL RANGE</div>
     <div class="result-range" id="res-range">$-- - $--</div>
-    <div class="result-disclaimer" id="res-note">Installed price estimate · Final price after site visit.</div>
+    <div class="result-disclaimer" id="res-note">Installed price estimate Â· Final price after site visit.</div>
   </div>
   <button class="go-btn" style="width:100%;padding:14px;font-size:11px;letter-spacing:3px" onclick="goToLead()">GET A FIRM QUOTE</button>
 </div>
@@ -172,7 +179,7 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
 </div>
 <div id="panel-success" class="section hidden">
   <div class="success-card">
-    <div class="success-icon">🛡</div>
+    <div class="success-icon">ð¡</div>
     <div class="success-title">You are In The Queue</div>
     <div class="success-sub">Jilly received your project details and Nate has been notified.<br><br>Expect a call or text within a few hours.<br><br><strong style="color:var(--amber)">816-852-FENCE</strong></div>
   </div>
@@ -248,13 +255,41 @@ function calcPriceRange(style, height, lf, address) {
   var high = Math.round((base * lf * mult * 1.20 + remSurcharge) / 50) * 50;
   return {low: low, high: high, base_per_lf: base, multiplier: mult};
 }
+function initMapsCallback(){
+  initEstimateMap();
+  initAutocomplete();
+}
 function initEstimateMap(){
   EST.ready=true;
   EST.map=new google.maps.Map(document.getElementById('map-canvas'),{
     zoom:18,center:{lat:39.0997,lng:-94.5786},mapTypeId:'satellite',
-    disableDefaultUI:true,gestureHandling:'cooperative'
+    disableDefaultUI:false,
+  gestureHandling:'cooperative',
+  zoomControl:true,
+  rotateControl:true,
+  tiltControl:true,
+  mapTypeControl:false,
+  streetViewControl:false,
+  fullscreenControl:false,
+  scaleControl:true
   });
   EST.map.addListener('click',function(e){estAddPoint(e.latLng);});
+}
+function initAutocomplete(){
+  var input=document.getElementById('est-address');
+  var ac=new google.maps.places.Autocomplete(input,{
+    types:['address'],
+    componentRestrictions:{country:'us'}
+  });
+  ac.addListener('place_changed',function(){
+    var place=ac.getPlace();
+    if(!place.geometry)return;
+    if(!EST.ready)initEstimateMap();
+    EST.map.setCenter(place.geometry.location);
+    EST.map.setZoom(19);
+    EST.address=place.formatted_address||input.value;
+    document.getElementById('lead-address-display').value=EST.address;
+  });
 }
 function estSearch(){
   if(!EST.ready){initEstimateMap();}
@@ -278,6 +313,16 @@ function estAddPoint(latLng){
     var prev=EST.points[EST.points.length-2];
     EST.polylines.push(new google.maps.Polyline({path:[prev,latLng],strokeColor:'#FFB800',strokeWeight:3,map:EST.map}));
     EST.points[EST.points.length-1]._lf=Math.round(google.maps.geometry.spherical.computeDistanceBetween(prev,latLng)*3.28084);
+  var midLat=(prev.lat()+latLng.lat())/2;
+  var midLng=(prev.lng()+latLng.lng())/2;
+  var lf2=EST.points[EST.points.length-1]._lf;
+  var labelMkr=new google.maps.Marker({
+    position:{lat:midLat,lng:midLng},
+    map:EST.map,
+    icon:{path:google.maps.SymbolPath.CIRCLE,scale:0,fillOpacity:0,strokeOpacity:0},
+    label:{text:lf2+' LF',color:'#FFB800',fontFamily:'Courier New',fontSize:'11px',fontWeight:'bold'}
+  });
+  EST.polylines.push(labelMkr);
   }
   updateEstSegments();
 }
@@ -307,6 +352,38 @@ function updateEstSegments(){
     btn.disabled=false;
   } else {
     document.getElementById('map-total').textContent='';btn.disabled=true;
+  }
+}
+function toggleHouseMode(){
+  EST.houseMode=!EST.houseMode;
+  var btn=document.getElementById('house-flag-btn');
+  if(EST.houseMode){
+    btn.style.borderColor='#FFB800';
+    btn.style.color='#FFB800';
+    btn.textContent='🏠 CLICK MAP TO PLACE HOUSE';
+    EST.map.addListener('click',function(e){
+      if(!EST.houseMode)return;
+      new google.maps.Marker({
+        position:e.latLng,map:EST.map,
+        icon:{path:google.maps.SymbolPath.CIRCLE,scale:10,
+          fillColor:'#FF3B3B',fillOpacity:0.7,
+          strokeColor:'#FF3B3B',strokeWeight:2},
+        title:'House/Structure',
+        label:{text:'🏠',fontSize:'14px'}
+      });
+      EST.houseMode=false;
+      btn.style.borderColor='var(--border2)';
+      btn.style.color='var(--dim)';
+      btn.textContent='🏠 FLAG HOUSE / STRUCTURE';
+      google.maps.event.clearListeners(EST.map,'click');
+      EST.map.addListener('click',function(e2){estAddPoint(e2.latLng);});
+    });
+  } else {
+    btn.style.borderColor='var(--border2)';
+    btn.style.color='var(--dim)';
+    btn.textContent='🏠 FLAG HOUSE / STRUCTURE';
+    google.maps.event.clearListeners(EST.map,'click');
+    EST.map.addListener('click',function(e){estAddPoint(e.latLng);});
   }
 }
 function estUndo(){
@@ -364,9 +441,9 @@ function goToResult(){
     var parts=[];
     if(walks>0)parts.push(walks+' walk gate'+(walks>1?'s':''));
     if(drives>0)parts.push(drives+' drive gate'+(drives>1?'s':''));
-    gateNote=' · '+parts.join(', ')+' quoted separately';
+    gateNote=' Â· '+parts.join(', ')+' quoted separately';
   }
-  document.getElementById('res-note').textContent='Installed price estimate · '+EST.height+'ft · '+Math.round(r.base_per_lf*r.multiplier)+'$/LF base'+gateNote+' · Final price after site visit';
+  document.getElementById('res-note').textContent='Installed price estimate Â· '+EST.height+'ft Â· '+Math.round(r.base_per_lf*r.multiplier)+'$/LF base'+gateNote+' Â· Final price after site visit';
   document.getElementById('panel-style').classList.add('hidden');
   document.getElementById('panel-result').classList.remove('hidden');
   setStep(3);
@@ -413,7 +490,7 @@ function placeGate(type){
     position:latLng,map:EST.map,
     icon:{path:google.maps.SymbolPath.CIRCLE,scale:12,fillColor:color,fillOpacity:0.9,strokeColor:'#fff',strokeWeight:2},
     label:{text:label,color:'#fff',fontSize:'11px',fontWeight:'bold'},
-    title:(type==='walk'?'Walk':'Drive')+' Gate ('+lf+'ft) — tap to remove'
+    title:(type==='walk'?'Walk':'Drive')+' Gate ('+lf+'ft) â tap to remove'
   });
   google.maps.event.addListener(marker,'click',function(){
     marker.setMap(null);
@@ -447,15 +524,15 @@ function showSuccess(){
   <div style="font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:14px;text-align:center">SELECT GATE TYPE</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
     <button onclick="placeGate('walk')" style="background:#00C85318;border:1px solid #00C853;color:#00C853;padding:14px 8px;font-family:var(--mono);font-size:8px;letter-spacing:1px;cursor:pointer;border-radius:4px;line-height:1.6">
-      🚶<br>WALK GATE<br><span style="font-size:8px;opacity:0.6">4ft · tap to remove</span>
+      ð¶<br>WALK GATE<br><span style="font-size:8px;opacity:0.6">4ft Â· tap to remove</span>
     </button>
     <button onclick="placeGate('drive')" style="background:#FF3B3B18;border:1px solid #FF3B3B;color:#FF3B3B;padding:14px 8px;font-family:var(--mono);font-size:8px;letter-spacing:1px;cursor:pointer;border-radius:4px;line-height:1.6">
-      🚗<br>DRIVE GATE<br><span style="font-size:8px;opacity:0.6">10ft · tap to remove</span>
+      ð<br>DRIVE GATE<br><span style="font-size:8px;opacity:0.6">10ft Â· tap to remove</span>
     </button>
   </div>
   <button onclick="hideGatePopup()" style="width:100%;background:transparent;border:1px solid var(--muted);color:var(--muted);padding:9px;font-family:var(--mono);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:4px">CANCEL</button>
 </div>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD96Qhc0YfxwI7iklOm7yTm7FxnuGyQen8&libraries=geometry,places&callback=initEstimateMap"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD96Qhc0YfxwI7iklOm7yTm7FxnuGyQen8&libraries=geometry,places&callback=initMapsCallback"></script>
 </body>
 </html>
