@@ -1,4 +1,4 @@
-—<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#FFB800"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <title>Hardsaw · Governed Decision Engine</title>
-<style>hhhhhhhh
-@import url('https://fonts.googleapis.com/css2?family=Share+hhTech+Mono&family=Barlow+Condensed:wght@300;400;600;700&display=swap');
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&display=swap');
 
 :root {
   --black:   #080808;
@@ -2425,6 +2425,52 @@ function getEdges(){
   return out;
 }
 
+// ── UNIFIED ENGINE (bom-calc) ────────────────────────────────────────────────
+// Frontend material math (calcF/calcDEH) replaced by live fetch to Supabase bom-calc edge
+// function — ONE engine, ONE source of truth. Local calcF/calcDEH retained ONLY as a
+// clearly-flagged legacy fallback for styles bom-calc does not know yet (vinyl, farm,
+// aluminum — zero AFC validation, fallback-baseline doctrine 2026-07-04).
+// Network failure = hard abort with error, NEVER silent local math (anti-drift doctrine).
+var BOMCALC_URL='https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/bom-calc';
+var BOMCALC_STYLE_MAP={
+  'chain_link.residential.galv':'chain_link.residential.galvanized',
+  'chain_link.residential.blk':'chain_link.residential.black',
+  'chain_link.commercial.galv':'chain_link.commercial.galvanized',
+  'chain_link.commercial.blk':'chain_link.commercial.black',
+  'wood.shadowbox.standard':'wood.privacy.shadowbox',
+  'wood.privacy.spaced_picket':'wood.privacy.spaced'
+};
+async function fetchBOM(styleId,edges,ht,ends,corners,walks,drives,others,flags,shared){
+  var beStyle=BOMCALC_STYLE_MAP[styleId]||styleId;
+  // shared posts: backend has no shared param; tp = ends+corners+gates*2, so deducting
+  // shared from ends yields the correct terminal TOTAL. SKU-split caveat warned below.
+  var body={style_id:beStyle,edges:edges,height_ft:ht,ends:Math.max(0,ends-(shared||0)),
+    corners:corners,walks:walks,drives:drives,others:others,flags:flags};
+  var resp=await fetch(BOMCALC_URL,{method:'POST',headers:{
+    'Content-Type':'application/json',
+    'apikey':window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,
+    'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY
+  },body:JSON.stringify(body)});
+  var data=null;try{data=await resp.json();}catch(e){}
+  if(!resp.ok){
+    if(resp.status===400&&data&&data.error&&String(data.error).indexOf('Unknown style_id')===0)
+      return{unknownStyle:true};
+    throw new Error('bom-calc '+resp.status+': '+(data&&data.error?data.error:'no detail'));
+  }
+  return{data:data};
+}
+function localFlagWarnings(flags,ht,geo,rp){
+  var warn=[];flags=flags||[];
+  if(flags.indexOf('HOA')>=0)   warn.push('HOA — confirm approved style and color before ordering');
+  if(flags.indexOf('rocky')>=0) warn.push('Rocky soil — auger rental or blasting likely');
+  if(flags.indexOf('grade')>=0) warn.push('Sloped terrain — stepped or racked install required');
+  if(flags.indexOf('permit')>=0)warn.push('Permit required — obtain before scheduling crew');
+  if(ht>8)                      warn.push('Height >8ft — permit likely required');
+  if(geo.totalLft>1000)         warn.push('Large job — confirm phased delivery');
+  if(rp&&rp.pool)               warn.push('Pool code compliant style — verify local AHJ requirements');
+  return warn;
+}
+
 // ── RUN JOB ───────────────────────────────────────────────────────────────────
 async function runJob(){
   var edges=getEdges();
@@ -2463,8 +2509,30 @@ async function runJob(){
 
   var geo    = calcA(edges);
   var posts  = calcB(geo,ends,corners,walks,drives,others,rp.S,shared);
-  var conc   = calcF(posts,rp,style.family);
-  var matR   = calcDEH(styleId,geo,posts,conc,ht);
+  // UNIFIED ENGINE: material math now comes from live bom-calc (see fetchBOM above)
+  var conc, matR, beResp=null;
+  try{ beResp=await fetchBOM(styleId,edges,ht,ends,corners,walks,drives,others,flags,shared); }
+  catch(engineErr){
+    alert('MATERIAL ENGINE UNREACHABLE\n'+engineErr.message+'\n\nNo BOM generated. Check connection and retry.\nLocal math is intentionally NOT used as a network fallback.');
+    setRailStep('BUILD IT','active');show('s-idle');
+    return;
+  }
+  if(beResp.unknownStyle){
+    conc = calcF(posts,rp,style.family);
+    matR = calcDEH(styleId,geo,posts,conc,ht);
+    matR.warn.unshift('LOCAL LEGACY ENGINE — style not in bom-calc yet; quantities NOT validated against v1.1.11 doctrine');
+  } else {
+    var beD=beResp.data;
+    conc = {totalBags:beD.concrete_bags||0,F:'per '+(beD.engine_version||'bom-calc')};
+    matR = {
+      bom: (beD.bom||[]).map(function(i){return{s:i.sku,u:i.unit,label:i.label,qty:i.qty,formula:i.formula||'',group:i.group||''};}),
+      warn: localFlagWarnings(flags,ht,geo,rp),
+      proof: [],
+      engine: beD.engine_version||'bom-calc',
+      decision_hash: beD.decision_hash||''
+    };
+    if(shared>0)matR.warn.push('SHARED POSTS ('+shared+'): deducted from ends for engine call — verify 3in/4in terminal SKU split if a shared post sits at a corner');
+  }
   var rdy    = calcJ(geo,posts,matR,flags,ht,styleId);
   var invars = buildProof(geo,posts,styleId);
   var invPass= Object.values(invars).every(Boolean);
@@ -2475,7 +2543,7 @@ async function runJob(){
   var sv=VERSIONS.styles[styleId]||{v:'UNKNOWN',cal:null,calDate:null};
   var famKey=style.family;
   var versions={
-    coreEngineVersion: VERSIONS.coreEngine,
+    coreEngineVersion: (matR&&matR.engine)?matR.engine:VERSIONS.coreEngine,
     familyRulepackVersion: VERSIONS.families[famKey]||'unknown',
     styleRulepackVersion:  sv.v,
     vendorProfileVersion:  VERSIONS.vendor,
