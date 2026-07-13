@@ -45,9 +45,9 @@
 
 function H(s:string):string{let h=0xDEADBEEF;for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),2654435761);return((h>>>0)^(h>>>16)).toString(16).toUpperCase().padStart(8,'0');}
 interface Edge{kind:'fence'|'opening';length:number;}
-interface BomItem{sku:string;unit:string;label:string;qty:number;group:string;formula:string;provisional?:boolean;}
+interface BomItem{sku:string|null;unit:string;label:string;qty:number;group:string;formula:string;provisional?:boolean;sku_status?:'confirmed'|'unconfirmed';}
 interface Gate{type:string;width_in?:number;}
-interface CalcInput{style_id:string;edges:Edge[];height_ft:number;ends:number;corners:number;walks:number;drives:number;others:number;flags:string[];lp_override?:number;hookup_override?:number;braced_hookups?:number;runs?:number[];gates?:Gate[];install_method?:string;hardware_spec?:string;concrete?:boolean;plate_sku?:string;total_lf?:number;}
+interface CalcInput{style_id?:string;family?:string;rails?:number;pool_code?:boolean;edges:Edge[];height_ft:number;ends:number;corners:number;walks:number;drives:number;others:number;flags:string[];lp_override?:number;hookup_override?:number;braced_hookups?:number;runs?:number[];gates?:Gate[];install_method?:string;hardware_spec?:string;concrete?:boolean;plate_sku?:string;total_lf?:number;}
 const ST:Record<string,any>={
 'ornamental.steel.flat_top_3rail':{family:'ornamental',label:'Ornamental Steel Flat Top 3-Rail (DM)',rp:{S:8,rails:3,con_line:1,con_term:2,bracket_system:'integrated'},skus:{panel:{s:'8W14X83FT',u:'each',d:'DM Blk Flat Top 3 Rail Panel 4x8'},post:{s:'8W12P69',u:'each',d:'Blk Sq Post 2in x 69in'},post_ht:{4:{s:'8W12P69',u:'each',d:'Blk Sq Post 2in x 69in (4ft)'},5:{s:'8W12P81',u:'each',d:'Blk Sq Post 2in x 81in (5ft)'},6:{s:'8W12P93',u:'each',d:'Blk Sq Post 2in x 93in (6ft)'}},cap:{s:'8AB506',u:'each',d:'Blk Flat Cap 2in'},bracket_univ:{s:'8BB102IWI',u:'each',d:'Blk Universal Bracket'},bracket_line:{s:'8BFLINE00',u:'each',d:'AFS Beta Blk Line Bracket'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'DM4X4BLKFT',u:'each',d:'DM Gate Single Swing Black'},dg:{s:'DM4X4BLKFT-DD',u:'each',d:'DM Gate DD Black'},hinge:{s:'8HB403',u:'each',d:'Hinge Male 2in'},hingef:{s:'8HB404',u:'each',d:'Hinge Female 1-1/4in'},latch:{s:'8HB402',u:'each',d:'Latch Fork SS 2in'},latch_dd:{s:'8HB401',u:'each',d:'Latch Fork DD Center 1-1/4in'},cane_bolt:{s:'8HB316',u:'each',d:'Cane Bolt 48in'},lhanger:{s:'8HB301',u:'each',d:'Latch Hanger'}}},
 'ornamental.steel.spear_top_3rail':{family:'ornamental',label:'Ornamental Steel Spear Top 3-Rail (DM)',rp:{S:8,rails:3,con_line:1,con_term:2,bracket_system:'integrated'},skus:{panel:{s:'8W15X83SP',u:'each',d:'DM Blk Spear Top 3 Rail Panel 5x8'},post:{s:'8W12P93',u:'each',d:'Blk Sq Post 2in x 96in'},cap:{s:'8AB506',u:'each',d:'Blk Flat Cap 2in'},bracket_univ:{s:'8BB102IWI',u:'each',d:'Blk Universal Bracket'},bracket_line:{s:'8BFLINE00',u:'each',d:'AFS Beta Blk Line Bracket'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},wg:{s:'DM5X5BLKFT',u:'each',d:'DM Gate 5W x 5H Spear Top Black'},dg:{s:'DM5X5BLKFT-DD',u:'each',d:'DM Gate DD Spear Top Black'},hinge:{s:'8HB403',u:'each',d:'Hinge Male 2in'},hingef:{s:'8HB404',u:'each',d:'Hinge Female 1-1/4in'},latch:{s:'8HB402',u:'each',d:'Latch Fork SS 2in'},latch_dd:{s:'8HB401',u:'each',d:'Latch Fork DD Center 1-1/4in'},cane_bolt:{s:'8HB316',u:'each',d:'Cane Bolt 48in'},lhanger:{s:'8HB301',u:'each',d:'Latch Hanger'}}},
@@ -61,11 +61,56 @@ const ST:Record<string,any>={
 'wood.privacy.french_gothic':{family:'wood',label:'Wood French Gothic 6ft',rp:{S:6,picket_pitch:4,waste_lo:1.02,waste_hi:1.02,waste_mode:'flat',rails_sec:3,walk_rb:2,drive_rb:3,con_line:1,con_term:1},skus:{picket:{s:'WOODSALES-FG',u:'each',d:'French Gothic Picket 1x4x6'},post:{s:'WOODSALES-FGPOST',u:'each',d:'4x4x8 French Gothic Post'},rail:{s:'62486',u:'each',d:'2x4x8 Wrc Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Strap Hinge Pair'},latch:{s:'10914',u:'each',d:'Gate Paddle Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod 48in'},wg:{s:'63978',u:'each',d:'Walk Gate'},dg:{s:'63979',u:'each',d:'Drive Gate'}}},
 'wood.privacy.spaced':{family:'wood',label:'Wood Spaced Picket 6ft',rp:{S:8,picket_pitch:5.5,waste_lo:1.05,waste_hi:1.08,rails_sec:3,walk_rb:2,drive_rb:3,con_line:1,con_term:1},skus:{picket:{s:'61564',u:'each',d:'Cedar Picket 3.5in Spaced'},post:{s:'64489',u:'each',d:'4x4x8 Green Treated Post'},rail:{s:'62486',u:'each',d:'2x4x8 Wrc Rail'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'},hinge:{s:'10910',u:'pair',d:'Gate Strap Hinge Pair'},latch:{s:'10914',u:'each',d:'Gate Paddle Latch'},rod:{s:'10918',u:'each',d:'Gate Drop Rod 48in'},frame:{s:'CHAINLINK-WGF',u:'each',d:'Metal Wood-Gate Frame'},wg:{s:'63978',u:'each',d:'Walk Gate'},dg:{s:'63979',u:'each',d:'Drive Gate'}}}
 };
+// v1.3.0 ORNAMENTAL FAMILY DECOMPOSITION (Nate architecture correction 2026-07-12):
+// rail count (2/3/4) and pool-code are ORTHOGONAL inputs, not baked style_ids. A "family" carries
+// only the silhouette (flat_top/spear_top) + rail/height-independent shared SKUs. Panel/post SKUs
+// are a function of (family, rails, height): confirmed where a real vaulted quote exists, else
+// sku:null + generic description + sku_status:'unconfirmed' — quantity is STILL computed by the
+// existing formulas (bracket=2*runs*rails, panels=Sum ceil(run/S)); SKU is not a build blocker.
+// This layer only REORGANIZES data + resolves an effective style object; it re-derives no formula.
+const FAM:Record<string,any>={
+'ornamental.steel.flat_top':{base_family:'ornamental',silhouette:'Flat Top',label:'Ornamental Steel Flat Top (DM)',
+  rp:{S:8,con_line:1,con_term:2,bracket_system:'integrated'},
+  confirmed_rails:[3],confirmed_heights:[4,5,6],
+  panel_conf:{s:'8W14X83FT',u:'each',d:'DM Blk Flat Top 3 Rail Panel 4x8'},
+  post_conf:{s:'8W12P69',u:'each',d:'Blk Sq Post 2in x 69in'},
+  post_ht_conf:{4:{s:'8W12P69',u:'each',d:'Blk Sq Post 2in x 69in (4ft)'},5:{s:'8W12P81',u:'each',d:'Blk Sq Post 2in x 81in (5ft)'},6:{s:'8W12P93',u:'each',d:'Blk Sq Post 2in x 93in (6ft)'}},
+  shared:{cap:{s:'8AB506',u:'each',d:'Blk Flat Cap 2in'},bracket_univ:{s:'8BB102IWI',u:'each',d:'Blk Universal Bracket'},bracket_line:{s:'8BFLINE00',u:'each',d:'AFS Beta Blk Line Bracket'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'}},
+  gate_std:{wg:{s:'DM4X4BLKFT',u:'each',d:'DM Gate Single Swing Black'},dg:{s:'DM4X4BLKFT-DD',u:'each',d:'DM Gate DD Black'},hinge:{s:'8HB403',u:'each',d:'Hinge Male 2in'},hingef:{s:'8HB404',u:'each',d:'Hinge Female 1-1/4in'},latch:{s:'8HB402',u:'each',d:'Latch Fork SS 2in'},latch_dd:{s:'8HB401',u:'each',d:'Latch Fork DD Center 1-1/4in'},cane_bolt:{s:'8HB316',u:'each',d:'Cane Bolt 48in'},lhanger:{s:'8HB301',u:'each',d:'Latch Hanger'}},
+  gate_pool:{wg:{s:'DM4X4BLKFT',u:'each',d:'DM Gate Single Swing Black'},hinge:{s:'50383',u:'pair',d:'Hinge Fully Adjustable Self Closing'},latch:{s:'50139',u:'each',d:'Blk Latch Magna Top Pullback'}}},
+'ornamental.steel.spear_top':{base_family:'ornamental',silhouette:'Spear Top',label:'Ornamental Steel Spear Top (DM)',
+  rp:{S:8,con_line:1,con_term:2,bracket_system:'integrated'},
+  confirmed_rails:[3],confirmed_heights:[4,5,6,7,8],
+  panel_conf:{s:'8W15X83SP',u:'each',d:'DM Blk Spear Top 3 Rail Panel 5x8'},
+  post_conf:{s:'8W12P93',u:'each',d:'Blk Sq Post 2in x 96in'},
+  shared:{cap:{s:'8AB506',u:'each',d:'Blk Flat Cap 2in'},bracket_univ:{s:'8BB102IWI',u:'each',d:'Blk Universal Bracket'},bracket_line:{s:'8BFLINE00',u:'each',d:'AFS Beta Blk Line Bracket'},con:{s:'CL-CON-60',u:'bag',d:'Concrete 60lb'}},
+  gate_std:{wg:{s:'DM5X5BLKFT',u:'each',d:'DM Gate 5W x 5H Spear Top Black'},dg:{s:'DM5X5BLKFT-DD',u:'each',d:'DM Gate DD Spear Top Black'},hinge:{s:'8HB403',u:'each',d:'Hinge Male 2in'},hingef:{s:'8HB404',u:'each',d:'Hinge Female 1-1/4in'},latch:{s:'8HB402',u:'each',d:'Latch Fork SS 2in'},latch_dd:{s:'8HB401',u:'each',d:'Latch Fork DD Center 1-1/4in'},cane_bolt:{s:'8HB316',u:'each',d:'Cane Bolt 48in'},lhanger:{s:'8HB301',u:'each',d:'Latch Hanger'}},
+  gate_pool:{wg:{s:'DM5X5BLKFT',u:'each',d:'DM Gate 5W x 5H Spear Top Black'},hinge:{s:'50383',u:'pair',d:'Hinge Fully Adjustable Self Closing'},latch:{s:'50139',u:'each',d:'Blk Latch Magna Top Pullback'}}}
+};
+// Build an effective style object (same shape ST[] entries have) from orthogonal inputs.
+// pool_code:true routes to the existing 'ornamental_pool' code path (50383/50139 self-closing) so
+// output is byte-identical to the legacy pool style at confirmed combos; false uses standard HW.
+function resolveStyle(famId:string,rails:number,ht:number,pool:boolean):any{
+  const F=FAM[famId];if(!F)return null;
+  const conf=(F.confirmed_rails||[]).includes(rails)&&(F.confirmed_heights||[]).includes(ht);
+  const railWord=rails+'-Rail';const nomW=F.rp.S+'ft nominal width';
+  const panel=conf?{...F.panel_conf,status:'confirmed'}
+    :{s:null,u:'each',d:`${ht}ft ${railWord} ${F.silhouette} Panel, ${nomW}`,status:'unconfirmed'};
+  const post=conf?{...F.post_conf,status:'confirmed'}
+    :{s:null,u:'each',d:`${ht}ft Post (2in sq) — ${railWord} ${F.silhouette}`,status:'unconfirmed'};
+  let post_ht:any=undefined;
+  if(F.post_ht_conf){post_ht={};for(const h of Object.keys(F.post_ht_conf)){post_ht[h]=conf?{...F.post_ht_conf[h],status:'confirmed'}:{s:null,u:'each',d:`${h}ft Post (2in sq) — ${railWord} ${F.silhouette}`,status:'unconfirmed'};}}
+  const gate=pool?F.gate_pool:F.gate_std;
+  const skus:any={panel,post,...(post_ht?{post_ht}:{}),...F.shared,...gate};
+  const rp:any={...F.rp,rails,...(pool?{pool:true}:{})};
+  return{family:pool?'ornamental_pool':F.base_family,base_family:F.base_family,silhouette:F.silhouette,
+    label:`${F.label} ${railWord}${pool?' — Pool':''}`,rp,skus,resolved:true,confirmed:conf,pool_code:pool,rails};
+}
 function cA(edges:Edge[]){const fe=edges.filter(e=>e.kind==='fence'),oe=edges.filter(e=>e.kind==='opening');const bL=fe.reduce((s,e)=>s+e.length,0),oL=oe.reduce((s,e)=>s+e.length,0);return{fenceEdges:fe,openingEdges:oe,buildLft:bL,openingLft:oL,totalLft:bL+oL,geoHash:H(edges.map(e=>e.kind+':'+e.length).join('|'))};}
 function cB(geo:ReturnType<typeof cA>,ends:number,corners:number,walks:number,drives:number,others:number,Sp:number,lpO=0,hkO=0){const gp=(walks+drives+others)*2,tp=ends+corners+gp;const lpA=geo.fenceEdges.map(e=>Math.max(0,Math.ceil(e.length/Sp)-1));const lp=lpA.reduce((a,b)=>a+b,0);const lpC=geo.openingEdges.reduce((s,e)=>s+Math.max(0,Math.ceil(e.length/Sp)-1),0);let lpAdj=Math.max(0,lp-lpC);const sA=geo.fenceEdges.map(e=>Math.ceil(e.length/Sp));const ts=sA.reduce((a,b)=>a+b,0);let hookups=2*geo.fenceEdges.length;if(lpO>0)lpAdj=lpO;if(hkO>0)hookups=hkO;return{terminalPosts:tp,linePosts:lpAdj,linePosts_raw:lp,gatePosts:gp,endPosts:ends,cornerPosts:corners,walkGates:walks,driveGates:drives,otherGates:others,hookups,totalSecs:ts,totalPosts:tp+lpAdj,lpArr:lpA,secsArr:sA,Sp,F:{tp:`${ends}e+${corners}c+${(walks+drives+others)}g*2=${tp}`,lp:`sum=${lp} corr=${lpC} adj=${lpAdj}`}};}
 function cF(posts:ReturnType<typeof cB>,rp:any,family:string){if(family==='wood'){const b=posts.totalPosts*rp.con_line;return{totalBags:b,F:`${posts.totalPosts}x${rp.con_line}=${b}`};}if(family==='chain_link_commercial')return{totalBags:0,F:'no concrete commercial'};const b=Math.ceil(posts.linePosts*rp.con_line+posts.terminalPosts*rp.con_term);return{totalBags:b,F:`${posts.linePosts}x${rp.con_line}+${posts.terminalPosts}x${rp.con_term}=${b}`};}
-function cD(styleId:string,geo:ReturnType<typeof cA>,posts:ReturnType<typeof cB>,conc:ReturnType<typeof cF>,ht:number,flags:string[],opts:{braced_hookups?:number;install_method?:string;hardware_spec?:string;concrete?:boolean;plate_sku?:string}={}):BomItem[]{const style=ST[styleId],rp=style.rp,sk=style.skus,fam=style.family;const bom:BomItem[]=[],lf=geo.buildLft,tp=posts.terminalPosts,lp=posts.linePosts;const ts=posts.totalSecs,walks=posts.walkGates,drives=posts.driveGates,others=posts.otherGates||0,hookups=posts.hookups;const ends=posts.endPosts,corners=posts.cornerPosts;const fl=flags||[];const hasTW=fl.includes('tension_wire');const hasTruss=fl.includes('truss_spec')||fl.includes('truss');const hasBarb=fl.includes('barb_wire');const hasCant=fl.includes('cantilever');
-function add(sku:any,qty:number,label:string,formula:string,grp:string){qty=Math.ceil(qty);if(qty<=0)return;bom.push({sku:sku.s,unit:sku.u,label:label||sku.d,qty,group:grp,formula});}
+function cD(style:any,geo:ReturnType<typeof cA>,posts:ReturnType<typeof cB>,conc:ReturnType<typeof cF>,ht:number,flags:string[],opts:{braced_hookups?:number;install_method?:string;hardware_spec?:string;concrete?:boolean;plate_sku?:string}={}):BomItem[]{const rp=style.rp,sk=style.skus,fam=style.family;const bom:BomItem[]=[],lf=geo.buildLft,tp=posts.terminalPosts,lp=posts.linePosts;const ts=posts.totalSecs,walks=posts.walkGates,drives=posts.driveGates,others=posts.otherGates||0,hookups=posts.hookups;const ends=posts.endPosts,corners=posts.cornerPosts;const fl=flags||[];const hasTW=fl.includes('tension_wire');const hasTruss=fl.includes('truss_spec')||fl.includes('truss');const hasBarb=fl.includes('barb_wire');const hasCant=fl.includes('cantilever');
+function add(sku:any,qty:number,label:string,formula:string,grp:string){qty=Math.ceil(qty);if(qty<=0)return;const item:BomItem={sku:(sku.s??null),unit:sku.u,label:label||sku.d,qty,group:grp,formula};if(sku.status)item.sku_status=sku.status;bom.push(item);}
 if(fam==='wood'){
 const base=lf*12/rp.picket_pitch;let pk;
 if(rp.waste_mode==='flat'){pk=Math.ceil(base*rp.waste_lo);}
@@ -127,12 +172,40 @@ add({s:'50383',u:'pair',d:'Hinge Self-Closing'},gc,'Hinge Self-Closing',`${gc}ga
 else{if(walks>0){if(sk.wg)add(sk.wg,walks,sk.wg.d,`${walks}walk`,'GATES');if(sk.hinge)add(sk.hinge,walks,sk.hinge.d,`${walks}x1 (1leaf x1male)`,'GATE HW');if(sk.hingef)add(sk.hingef,walks*2,sk.hingef.d,`${walks}x2 (1leaf x2female)`,'GATE HW');if(sk.lhanger)add(sk.lhanger,walks,sk.lhanger.d,`${walks}x1`,'GATE HW');if(sk.latch)add(sk.latch,walks,sk.latch.d,`${walks}x1 SS latch`,'GATE HW');}if(drives>0){if(sk.dg)add(sk.dg,drives,sk.dg.d,`${drives}drive`,'GATES');if(sk.hinge)add(sk.hinge,drives*2,sk.hinge.d,`${drives}x2 (2leafs/DD x1male/leaf)`,'GATE HW');if(sk.hingef)add(sk.hingef,drives*6,sk.hingef.d,`${drives}x6 (2leafs x2female=4 + 2 dropRod holder)`,'GATE HW');if(sk.lhanger)add(sk.lhanger,drives,sk.lhanger.d,`${drives}x1`,'GATE HW');if(sk.latch_dd)add(sk.latch_dd,drives,sk.latch_dd.d,`${drives}x1 DD center latch`,'GATE HW');else if(sk.latch)add(sk.latch,drives,sk.latch.d,`${drives}x1 [FALLBACK no DD-specific latch]`,'GATE HW');if(sk.cane_bolt)add(sk.cane_bolt,drives,sk.cane_bolt.d,`${drives}x1 cane bolt/DD`,'GATE HW');}}}
 return bom;}
 const CORS={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'authorization, x-client-info, apikey, content-type'};
-Deno.serve(async(req:Request)=>{if(req.method==='OPTIONS')return new Response(null,{headers:CORS});try{const body:CalcInput=await req.json();const{style_id,edges,height_ft,ends,corners,walks,drives,others,flags,lp_override,hookup_override,braced_hookups,runs,gates,install_method,hardware_spec,concrete,plate_sku,total_lf}=body;if(!style_id||!ST[style_id])return new Response(JSON.stringify({error:`Unknown style_id: ${style_id}`,available:Object.keys(ST)}),{status:400,headers:{...CORS,'Content-Type':'application/json'}});const style=ST[style_id],rp=style.rp;
-let effEdges:Edge[]=[];let assumption:string|null=null;
-if(Array.isArray(edges)&&edges.length){effEdges=edges;}
-else if(Array.isArray(runs)&&runs.length){effEdges=runs.filter((r:number)=>Number(r)>0).map((r:number)=>({kind:'fence' as const,length:Number(r)}));}
-else if(typeof total_lf==='number'&&total_lf>0){effEdges=[{kind:'fence',length:total_lf}];assumption='single_run';}
-if(!effEdges.filter((e:Edge)=>e.kind==='fence').length)return new Response(JSON.stringify({error:'At least one fence run required'}),{status:400,headers:{...CORS,'Content-Type':'application/json'}});
-let eWalks=walks??0,eDrives=drives??0,gateLfIn=0;
-if(Array.isArray(gates)){eWalks=gates.filter((g:Gate)=>String(g&&g.type).toUpperCase()==='SS').length;eDrives=gates.filter((g:Gate)=>String(g&&g.type).toUpperCase()==='DD').length;gateLfIn=gates.reduce((s:number,g:Gate)=>s+(Number(g&&g.width_in)||0),0);}
-const geo=cA(effEdges);const posts=cB(geo,ends??2,corners??0,eWalks,eDrives,others??0,rp.S,lp_override??0,hookup_override??0);const conc=cF(posts,rp,style.family);const bom=cD(style_id,geo,posts,conc,height_ft??4,flags??[],{braced_hookups,install_method,hardware_spec,concrete,plate_sku});const dH=H(JSON.stringify({geoHash:geo.geoHash,bom:bom.map((i:BomItem)=>i.sku+':'+i.qty),style_id,height_ft:height_ft??4,flags:flags??[]}));const concreteBags=bom.filter((i:BomItem)=>i.group==='CONCRETE').reduce((s:number,i:BomItem)=>s+i.qty,0);const derivedTotalLf=geo.buildLft+geo.openingLft+(gateLfIn/12);const isOrn=(style.family==='ornamental'||style.family==='ornamental_pool');const cf:string[]=[];if(geo.buildLft<1)cf.push('NO_FENCE_RUNS');if(posts.totalPosts<2)cf.push('POST_COUNT_ERROR');const hardBlock=cf.length>0;if(isOrn&&install_method==='plated')cf.push('PLATED_PLATE_SELECTION_UNMAPPED');const readiness=hardBlock?'BLOCKED':(cf.length>0||(flags||[]).includes('pool'))?'NEEDS_REVIEW':'READY';return new Response(JSON.stringify({decision_hash:dH,geo_hash:geo.geoHash,style_id,style_label:style.label,family:style.family,height_ft:height_ft??4,build_lf:geo.buildLft,opening_lf:geo.openingLft,total_lf:derivedTotalLf,assumption,install_method:isOrn?(install_method||'ground_set'):undefined,hardware_spec:isOrn?(hardware_spec||'standard'):undefined,concrete:isOrn?((concrete===undefined)?true:!!concrete):undefined,tension_wire:(flags??[]).includes('tension_wire'),posts:{terminal:posts.terminalPosts,line:posts.linePosts,line_raw:posts.linePosts_raw,gate:posts.gatePosts,total:posts.totalPosts,hookups:posts.hookups,sections:posts.totalSecs,ends:posts.endPosts,corners:posts.cornerPosts},concrete_bags:concreteBags,bom,readiness,proof_state:hardBlock?'BLOCKED':'ALL_PASS',findings:cf,engine_version:'bom-calc-v1.2.1',timestamp:new Date().toISOString()}),{headers:{...CORS,'Content-Type':'application/json'}});}catch(err){return new Response(JSON.stringify({error:String(err)}),{status:500,headers:{...CORS,'Content-Type':'application/json'}});}});
+// Pure compute core (no HTTP). Returns {status, payload}. Extracted from the handler so the same
+// code path is exercised by the Node verification harness and by the live edge function.
+function calc(body:CalcInput):{status:number;payload:any}{
+  const{style_id,family,rails,pool_code,edges,height_ft,ends,corners,walks,drives,others,flags,lp_override,hookup_override,braced_hookups,runs,gates,install_method,hardware_spec,concrete,plate_sku,total_lf}=body;
+  const ht=height_ft??4;
+  // ── Resolve effective style: new decomposed (family+rails+pool_code) OR legacy style_id ──
+  let style:any=null,effStyleId='',mode='legacy';
+  if(family&&FAM[family]){mode='decomposed';const rl=(typeof rails==='number'&&rails>0)?rails:3;const pool=!!pool_code;style=resolveStyle(family,rl,ht,pool);effStyleId=`${family}|rails=${rl}${pool?'|pool':''}`;}
+  else if(style_id&&ST[style_id]){style=ST[style_id];effStyleId=style_id;}
+  else return{status:400,payload:{error:family?`Unknown family: ${family}`:`Unknown style_id: ${style_id}`,available_families:Object.keys(FAM),available_styles:Object.keys(ST)}};
+  const rp=style.rp;
+  let effEdges:Edge[]=[];let assumption:string|null=null;
+  if(Array.isArray(edges)&&edges.length){effEdges=edges;}
+  else if(Array.isArray(runs)&&runs.length){effEdges=runs.filter((r:number)=>Number(r)>0).map((r:number)=>({kind:'fence' as const,length:Number(r)}));}
+  else if(typeof total_lf==='number'&&total_lf>0){effEdges=[{kind:'fence',length:total_lf}];assumption='single_run';}
+  if(!effEdges.filter((e:Edge)=>e.kind==='fence').length)return{status:400,payload:{error:'At least one fence run required'}};
+  let eWalks=walks??0,eDrives=drives??0,gateLfIn=0;
+  if(Array.isArray(gates)){eWalks=gates.filter((g:Gate)=>String(g&&g.type).toUpperCase()==='SS').length;eDrives=gates.filter((g:Gate)=>String(g&&g.type).toUpperCase()==='DD').length;gateLfIn=gates.reduce((s:number,g:Gate)=>s+(Number(g&&g.width_in)||0),0);}
+  const geo=cA(effEdges);const posts=cB(geo,ends??2,corners??0,eWalks,eDrives,others??0,rp.S,lp_override??0,hookup_override??0);const conc=cF(posts,rp,style.family);const bom=cD(style,geo,posts,conc,ht,flags??[],{braced_hookups,install_method,hardware_spec,concrete,plate_sku});
+  const dH=H(JSON.stringify({geoHash:geo.geoHash,bom:bom.map((i:BomItem)=>i.sku+':'+i.qty),style_id:effStyleId,height_ft:ht,flags:flags??[]}));
+  const concreteBags=bom.filter((i:BomItem)=>i.group==='CONCRETE').reduce((s:number,i:BomItem)=>s+i.qty,0);
+  const derivedTotalLf=geo.buildLft+geo.openingLft+(gateLfIn/12);
+  const isOrn=(style.family==='ornamental'||style.family==='ornamental_pool');
+  const poolActive=!!pool_code||!!(rp&&rp.pool)||(flags||[]).includes('pool');
+  const unconfirmed=bom.filter((i:BomItem)=>i.sku_status==='unconfirmed').length;
+  // ── Findings: hard blockers first (snapshot hardBlock), then info-level (non-blocking) ──
+  const cf:string[]=[];if(geo.buildLft<1)cf.push('NO_FENCE_RUNS');if(posts.totalPosts<2)cf.push('POST_COUNT_ERROR');const hardBlock=cf.length>0;
+  if(isOrn&&install_method==='plated')cf.push('PLATED_PLATE_SELECTION_UNMAPPED');
+  if(poolActive)cf.push('POOL_CODE_ACTIVE');                 // info: pool code compliant — verify local AHJ requirements
+  if(unconfirmed>0)cf.push('SKU_UNCONFIRMED');               // info: quantity computed; distributor SKU not yet vaulted for this combo
+  const readiness=hardBlock?'BLOCKED':(cf.length>0||poolActive)?'NEEDS_REVIEW':'READY';
+  return{status:200,payload:{decision_hash:dH,geo_hash:geo.geoHash,style_id:effStyleId,style_label:style.label,family:style.family,silhouette:style.silhouette,rails:rp.rails,pool_code:poolActive,resolution_mode:mode,height_ft:ht,build_lf:geo.buildLft,opening_lf:geo.openingLft,total_lf:derivedTotalLf,assumption,install_method:isOrn?(install_method||'ground_set'):undefined,hardware_spec:isOrn?(hardware_spec||'standard'):undefined,concrete:isOrn?((concrete===undefined)?true:!!concrete):undefined,tension_wire:(flags??[]).includes('tension_wire'),posts:{terminal:posts.terminalPosts,line:posts.linePosts,line_raw:posts.linePosts_raw,gate:posts.gatePosts,total:posts.totalPosts,hookups:posts.hookups,sections:posts.totalSecs,ends:posts.endPosts,corners:posts.cornerPosts},concrete_bags:concreteBags,bom,sku_summary:{confirmed:bom.length-unconfirmed,unconfirmed},readiness,proof_state:hardBlock?'BLOCKED':'ALL_PASS',findings:cf,engine_version:'bom-calc-v1.3.0',timestamp:new Date().toISOString()}};
+}
+if(typeof (globalThis as any).Deno!=='undefined'){
+(globalThis as any).Deno.serve(async(req:Request)=>{if(req.method==='OPTIONS')return new Response(null,{headers:CORS});try{const body:CalcInput=await req.json();const r=calc(body);return new Response(JSON.stringify(r.payload),{status:r.status,headers:{...CORS,'Content-Type':'application/json'}});}catch(err){return new Response(JSON.stringify({error:String(err)}),{status:500,headers:{...CORS,'Content-Type':'application/json'}});}});
+}
+export{calc,resolveStyle,FAM,ST};

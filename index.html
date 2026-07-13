@@ -818,7 +818,6 @@ textarea,input{outline:none}
         <optgroup label="  Steel">
           <option value="ornamental.steel.flat_top_3rail">Flat Top</option>
           <option value="ornamental.steel.spear_top_3rail">Spear Top</option>
-          <option value="ornamental.steel.flat_top_pool">Pool</option>
         </optgroup>
         <optgroup label="  Aluminum">
           <option value="ornamental.aluminum.flat_top_3rail">Flat Top</option>
@@ -849,6 +848,12 @@ textarea,input{outline:none}
       <select class="sel" id="ht">
         <option value="4">4ft</option><option value="5">5ft</option>
         <option value="6" selected>6ft</option><option value="7">7ft</option><option value="8">8ft</option>
+      </select>
+      <label class="lbl" style="margin-top:8px">RAILS <span style="color:var(--dim);letter-spacing:0">(ornamental)</span></label>
+      <select class="sel" id="rails">
+        <option value="2">2-Rail</option>
+        <option value="3" selected>3-Rail</option>
+        <option value="4">4-Rail</option>
       </select>
     </div>
     <div>
@@ -2445,6 +2450,18 @@ async function fetchBOM(styleId,edges,ht,ends,corners,walks,drives,others,flags,
   // shared from ends yields the correct terminal TOTAL. SKU-split caveat warned below.
   var body={style_id:beStyle,edges:edges,height_ft:ht,ends:Math.max(0,ends-(shared||0)),
     corners:corners,walks:walks,drives:drives,others:others,flags:flags};
+  // v1.3.0: ornamental steel styles are decomposed into orthogonal (family, rails, pool_code).
+  // Family = silhouette only (no rail count); rails from the RAILS selector; pool_code driven by
+  // the POOL site flag (rewired from cosmetic-only to actually toggling pool code in the payload).
+  var fam=null;
+  if(styleId==='ornamental.steel.flat_top_3rail'||styleId==='ornamental.steel.flat_top_pool') fam='ornamental.steel.flat_top';
+  else if(styleId==='ornamental.steel.spear_top_3rail') fam='ornamental.steel.spear_top';
+  if(fam){
+    var railsSel=document.getElementById('rails');
+    body.family=fam;
+    body.rails=railsSel?(parseInt(railsSel.value)||3):3;
+    body.pool_code=(flags||[]).indexOf('pool')>=0||styleId==='ornamental.steel.flat_top_pool';
+  }
   var resp=await fetch(BOMCALC_URL,{method:'POST',headers:{
     'Content-Type':'application/json',
     'apikey':window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,
@@ -2524,7 +2541,7 @@ async function runJob(){
     var beD=beResp.data;
     conc = {totalBags:beD.concrete_bags||0,F:'per '+(beD.engine_version||'bom-calc')};
     matR = {
-      bom: (beD.bom||[]).map(function(i){return{s:i.sku,u:i.unit,label:i.label,qty:i.qty,formula:i.formula||'',group:i.group||''};}),
+      bom: (beD.bom||[]).map(function(i){return{s:i.sku,u:i.unit,label:i.label,qty:i.qty,formula:i.formula||'',group:i.group||'',sku_status:i.sku_status||(i.sku?'confirmed':'unconfirmed')};}),
       warn: localFlagWarnings(flags,ht,geo,rp),
       proof: [],
       engine: beD.engine_version||'bom-calc',
@@ -2670,19 +2687,24 @@ function renderTab(){
         priceCell='<div style="color:var(--dim)">'+i.u+'</div>';
       }
       var inputId='ov-'+overrideN++;
-      var isOv=FIELD_OVERRIDES[i.s]!==undefined;
+      var pending=(i.sku_status==='unconfirmed'||!i.s);
+      var okey=i.s||('PENDING:'+i.label);
+      var isOv=FIELD_OVERRIDES[okey]!==undefined;
+      var skuLine=pending
+        ?'<span style="color:#FFB800;letter-spacing:1px">⏳ SKU PENDING</span> <span style="color:var(--dim)">· qty verified</span>'
+        :esc(i.s);
       h+='<div class="bom-override-row">'
         +'<div><div style="'+(isOv?'color:var(--amber)':'')+'">'+esc(i.label)+'</div>'
-        +'<div class="bom-sku">'+esc(i.s)+'</div></div>'
+        +'<div class="bom-sku">'+skuLine+'</div></div>'
         +'<div style="color:var(--amber);font-weight:bold;text-align:right">'
-        +(isOv?'<span style="text-decoration:line-through;color:var(--dim);font-size:9px">'+i.qty+'</span><br>'+FIELD_OVERRIDES[i.s].val:i.qty)
+        +(isOv?'<span style="text-decoration:line-through;color:var(--dim);font-size:9px">'+i.qty+'</span><br>'+FIELD_OVERRIDES[okey].val:i.qty)
         +'</div>'
         +'<input class="bom-override-input" id="'+inputId+'" type="number" min="1" max="9999"'
-        +' value="'+(isOv?FIELD_OVERRIDES[i.s].val:i.qty)+'"'
+        +' value="'+(isOv?FIELD_OVERRIDES[okey].val:i.qty)+'"'
         +' data-engine-val="'+i.qty+'"'
         +' placeholder="'+i.qty+'">'
         +'<button class="bom-override-btn'+(isOv?' flagged':'')+'"'
-        +' onclick="flagOverride(\''+esc(i.s)+'\',\''+inputId+'\')">'
+        +' onclick="flagOverride(\''+esc(okey)+'\',\''+inputId+'\')">'
         +(isOv?'OK':'!')+'</button>'
         +'</div>';
     });
