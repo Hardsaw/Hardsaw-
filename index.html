@@ -2130,7 +2130,7 @@ function liveUpdate(){
   var style=STYLES[styleId];
   if(!style)return;
   var S=style.rp.S;
-  var ends=parseInt(document.getElementById('ends').value)||2;
+  var _e=parseInt(document.getElementById('ends').value);var ends=Number.isNaN(_e)?2:_e;
   var corners=parseInt(document.getElementById('corners').value)||0;
   var walks=parseInt(document.getElementById('wg').value)||0;
   var drives=parseInt(document.getElementById('dg').value)||0;
@@ -2494,7 +2494,7 @@ async function runJob(){
   if(!edges.filter(function(e){return e.kind==='fence';}).length){alert('Add at least one fence run.');return;}
   var styleId=document.getElementById('fam').value;
   var ht=parseInt(document.getElementById('ht').value);
-  var ends=parseInt(document.getElementById('ends').value)||2;
+  var _e=parseInt(document.getElementById('ends').value);var ends=Number.isNaN(_e)?2:_e;
   var corners=parseInt(document.getElementById('corners').value)||0;
   var walks=parseInt(document.getElementById('wg').value)||0;
   var drives=parseInt(document.getElementById('dg').value)||0;
