@@ -3051,7 +3051,15 @@ function closePicker(){
     var st = document.getElementById('ev-sketch-st');
     if(st){ st.textContent = 'PARSING...'; }
     try {
-      var resp = await fetch('https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/vision-parse', {
+      // FIX 7/19: was calling v1 vision-parse and writing to element IDs (end-posts,
+      // walk-gates, drive-gates, ht-sel, .fence-run-input) that do not exist anywhere else
+      // in this file - every single auto-fill silently no-op'd via the null-guard on every
+      // field, every time. Real element IDs confirmed by grep: ends, wg, dg, corners, ht,
+      // .edge-len (via addEdge()). Switched to vision-parse-v2 (the version with real
+      // confidence-scored form_params, already deployed but never wired to this button) and
+      // corrected every element ID. UI feedback logic below (confidence display, assist alert)
+      // is UNCHANGED - only the fetch target and the field-writing were broken.
+      var resp = await fetch('https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/vision-parse-v2', {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
@@ -3061,18 +3069,35 @@ function closePicker(){
       });
       var data = await resp.json();
       if(data.error) throw new Error(data.error);
-      var parsed = data;
-      // Auto-fill calc fields
-      if(parsed.total_lf){
-        var runInputs = document.querySelectorAll('.fence-run-input');
+      var fp = data.form_params || {};
+      var ex = data.extraction || {};
+      var parsed = {
+        total_lf: fp.edges && fp.edges.length
+          ? fp.edges.filter(function(e){return e.kind!=='opening';}).reduce(function(s,e){return s+e.length;},0)
+          : (ex.total_lf && ex.total_lf.value) || null,
+        height_ft: fp.height_ft ?? null,
+        end_posts: fp.ends ?? null,
+        corners: fp.corners ?? null,
+        walk_gates: fp.walks ?? null,
+        drive_gates: fp.drives ?? null,
+        fence_type: null,
+        confidence: (data.summary && data.summary.missing && data.summary.missing.length===0 && data.summary.needs_confirmation && data.summary.needs_confirmation.length===0) ? 'high'
+                  : (data.summary && data.summary.missing && data.summary.missing.length>2) ? 'low' : 'medium'
+      };
+      if(fp.edges && fp.edges.length){
+        document.getElementById('edges-container').innerHTML=''; edgeN=0;
+        fp.edges.forEach(function(e){ addEdge(e.kind==='opening'?'opening':'fence', e.length, e.kind==='opening'?'gate opening':''); });
+      } else if(parsed.total_lf){
+        var runInputs = document.querySelectorAll('.edge-len');
         if(runInputs.length > 0) runInputs[0].value = parsed.total_lf;
+        else addEdge('fence', parsed.total_lf, '');
       }
       if(parsed.height_ft){
-        var htSel = document.getElementById('ht-sel');
+        var htSel = document.getElementById('ht');
         if(htSel) htSel.value = parsed.height_ft;
       }
       if(parsed.end_posts != null){
-        var epEl = document.getElementById('end-posts');
+        var epEl = document.getElementById('ends');
         if(epEl) epEl.value = parsed.end_posts;
       }
       if(parsed.corners != null){
@@ -3080,13 +3105,14 @@ function closePicker(){
         if(cornEl) cornEl.value = parsed.corners;
       }
       if(parsed.walk_gates != null){
-        var wgEl = document.getElementById('walk-gates');
+        var wgEl = document.getElementById('wg');
         if(wgEl) wgEl.value = parsed.walk_gates;
       }
       if(parsed.drive_gates != null){
-        var dgEl = document.getElementById('drive-gates');
+        var dgEl = document.getElementById('dg');
         if(dgEl) dgEl.value = parsed.drive_gates;
       }
+      liveUpdate();
       // Auto-select fence family if detected
       if(parsed.fence_type){
         var famBtns = document.querySelectorAll('.fam-btn');
