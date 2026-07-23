@@ -3061,13 +3061,17 @@ function closePicker(){
       // is UNCHANGED - only the fetch target and the field-writing were broken.
       var resp = await fetch('https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/vision-parse-v2', {
         method:'POST',
-        headers:{'Content-Type':'application/json'},
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY
+        },
         body: JSON.stringify({
           image_base64: window._sketchBase64,
           media_type: window._sketchMime || 'image/jpeg'
         })
       });
       var data = await resp.json();
+      if(!resp.ok) throw new Error(data && (data.error||data.message) || ('HTTP '+resp.status));
       if(data.error) throw new Error(data.error);
       var fp = data.form_params || {};
       var ex = data.extraction || {};
