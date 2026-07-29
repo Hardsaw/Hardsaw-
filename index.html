@@ -2231,7 +2231,8 @@ function gate(a){
 function vadd(t,d){var prev=vault.length>0?vault[vault.length-1].h:'GENESIS';var h=H(JSON.stringify({t:t,d:d,prev:prev,ts:Date.now()}));vault.push({t:t,h:h,prev:prev.slice(0,8)});vaultRemote(t,d);}
 
 window.HARDSAW_CONFIG = window.HARDSAW_CONFIG || {
-  ASSIST_URL: 'https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/assist',
+  ASSIST_URL: 'https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/assist-v2',
+  ASSIST_APP_SECRET: 'CMqC6ueusLqcCo_KGCDmxf6XoTmGJntx-LVcNt_eQUI',
   VAULT_URL: 'https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/vault',
   SUPABASE_ANON_KEY: 'sb_publishable_xjc1UroCJV0j3PWGQfDHUA_rwaZ6h90',
   CONTRACTOR_ID: 'ce43db8b-1bd1-44fd-aece-c4ad7c26efcd',
@@ -2303,7 +2304,8 @@ async function vaultRemote(input, data) {
                     method:'POST',
                     headers:{
                               'Content-Type':'application/json',
-                              'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY
+                              'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,
+                              'X-App-Secret':window.HARDSAW_CONFIG.ASSIST_APP_SECRET
                     },
                     body:JSON.stringify({question:msg,jobContext:ctx||null,sessionRef:'calc-'+Date.now()})
             });
