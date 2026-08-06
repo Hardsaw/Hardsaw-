@@ -2552,8 +2552,29 @@ async function runJob(){
     };
     if(shared>0)matR.warn.push('SHARED POSTS ('+shared+'): deducted from ends for engine call — verify 3in/4in terminal SKU split if a shared post sits at a corner');
   }
+  // FRG-CALC-03 fix, scoped honestly: the edge model has no concept of which fence runs
+  // are physically connected vs disconnected, so END POSTS cannot be auto-derived from
+  // geometry alone without a real connectivity model — that is bigger than tonight's fix.
+  // What IS fixable now: the silent part. If more than one fence-run edge is present and
+  // END POSTS is still sitting at the untouched HTML default of 2, that is exactly the
+  // pattern that produces a silent undercount on jobs with genuinely disconnected runs.
+  // Surface it loudly instead of letting it pass unnoticed.
+  if(geo.fenceEdges.length>1 && ends===2){
+    matR.warn.unshift('END POSTS = 2 with '+geo.fenceEdges.length+' fence runs entered — verify this is correct. Each physically disconnected run needs its own pair of end posts; this field does not auto-update when you add a run.');
+  }
   var rdy    = calcJ(geo,posts,matR,flags,ht,styleId);
   var invars = buildProof(geo,posts,styleId);
+  // FRG-CALC-02 fix: buildProof() only ever checked pure geometry invariants and had
+  // no awareness of whether bom-calc actually validated this style. A style that falls
+  // back to LOCAL LEGACY ENGINE (beResp.unknownStyle) could still show ALL PASS, because
+  // every geometry invariant is trivially true regardless of which engine ran. Add the
+  // missing invariant explicitly rather than folding it silently into buildProof, so the
+  // failure reason is visible in the invars object itself.
+  // Explicit !!beResp guard (Spider, SPD-BUBBLE-xx review): without it this line's safety
+  // on a malformed/absent beResp depends entirely on the else-branch above throwing first
+  // on bad data - true today, but incidental, not structural. Guard it here directly so a
+  // no-response can never read as PASS even if that upstream behavior changes later.
+  invars['material engine validated (not local legacy fallback)'] = !!beResp && !beResp.unknownStyle;
   var invPass= Object.values(invars).every(Boolean);
 
   gate('check_readiness');vadd('READINESS_CHECKED',{st:rdy.st,level:rdy.level,score:rdy.score,findings:rdy.findings});
