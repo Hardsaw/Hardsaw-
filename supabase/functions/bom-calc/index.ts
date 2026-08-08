@@ -60,6 +60,15 @@ else if(fam==='ornamental'||fam==='ornamental_pool'){const orR=rp.rails||3;const
 const pnlQ=posts.totalSecs,pstQ=orTp+orLp;
 add(sk.panel,pnlQ,sk.panel.d,`sum(ceil(run/${rp.S})) per-run=${pnlQ} [v1.3.6 panels=linePosts+runs identity n=6]`,'PANELS');
 let postSku=sk.post,drivenTier='';
+// v1.3.7 (2026-08-08, Forge; seconded SPD-ENGINE-02, root cause FRG-ENGINE-03):
+// post_ht held correct per-height SKUs all along (4:8W12P69, 5:8W12P81, 6:8W12P93) but was
+// consulted ONLY on the driven path, so ground_set - the DEFAULT install - always emitted the
+// hardcoded 4ft sk.post no matter the height. Proven by KAN005708 (5ft): AFC billed 8W12P81,
+// engine emitted 8W12P69. Not a missing-5ft-branch: KAN006553 (4ft) emitted the same 8W12P69,
+// so height never reached SKU resolution at all - it merely looked correct at 4ft by coincidence.
+// Height selection now applies on every install path; the driven tier below still overrides it,
+// so driven behavior is unchanged. 4ft is a no-op since post_ht[4] === sk.post.
+if(sk.post_ht&&sk.post_ht[ht])postSku=sk.post_ht[ht];
 if(install==='driven'&&sk.post_ht){for(const st of [2,3,4]){if(sk.post_ht[ht+st]){postSku=sk.post_ht[ht+st];drivenTier=` [driven: ${ht}ft->${ht+st}ft post ${postSku.s}]`;break;}}}
 add(postSku,pstQ,postSku.d,`${pstQ}posts (${orTp}term+${orLp}line)${drivenTier}`,'POSTS');
 if(rp.bracket_system==='integrated'){if(sk.bracket_univ&&hookups*orR>0)add(sk.bracket_univ,hookups*orR,sk.bracket_univ.d,`2x${geo.fenceEdges.length}runs x${orR}rails=${hookups*orR}`,'HARDWARE');if(sk.bracket_line&&orLp*orR>0)add(sk.bracket_line,orLp*orR,sk.bracket_line.d,`lp${orLp}x${orR}rails=${orLp*orR}`,'HARDWARE');}
