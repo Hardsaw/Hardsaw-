@@ -882,6 +882,16 @@ textarea,input{outline:none}
           <span class="flag-icon">🏊</span>
           <span class="flag-label">POOL</span>
         </button>
+        <!-- FRG-CONCRETE-01 (2026-08-08): bom-calc treats concrete===undefined as TRUE, and this
+             UI never sent the field, so every quote got concrete whether the job used it or not.
+             Confirmed against 4 real AFC quotes: KAN006547 billed concrete, KAN005708 / KAN006553 /
+             KAN006065 billed none - so concrete is the exception, not the rule. Engine needs no
+             change; it already honors concrete:false exactly. Icon is an HTML numeric entity, not a
+             raw emoji, because this file has a known mojibake/UTF-8 problem worth not feeding. -->
+        <button class="flag-btn" data-flag="noconcrete" onclick="this.classList.toggle('on');updateGov()">
+          <span class="flag-icon">&#8856;</span>
+          <span class="flag-label">NO CONCRETE</span>
+        </button>
       </div>
     </div>
   </div>
@@ -2456,6 +2466,13 @@ async function fetchBOM(styleId,edges,ht,ends,corners,walks,drives,others,flags,
   // shared from ends yields the correct terminal TOTAL. SKU-split caveat warned below.
   var body={style_id:beStyle,edges:edges,height_ft:ht,ends:Math.max(0,ends-(shared||0)),
     corners:corners,walks:walks,drives:drives,others:others,flags:flags};
+  // FRG-CONCRETE-01: send concrete EXPLICITLY on every call. bom-calc reads
+  // (opts.concrete===undefined) ? true : !!opts.concrete - so omitting the field is not neutral,
+  // it silently opts every job into concrete. Verified against the deployed engine: concrete:false
+  // yields zero bags and clean readiness, so no engine change is needed. Always sending an explicit
+  // boolean means the engine never has to guess, which is the actual fix - the toggle is just how
+  // a human expresses it.
+  body.concrete = ((flags||[]).indexOf('noconcrete') < 0);
   // v1.3.0: ornamental steel styles are decomposed into orthogonal (family, rails, pool_code).
   // Family = silhouette only (no rail count); rails from the RAILS selector; pool_code driven by
   // the POOL site flag (rewired from cosmetic-only to actually toggling pool code in the payload).
