@@ -2479,6 +2479,7 @@ async function fetchBOM(styleId,edges,ht,ends,corners,walks,drives,others,flags,
   var fam=null;
   if(styleId==='ornamental.steel.flat_top_3rail'||styleId==='ornamental.steel.flat_top_pool') fam='ornamental.steel.flat_top';
   else if(styleId==='ornamental.steel.spear_top_3rail') fam='ornamental.steel.spear_top';
+  else if(styleId==='ornamental.aluminum.flat_top_3rail') fam='ornamental.aluminum.flat_top';
   if(fam){
     var railsSel=document.getElementById('rails');
     body.family=fam;
