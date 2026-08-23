@@ -2450,6 +2450,7 @@ function getEdges(){
 // clearly-flagged legacy fallback for styles bom-calc does not know yet (vinyl, farm,
 // aluminum — zero AFC validation, fallback-baseline doctrine 2026-07-04).
 // Network failure = hard abort with error, NEVER silent local math (anti-drift doctrine).
+document.addEventListener('wheel',function(e){var t=e.target;if(t&&t.tagName==='INPUT'&&t.type==='number'&&t===document.activeElement){t.blur();}},{passive:true});
 var BOMCALC_URL='https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/bom-calc';
 var JOBSAVE_URL='https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/job-save';
 var BOMCALC_STYLE_MAP={
