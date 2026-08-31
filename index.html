@@ -2491,7 +2491,7 @@ async function fetchBOM(styleId,edges,ht,ends,corners,walks,drives,others,flags,
     body.rails=railsSel?(parseInt(railsSel.value)||3):3;
     body.pool_code=(flags||[]).indexOf('pool')>=0||styleId==='ornamental.steel.flat_top_pool';
   }
-  var resp=await fetch(BOMCALC_URL,{method:'POST',headers:{
+try{window.__hardsawLastBomcalcBody=JSON.parse(JSON.stringify(body));}catch(e){window.__hardsawLastBomcalcBody=null;}   var resp=await fetch(BOMCALC_URL,{method:'POST',headers:{
     'Content-Type':'application/json',
     'apikey':window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,
     'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY
@@ -2619,8 +2619,8 @@ async function runJob(){
   vadd('PACKETS_GENERATED',{decisionId:outHash});
 
   S.result={geo,posts,conc,matR,rdy,invars,invPass,versions,styleId,style,sv,ht,flags,outHash,
-    bomcalc:(beResp&&beResp.data)?beResp.data:null, bomcalc_input:{flags:flags}};
-document.getElementById('btn-save-job').style.display='inline-block';
+    bomcalc:(beResp&&beResp.data)?beResp.data:null, bomcalc_input:Object.assign({}, window.__hardsawLastBomcalcBody||{}, {flags:flags})};
+document.getElementById('btn-save-job').style.display='inline-block';try{var _b=document.getElementById('btn-save-job');if(_b){_b.disabled=false;_b.textContent='SAVE JOB \u2193';}var _s=document.getElementById('save-status');if(_s){_s.textContent='';}}catch(e){}
 
   // Update governance panel
   document.getElementById('gv-ruleset').textContent=sv.v;
