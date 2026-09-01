@@ -1052,11 +1052,11 @@ textarea,input{outline:none}
         <div class="rdot"></div>
         <span id="readiness-label">—</span>
       </div>
-      <button class="run-btn" id="btn-save-job" onclick="saveJob()" style="display:none;background:#217346;margin-left:8px;">SAVE JOB ↓</button>
-      <input id="save-name"
+<button class="run-btn" id="btn-save-job" onclick="saveJob()" aria-label="Save job" data-testid="btn-save-job" style="display:none;background:#217346;margin-left:8px;">SAVE JOB ↓</button>
+      <input id="save-name" name="save_name" type="text" aria-label="Save name" data-testid="save-name"
              placeholder="Save name (e.g. L0829-01-KAN007014)"
              style="margin-left:8px;padding:6px;width:280px;">
-      <span id="save-status" style="margin-left:8px;"></span>
+      <span id="save-status" data-testid="save-status" data-save-status="idle" style="margin-left:8px;"></span>
 <button class="new-job-btn" style="width:auto;margin:0" onclick="reset()">← NEW JOB</button>
     </div>
     <div class="result-meta" id="result-meta"></div>
@@ -2897,7 +2897,25 @@ function saveStatus(msg, color){
   else { console.log('[saveJob] ' + msg); }
 }
 
-async function saveJob(){ var r=S.result; if(!r){saveStatus('Run a job first.','#c00');return;} if(!r.bomcalc||!r.bomcalc.decision_hash){saveStatus('This style was computed by the local legacy engine (not bom-calc), so the normalized job-save is unavailable for it.','#c00');return;} var el=document.getElementById('save-name'); if(!el){saveStatus('Save name field missing','#c00');return;} var customerName=el.value.trim(); if(!customerName){ el.style.borderColor='#c00'; el.placeholder='Save name required'; el.focus(); saveStatus('Enter a save name','#c00'); return; } el.style.borderColor=''; saveStatus(''); var input=Object.assign({},r.bomcalc_input||{}); input.customer_ref=customerName; var btn=document.getElementById('btn-save-job'); btn.disabled=true; btn.textContent='SAVING\u2026'; try{ var resp=await fetch( JOBSAVE_URL, { method:'POST', headers:{ 'apikey':window.HARDSAW_CONFIG.SUPABASE_ANON_KEY, 'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY, 'Content-Type':'application/json' }, body:JSON.stringify({ result:r.bomcalc, input:input }) } ); var data=null; try{ data=await resp.json(); }catch(e){} if(resp.ok&&data&&data.success){ saveStatus('Job saved \u2713 \u00b7 Decision hash: '+data.output_hash+' \u00b7 BOM lines: '+data.bom_line_count+' \u00b7 Trust: '+data.trust_level+' \u00b7 Job ID: '+data.job_id,'#217346'); btn.textContent='JOB SAVED \u2713'; } else { btn.disabled=false; btn.textContent='SAVE JOB \u2193'; saveStatus('Save failed: '+((data&&(data.error||data.detail))?JSON.stringify(data.error||data.detail):('HTTP '+resp.status)),'#c00'); } }catch(e){ btn.disabled=false; btn.textContent='SAVE JOB \u2193'; saveStatus('Save error: '+e.message,'#c00'); } } async function sendChat(){
+function hardsawSaveState(s,d){try{document.body.setAttribute('data-save-status',s);var e=document.getElementById('save-status');if(e)e.setAttribute('data-save-status',s);}catch(x){}window.__hardsawSave=Object.assign({status:s,at:new Date().toISOString()},d||{});return window.__hardsawSave;}
+function hardsawSaveName(){var e=document.getElementById('save-name');var v=e?e.value.trim():'';if(!v){try{v=(new URLSearchParams(location.search).get('save_name')||'').trim();}catch(x){}if(v&&e)e.value=v;}return v;}
+async function saveJobOrThrow(){var r=S.result;if(!r){hardsawSaveState('error',{error:'no_result'});throw new Error('SAVE_BLOCKED: run a job first');}
+if(!r.bomcalc||!r.bomcalc.decision_hash){hardsawSaveState('error',{error:'legacy_engine'});throw new Error('SAVE_BLOCKED: legacy engine, normalized save unavailable');}
+var n=hardsawSaveName();if(!n){var f=document.getElementById('save-name');if(f){f.style.borderColor='#c00';f.placeholder='Save name required';}hardsawSaveState('error',{error:'no_save_name'});throw new Error('SAVE_BLOCKED: save name required');}
+var el=document.getElementById('save-name');if(el)el.style.borderColor='';saveStatus('');hardsawSaveState('saving',{save_name:n});
+var input=Object.assign({},r.bomcalc_input||{});input.customer_ref=n;
+var btn=document.getElementById('btn-save-job');if(btn){btn.disabled=true;btn.textContent='SAVING\u2026';}
+var resp,data=null;
+try{resp=await fetch(JOBSAVE_URL,{method:'POST',headers:{'apikey':window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify({result:r.bomcalc,input:input})});}
+catch(e){if(btn){btn.disabled=false;btn.textContent='SAVE JOB \u2193';}hardsawSaveState('error',{error:'network',message:e.message});throw new Error('SAVE_FAILED: network: '+e.message);}
+try{data=await resp.json();}catch(e){}
+if(resp.ok&&data&&data.success){saveStatus('Job saved \u2713 \u00b7 Decision hash: '+data.output_hash+' \u00b7 BOM lines: '+data.bom_line_count+' \u00b7 Trust: '+data.trust_level+' \u00b7 Job ID: '+data.job_id,'#217346');if(btn)btn.textContent='JOB SAVED \u2713';return hardsawSaveState('saved',{save_name:n,job_id:data.job_id,output_hash:data.output_hash,bom_line_count:data.bom_line_count,trust_level:data.trust_level});}
+if(btn){btn.disabled=false;btn.textContent='SAVE JOB \u2193';}
+var det=(data&&(data.error||data.detail))?JSON.stringify(data.error||data.detail):('HTTP '+resp.status);
+hardsawSaveState('error',{error:'rejected',http_status:resp.status,detail:det});throw new Error('SAVE_FAILED: '+det);}
+async function saveJob(){try{return await saveJobOrThrow();}catch(e){saveStatus(e.message,'#c00');return window.__hardsawSave;}}
+window.hardsawSaveJob=saveJobOrThrow;window.hardsawSaveState=hardsawSaveState;
+async function sendChat(){
   var inp=document.getElementById('ci');var msg=inp.value.trim();if(!msg||S.loading)return;
   inp.value='';S.loading=true;S.chat.push({role:'user',text:msg});renderChat();
   gate('assist_chat');
