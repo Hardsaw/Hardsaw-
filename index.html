@@ -2976,6 +2976,18 @@ function reset(){
   document.getElementById('gv-proof').textContent='AWAITING INPUT';document.getElementById('gv-proof').className='gov-v dim';
   document.getElementById('gv-ready').textContent='—';document.getElementById('gv-ready').className='gov-v dim';
   edgeN=0;show('s-idle');addEdge('fence');liveUpdate();
+  // Residue fix 9/2 (Coworker finding, KAN007014 run): NEW JOB did not clear
+  // data-save-status or #save-name, so a driver polling status after reset
+  // would read "saved" for a job it never saved, and a re-save without
+  // clearing the name field would silently reuse the prior job's name.
+  try{
+    document.body.setAttribute('data-save-status','idle');
+    var _ss=document.getElementById('save-status');
+    if(_ss){_ss.textContent='';_ss.setAttribute('data-save-status','idle');}
+    var _sn=document.getElementById('save-name');
+    if(_sn) _sn.value='';
+    window.__hardsawSave=null;
+  }catch(e){}
 }
 
 function show(id){['s-idle','s-think','s-result','s-supplier'].forEach(function(s){var el=document.getElementById(s);if(el)el.classList.toggle('hidden',s!==id);});}
