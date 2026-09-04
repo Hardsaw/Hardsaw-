@@ -2678,7 +2678,7 @@ function renderResultUI(){
   document.getElementById('result-meta').textContent=
     (r.style||{label:'?'}).label+' · '+r.ht+'ft · build '+r.geo.buildLft+'ft · openings '+r.geo.openingLft+'ft · '
     +r.posts.totalPosts+' posts · '+r.posts.totalSecs+' sections';
-  document.getElementById('hash-strip').textContent='GEO: '+r.geo.geoHash+' · DECISION: '+r.outHash;
+  document.getElementById('hash-strip').textContent='GEO: '+((r.bomcalc&&r.bomcalc.geometry_hash)||r.geo.geoHash)+' · DECISION: '+((r.bomcalc&&r.bomcalc.decision_hash)||r.outHash)+((r.bomcalc&&r.bomcalc.decision_hash)?'':' · LOCAL');
   var heroEl = document.getElementById('result-hero');
   if(heroEl) {
     var prTotal = (r.pricingResult && r.pricingResult.total)
@@ -2690,7 +2690,7 @@ function renderResultUI(){
     var heroBadgeEl = document.getElementById('hero-badge');
     heroBadgeEl.textContent = tl2;
     heroBadgeEl.style.color = tl2==='CLEAR' ? 'var(--green)' : tl2.includes('HUMAN') ? 'var(--amber)' : 'var(--red)';
-    document.getElementById('hero-hash').textContent = 'DECISION: ' + r.outHash.slice(0,8);
+    document.getElementById('hero-hash').textContent = 'DECISION: ' + (((r.bomcalc&&r.bomcalc.decision_hash)||r.outHash)+'').slice(0,8);
     heroEl.style.display = 'block';
   }
   document.getElementById('dual-mat').textContent=r.matR.bom.length+' items';
@@ -2790,7 +2790,7 @@ function renderTab(){
     Object.entries(r.versions).forEach(function(e){h+='<div class="ver-row"><span class="ver-k">'+esc(e[0])+'</span><span class="ver-v">'+esc(e[1])+'</span></div>';});
     h+='</div>';
     if(r.sv.cal)h+='<div class="calib-tag">✓ CALIBRATED · AmeriFence '+r.sv.cal+' · '+r.sv.calDate+'</div>';
-    h+='<div class="hash-line">GEO: '+geo.geoHash+' · DECISION: '+r.outHash+'<br>PROOF: '+(r.invPass?'✓ ALL INVARIANTS PASS':'✗ PROOF FAILED')+'</div>';
+    h+='<div class="hash-line">GEO: '+((r.bomcalc&&r.bomcalc.geometry_hash)||geo.geoHash)+' · DECISION: '+((r.bomcalc&&r.bomcalc.decision_hash)||r.outHash)+'<br>PROOF: '+(r.invPass?'✓ ALL INVARIANTS PASS':'✗ PROOF FAILED')+'</div>';
     el.innerHTML=h;
 
   } else if(t==='PROOF'){
