@@ -1645,6 +1645,8 @@ function updateGraphSummary() {
 
 var VERSIONS = {
   coreEngine: 'core_engine_v3.1.0', protocol: 'ufbp_v1.0.0',
+  // 5902df04: replaced by build.sh from VERCEL_GIT_COMMIT_SHA. Stays as the placeholder if built outside Vercel - visible, not silent.
+  frontendVersion: '__FRONTEND_VERSION__',
   families: { wood:'wood_family_v2.0.0', chain_link:'chain_link_family_v2.1.0', ornamental:'ornamental_family_v1.0.0', vinyl:'vinyl_family_v1.0.0', farm:'farm_family_v1.0.0' },
   styles: {
     'wood.privacy.tight_cedar':          {v:'WP-TIGHT-v2.0',  cal:'KAN004247',  calDate:'2026-02-05'},
@@ -2910,6 +2912,8 @@ if(!r.bomcalc||!r.bomcalc.decision_hash){hardsawSaveState('error',{error:'legacy
 var n=hardsawSaveName();if(!n){var f=document.getElementById('save-name');if(f){f.style.borderColor='#c00';f.placeholder='Save name required';}hardsawSaveState('error',{error:'no_save_name'});throw new Error('SAVE_BLOCKED: save name required');}
 var el=document.getElementById('save-name');if(el)el.style.borderColor='';saveStatus('');hardsawSaveState('saving',{save_name:n});
 var input=Object.assign({},r.bomcalc_input||{});input.customer_ref=n;
+/* 5902df04: client lineage travels in p_input; save_job lifts both into version_manifest and excludes them from intent_hash. Not in `versions` - that object feeds outHash. */
+input.frontend_version=VERSIONS.frontendVersion;input.client_calc_version=VERSIONS.coreEngine;
 var btn=document.getElementById('btn-save-job');if(btn){btn.disabled=true;btn.textContent='SAVING\u2026';}
 var resp,data=null;
 try{resp=await fetch(JOBSAVE_URL,{method:'POST',headers:{'apikey':window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,'Authorization':'Bearer '+window.HARDSAW_CONFIG.SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify({result:r.bomcalc,input:input})});}
