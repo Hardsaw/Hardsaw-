@@ -1817,6 +1817,20 @@ var STYLES = {
 };
 
 function H(s){var h=0;for(var i=0;i<s.length;i++)h=Math.imul(31,h)+s.charCodeAt(i)|0;return Math.abs(h).toString(16).padStart(8,'0').toUpperCase();}
+// F-03: fingerprint of everything runJob reads from the DOM. Stored on S.result at run time,
+// recomputed at save time. If they differ, the BOM on screen was computed from inputs that no
+// longer match the form, and saving it would persist a mismatch. Structural check - the UX
+// disable below is a courtesy; this is the gate.
+function hardsawInputSig(){
+  function v(id){var e=document.getElementById(id);return e?e.value:'';}
+  var flags=Array.from(document.querySelectorAll('.flag-btn.on')).map(function(b){return b.dataset.flag;}).sort();
+  var edges;try{edges=getEdges();}catch(e){edges=[];}
+  return H(JSON.stringify({fam:v('fam'),ht:v('ht'),ends:v('ends'),corners:v('corners'),wg:v('wg'),dg:v('dg'),og:v('og'),sp:v('sp'),rails:v('rails'),flags:flags,edges:edges}));
+}
+function hardsawMarkStale(){
+  var b=document.getElementById('btn-save-job');
+  if(b&&S&&S.result&&S.result.inputSig&&S.result.inputSig!==hardsawInputSig()){b.disabled=true;b.textContent='RUN AGAIN BEFORE SAVING';}
+}
 
 // ── TRUST GATE ────────────────────────────────────────────────────────────────
 // Mirrors hardsaw.severity_weights and hardsaw.trust_thresholds (verified 2026-05-26).
@@ -2463,6 +2477,9 @@ function getEdges(){
 // aluminum — zero AFC validation, fallback-baseline doctrine 2026-07-04).
 // Network failure = hard abort with error, NEVER silent local math (anti-drift doctrine).
 document.addEventListener('wheel',function(e){var t=e.target;if(t&&t.tagName==='INPUT'&&t.type==='number'&&t===document.activeElement){t.blur();}},{passive:true});
+// F-03 courtesy layer: any change to a form control or flag chip disables SAVE until the next run.
+document.addEventListener('change',function(e){var t=e.target;if(t&&(t.tagName==='SELECT'||t.tagName==='INPUT'))hardsawMarkStale();},true);
+document.addEventListener('click',function(e){var t=e.target;if(t&&t.closest&&t.closest('.flag-btn'))setTimeout(hardsawMarkStale,0);},true);
 var BOMCALC_URL='https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/bom-calc';
 var JOBSAVE_URL='https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/job-save';
 var BOMCALC_STYLE_MAP={
@@ -2628,7 +2645,14 @@ async function runJob(){
 
   S.result={geo,posts,conc,matR,rdy,invars,invPass,versions,styleId,style,sv,ht,flags,outHash,
     bomcalc:(beResp&&beResp.data)?beResp.data:null, bomcalc_input:Object.assign({}, window.__hardsawLastBomcalcBody||{}, {flags:flags})};
-document.getElementById('btn-save-job').style.display='inline-block';try{var _b=document.getElementById('btn-save-job');if(_b){_b.disabled=false;_b.textContent='SAVE JOB \u2193';}var _s=document.getElementById('save-status');if(_s){_s.textContent='';}}catch(e){}
+document.getElementById('btn-save-job').style.display='inline-block';try{var _b=document.getElementById('btn-save-job');var _s=document.getElementById('save-status');
+  // F-03: remember what this result was computed from.
+  S.result.inputSig=hardsawInputSig();
+  // F-02: the save path refuses legacy-engine results (no bomcalc.decision_hash). The button used to go
+  // green anyway and throw on click. Now it says what the save path will say, before the click.
+  var _canSave=!!(S.result.bomcalc&&S.result.bomcalc.decision_hash);
+  if(_b){_b.disabled=!_canSave;_b.textContent=_canSave?'SAVE JOB \u2193':'SAVE UNAVAILABLE \u00b7 LEGACY ENGINE';}
+  if(_s){_s.textContent=_canSave?'':'This style ran on the local legacy engine (no server decision hash). Result is viewable, not saveable.';_s.style.color=_canSave?'':'var(--amber)';}}catch(e){}
 
   // Update governance panel
   document.getElementById('gv-ruleset').textContent=sv.v;
@@ -2909,6 +2933,7 @@ function hardsawSaveState(s,d){try{document.body.setAttribute('data-save-status'
 function hardsawSaveName(){var e=document.getElementById('save-name');var v=e?e.value.trim():'';if(!v){try{v=(new URLSearchParams(location.search).get('save_name')||'').trim();}catch(x){}if(v&&e)e.value=v;}return v;}
 async function saveJobOrThrow(){var r=S.result;if(!r){hardsawSaveState('error',{error:'no_result'});throw new Error('SAVE_BLOCKED: run a job first');}
 if(!r.bomcalc||!r.bomcalc.decision_hash){hardsawSaveState('error',{error:'legacy_engine'});throw new Error('SAVE_BLOCKED: legacy engine, normalized save unavailable');}
+if(r.inputSig&&r.inputSig!==hardsawInputSig()){hardsawMarkStale();hardsawSaveState('error',{error:'inputs_changed'});throw new Error('SAVE_BLOCKED: inputs changed since this BOM was computed - run again');}
 var n=hardsawSaveName();if(!n){var f=document.getElementById('save-name');if(f){f.style.borderColor='#c00';f.placeholder='Save name required';}hardsawSaveState('error',{error:'no_save_name'});throw new Error('SAVE_BLOCKED: save name required');}
 var el=document.getElementById('save-name');if(el)el.style.borderColor='';saveStatus('');hardsawSaveState('saving',{save_name:n});
 var input=Object.assign({},r.bomcalc_input||{});input.customer_ref=n;
