@@ -1378,12 +1378,18 @@ function mapClear() {
 }
 
 function mapApply() {
-  mapClear();
+  // F-01: read the segments BEFORE mapClear() empties MAP_POINTS.
+  // Bound is length (not length+1) to match updateMapSegments().
   var segs = [];
-  for (var i = 1; i < MAP_POINTS.length + 1; i++) {
+  for (var i = 1; i < MAP_POINTS.length; i++) {
     var lf = (MAP_POINTS[i] && MAP_POINTS[i]._lf) || 0;
     if (lf > 0) segs.push(lf);
   }
+  if (!segs.length) {
+    alert('No measured runs on the map yet - drop at least two points before applying.');
+    return;
+  }
+  mapClear();
   // Clear existing fence runs
   var container = document.getElementById('edges-container');
   if (container) container.innerHTML = '';
