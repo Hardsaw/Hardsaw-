@@ -14,6 +14,8 @@
     { "src": "/quote", "dest": "/jilly_form.html" },
     { "src": "/pro-center", "dest": "/pro-center.html" },
     { "src": "/pro-center.html", "dest": "/pro-center.html" },
+    { "src": "/photos", "dest": "/photos.html" },
+    { "src": "/photos.html", "dest": "/photos.html" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }

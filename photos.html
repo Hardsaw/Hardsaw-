@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Quote Photo Intake</title>
+<style>
+  :root { --bg:#f6f5f2; --card:#fff; --ink:#1d1d1b; --muted:#6b6a66; --line:#d9d6cf; --accent:#1f5f3f; --bad:#a3271d; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#151514; --card:#1f1f1d; --ink:#ecebe7; --muted:#a3a19b; --line:#3a3936; --accent:#5fb489; --bad:#e8786d; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.45 -apple-system, system-ui, sans-serif; }
+  main { max-width:480px; margin:0 auto; padding:20px 16px 40px; }
+  h1 { font-size:20px; margin:0 0 4px; }
+  p.sub { margin:0 0 18px; color:var(--muted); font-size:14px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:14px; }
+  label { display:block; font-weight:600; font-size:14px; margin:0 0 6px; }
+  input[type=text], input[type=password] { width:100%; font-size:18px; padding:12px; border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--ink); }
+  input[type=file] { width:100%; font-size:16px; }
+  button { width:100%; font-size:18px; font-weight:600; padding:14px; border:0; border-radius:10px; background:var(--accent); color:#fff; }
+  button:disabled { opacity:.5; }
+  .row { margin-bottom:14px; }
+  ul { list-style:none; padding:0; margin:10px 0 0; font-size:14px; }
+  li { padding:6px 0; border-top:1px solid var(--line); word-break:break-all; }
+  .ok { color:var(--accent); } .bad { color:var(--bad); } .muted { color:var(--muted); font-size:13px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Quote Photo Intake</h1>
+  <p class="sub">AFC quote sheets → private photo store. One quote number per batch, up to 10 photos.</p>
+
+  <div class="card">
+    <div class="row">
+      <label for="pin">Upload PIN</label>
+      <input id="pin" type="password" autocomplete="current-password" inputmode="numeric">
+      <div class="muted">Remembered on this phone only.</div>
+    </div>
+    <div class="row">
+      <label for="kan">Quote number</label>
+      <input id="kan" type="text" placeholder="KAN005911" autocapitalize="characters" autocomplete="off">
+    </div>
+    <div class="row">
+      <label for="files">Photos</label>
+      <input id="files" type="file" accept="image/*" multiple>
+    </div>
+    <button id="go">Upload</button>
+    <ul id="out"></ul>
+  </div>
+  <p class="muted">Nothing here can mark a photo verified or delete one.</p>
+</main>
+<script>
+const FN = "https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/quote-photo-intake";
+const $ = (id) => document.getElementById(id);
+try { $("pin").value = localStorage.getItem("hs_photo_pin") || ""; } catch (e) {}
+
+function line(text, cls) { const li = document.createElement("li"); li.textContent = text; if (cls) li.className = cls; $("out").appendChild(li); }
+async function call(body) {
+  const r = await fetch(FN, { method: "POST", headers: { "Content-Type": "application/json", "x-upload-pin": $("pin").value.trim() }, body: JSON.stringify(body) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || ("HTTP " + r.status));
+  return j;
+}
+function extOf(f) {
+  const m = (f.name || "").toLowerCase().match(/\.([a-z0-9]+)$/);
+  if (m) return m[1];
+  return ({ "image/jpeg":"jpg", "image/png":"png", "image/heic":"heic", "image/heif":"heif", "image/webp":"webp" })[f.type] || "jpg";
+}
+
+$("go").addEventListener("click", async () => {
+  $("out").innerHTML = "";
+  const kan = $("kan").value.trim().toUpperCase();
+  const files = [...$("files").files];
+  if (!/^KAN[0-9]{6}$/.test(kan)) return line("Quote number must look like KAN005911", "bad");
+  if (!files.length) return line("Pick at least one photo", "bad");
+  if (files.length > 10) return line("10 photos at a time, please", "bad");
+  try { localStorage.setItem("hs_photo_pin", $("pin").value.trim()); } catch (e) {}
+  $("go").disabled = true;
+  try {
+    const issued = await call({ action: "issue", quote_no: kan, exts: files.map(extOf) });
+    const done = [];
+    for (let i = 0; i < files.length; i++) {
+      const u = issued.uploads[i];
+      line("Uploading " + u.path + " …", "muted");
+      const up = await fetch(u.signedUrl, { method: "PUT", headers: { "Content-Type": files[i].type || "image/jpeg", "x-upsert": "false" }, body: files[i] });
+      if (!up.ok) { line("✗ " + u.path + " upload failed (" + up.status + ")", "bad"); continue; }
+      done.push(u.path);
+    }
+    if (done.length) {
+      const fin = await call({ action: "finalize", paths: done });
+      for (const r of fin.results) line((r.ok ? "✓ " : "✗ ") + r.path + (r.ok ? "  saved, fingerprint " + r.sha256.slice(0, 12) : "  " + r.error), r.ok ? "ok" : "bad");
+    }
+    $("files").value = "";
+  } catch (e) {
+    line("✗ " + e.message, "bad");
+  } finally {
+    $("go").disabled = false;
+  }
+});
+</script>
+</body>
+</html>
