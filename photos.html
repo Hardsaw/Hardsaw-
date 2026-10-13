@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Quote Photos">
+<meta name="theme-color" content="#1f5f3f">
 <title>Quote Photo Intake</title>
 <style>
   :root { --bg:#f6f5f2; --card:#fff; --ink:#1d1d1b; --muted:#6b6a66; --line:#d9d6cf; --accent:#1f5f3f; --bad:#a3271d; }
@@ -33,8 +37,9 @@
   <div class="card">
     <div class="row">
       <label for="pin">Upload PIN</label>
-      <input id="pin" type="password" autocomplete="current-password" inputmode="numeric">
-      <div class="muted">Remembered on this phone only.</div>
+      <input id="pin" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false">
+      <label class="muted" style="font-weight:400;margin-top:6px"><input id="showpin" type="checkbox"> show PIN</label>
+      <div class="muted">Remembered on this phone only. Letters and numbers both work.</div>
     </div>
     <div class="row">
       <label for="kan">Quote number</label>
@@ -48,15 +53,19 @@
     <ul id="out"></ul>
   </div>
   <p class="muted">Nothing here can mark a photo verified or delete one.</p>
+  <p class="muted">Tip: in Safari tap Share → Add to Home Screen to keep this as an app icon.</p>
 </main>
 <script>
 const FN = "https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/quote-photo-intake";
 const $ = (id) => document.getElementById(id);
 try { $("pin").value = localStorage.getItem("hs_photo_pin") || ""; } catch (e) {}
+$("showpin").addEventListener("change", () => { $("pin").type = $("showpin").checked ? "text" : "password"; });
 
 function line(text, cls) { const li = document.createElement("li"); li.textContent = text; if (cls) li.className = cls; $("out").appendChild(li); }
 async function call(body) {
-  const r = await fetch(FN, { method: "POST", headers: { "Content-Type": "application/json", "x-upload-pin": $("pin").value.trim() }, body: JSON.stringify(body) });
+  let r;
+  try { r = await fetch(FN, { method: "POST", headers: { "Content-Type": "application/json", "x-upload-pin": $("pin").value.trim() }, body: JSON.stringify(body) }); }
+  catch (e) { throw new Error("No connection to the photo server (" + body.action + "). Check signal and try again."); }
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error(j.error || ("HTTP " + r.status));
   return j;
@@ -82,8 +91,10 @@ $("go").addEventListener("click", async () => {
     for (let i = 0; i < files.length; i++) {
       const u = issued.uploads[i];
       line("Uploading " + u.path + " …", "muted");
-      const up = await fetch(u.signedUrl, { method: "PUT", headers: { "Content-Type": files[i].type || "image/jpeg", "x-upsert": "false" }, body: files[i] });
-      if (!up.ok) { line("✗ " + u.path + " upload failed (" + up.status + ")", "bad"); continue; }
+      let up;
+      try { up = await fetch(u.signedUrl, { method: "PUT", headers: { "Content-Type": files[i].type || "image/jpeg", "x-upsert": "false" }, body: files[i] }); }
+      catch (e) { line("✗ " + u.path + " upload failed (no connection)", "bad"); continue; }
+      if (!up.ok) { const t = await up.text().catch(() => ""); line("✗ " + u.path + " upload failed (" + up.status + ") " + t.slice(0, 120), "bad"); continue; }
       done.push(u.path);
     }
     if (done.length) {
