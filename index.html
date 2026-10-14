@@ -758,6 +758,16 @@ textarea,input{outline:none}
       <div class="ev-facts" id="ev-site-facts"></div>
     </div>
   </div>
+  <!-- PHOTO STORE (9aa57e05): evidence photos also go into the private AFC photo store. PIN is typed, never in code. -->
+  <div id="ev-store" style="border:1px solid var(--border);padding:8px;margin:6px 0 12px;font-size:10px">
+    <div style="font-size:7px;letter-spacing:3px;color:var(--amber);margin-bottom:6px">PHOTO STORE · LOOP EVIDENCE</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <input class="inp" id="ev-kan" type="text" placeholder="KAN quote # (KAN004659)" autocapitalize="characters" autocomplete="off" style="font-size:12px;padding:6px 8px">
+      <input class="inp" id="ev-pin" type="password" placeholder="upload PIN" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false" style="font-size:12px;padding:6px 8px">
+    </div>
+    <div id="ev-store-st" style="margin-top:6px;color:var(--muted)">Photos you add above are stored here once a KAN # and PIN are set.</div>
+    <button id="ev-store-btn" onclick="storeEvidencePhoto(window._lastEvidenceFile)" style="display:none;margin-top:6px;width:100%;background:transparent;border:1px solid var(--amber);color:var(--amber);padding:6px;font-size:8px;letter-spacing:2px;cursor:pointer">STORE THIS PHOTO NOW</button>
+  </div>
   <!-- Picker bottom sheet -->
   <div id="picker-sheet" style="display:none;position:fixed;bottom:0;left:0;right:0;background:var(--panel);border-top:2px solid var(--amber);padding:16px;z-index:999">
     <div style="font-size:8px;letter-spacing:3px;color:var(--amber);margin-bottom:12px" id="picker-title">SELECT SOURCE</div>
@@ -2386,8 +2396,86 @@ function showCaptureGuide(){
     +'</button>';
   document.body.appendChild(el);
 }
+// ── REFUSE-NOT-DEFAULT HELPERS (10/13) ──────────────────────────────────────
+// A field counts as typed once a real user input/change event touches it.
+document.addEventListener('input',  function(e){ if(e.isTrusted && e.target && e.target.matches && e.target.matches('input,select')) e.target.dataset.typed='1'; }, true);
+document.addEventListener('change', function(e){ if(e.isTrusted && e.target && e.target.matches && e.target.matches('input,select')) e.target.dataset.typed='1'; }, true);
+function hasTypedRuns(){
+  var any=false;
+  document.querySelectorAll('#edges-container .edge-len').forEach(function(i){ if(parseFloat(i.value)>0) any=true; });
+  return any;
+}
+// Returns 'filled', 'kept' (user typed a different value) or 'skip' (no usable value). Never writes 0 or blank.
+function safeFill(el, v){
+  if(!el || v == null || v === '') return 'skip';
+  var n = Number(v);
+  if(!(n > 0)) return 'skip';
+  if(el.dataset.typed === '1' && el.value !== '' && Number(el.value) !== n) return 'kept';
+  if(el.tagName === 'SELECT'){
+    for(var i=0;i<el.options.length;i++){ if(Number(el.options[i].value) === n){ el.selectedIndex = i; return 'filled'; } }
+    return 'skip';
+  }
+  el.value = n; return 'filled';
+}
+
+// ── PHOTO STORE CLIENT (9aa57e05) ───────────────────────────────────────────
+// Same server as /photos (quote-photo-intake). The PIN is typed by the user and remembered in this browser only
+// (shared with /photos on the same site); it is never written into this page's code (Spider condition 1).
+var PHOTO_FN = 'https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/quote-photo-intake';
+(function(){
+  try { var p = localStorage.getItem('hs_photo_pin'); if(p) document.getElementById('ev-pin').value = p; } catch(e){}
+  try { var k = localStorage.getItem('hs_evidence_kan'); if(k) document.getElementById('ev-kan').value = k; } catch(e){}
+})();
+function storeStatus(msg, cls, showBtn){
+  var st = document.getElementById('ev-store-st'); if(st){ st.textContent = msg; st.style.color = cls==='ok'?'var(--green)':cls==='bad'?'var(--red)':'var(--muted)'; }
+  var b = document.getElementById('ev-store-btn'); if(b) b.style.display = showBtn ? 'block' : 'none';
+}
+async function photoCall(body, pin){
+  var r;
+  try { r = await fetch(PHOTO_FN, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-upload-pin': pin }, body: JSON.stringify(body) }); }
+  catch(e){ throw new Error('no connection to the photo store (' + body.action + ')'); }
+  var j = await r.json().catch(function(){ return {}; });
+  if(!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+  return j;
+}
+async function storeEvidencePhoto(file){
+  if(!file) return;
+  if(!/^image\//.test(file.type || '')) { storeStatus('Not stored: the photo store takes images only (' + (file.type||'unknown') + ').', 'bad', false); return; }
+  var kan = (document.getElementById('ev-kan').value || '').trim().toUpperCase();
+  var pin = (document.getElementById('ev-pin').value || '').trim();
+  if(!/^KAN[0-9]{6}$/.test(kan) || !pin){ storeStatus('Not stored yet: enter the KAN quote # and PIN, then tap STORE.', 'bad', true); return; }
+  try { localStorage.setItem('hs_photo_pin', pin); localStorage.setItem('hs_evidence_kan', kan); } catch(e){}
+  storeStatus('Storing ' + kan + ' photo…', '', false);
+  try {
+    var m = (file.name || '').toLowerCase().match(/\.([a-z0-9]+)$/);
+    var ext = m ? m[1] : ({ 'image/jpeg':'jpg','image/png':'png','image/heic':'heic','image/heif':'heif','image/webp':'webp' })[file.type] || 'jpg';
+    var issued = await photoCall({ action:'issue', quote_no: kan, exts:[ext] }, pin);
+    var u = issued.uploads[0], up;
+    try { up = await fetch(u.signedUrl, { method:'PUT', headers:{ 'Content-Type': file.type || 'image/jpeg', 'x-upsert':'false' }, body: file }); }
+    catch(e){ throw new Error('upload failed (no connection)'); }
+    if(!up.ok) throw new Error('upload failed (' + up.status + ')');
+    var fin = { action:'finalize', paths:[u.path] };
+    if(window.HS_LOOP_RUN_ID) fin.loop_run_id = window.HS_LOOP_RUN_ID;
+    var res = (await photoCall(fin, pin)).results[0];
+    if(!res.ok) throw new Error(res.error || 'not stored');
+    try {
+      var list = JSON.parse(localStorage.getItem('hs_evidence_paths') || '[]');
+      list.push({ path: res.path, sha256: res.sha256, at: new Date().toISOString(), loop_run_id: res.loop_run_id || null });
+      localStorage.setItem('hs_evidence_paths', JSON.stringify(list.slice(-50)));
+    } catch(e){}
+    var msg = '✓ Stored ' + res.path + ' · fingerprint ' + res.sha256.slice(0,12);
+    if(res.link_error) { storeStatus(msg + ' · NOT linked to run: ' + res.link_error, 'bad', false); return; }   // Spider: show link_error, not ok alone
+    if(res.loop_run_id) msg += ' · linked to run ' + res.loop_run_id.slice(0,8);
+    storeStatus(msg, 'ok', false);
+  } catch(e){
+    storeStatus('✗ Not stored: ' + e.message, 'bad', true);
+  }
+}
+
 async function handleImg(file,source){
   if(!file)return;
+  window._lastEvidenceFile = file;
+  try { storeEvidencePhoto(file); } catch(e) { console.error('photo store', e); }   // never blocks the calc
   document.getElementById('up-img').src='';
   document.getElementById('up-wrap').classList.remove('hidden');
   var reader=new FileReader();
@@ -2429,14 +2517,15 @@ function applyExtracted(){
   if(!extracted)return;var d=extracted;
   if(d.styleId){var s=document.getElementById('fam');for(var i=0;i<s.options.length;i++){if(s.options[i].value===d.styleId){s.selectedIndex=i;break;}}onStyleChange();}
   if(!d.styleId&&d.styleHint){var famMap={'ornamental':'ornamental.steel.flat_top_3rail','chain_link':'chain_link.commercial.black','wood':'wood.tight_cedar.6ft','vinyl':'vinyl.privacy.6ft','farm':'farm.wire.4strand'};var sid=famMap[d.styleHint];if(sid){var s2=document.getElementById('fam');for(var i=0;i<s2.options.length;i++){if(s2.options[i].value===sid){s2.selectedIndex=i;break;}}onStyleChange();}}
-  if(d.height_ft){var h=document.getElementById('ht');for(var i=0;i<h.options.length;i++){if(parseInt(h.options[i].value)===d.height_ft){h.selectedIndex=i;break;}}}
-  if(d.fenceEdges&&d.fenceEdges.length){document.getElementById('edges-container').innerHTML='';edgeN=0;d.fenceEdges.forEach(function(e){addEdge('fence',e.length,e.note);});}
-  if(d.openingEdges&&d.openingEdges.length){d.openingEdges.forEach(function(e){addEdge('opening',e.length,e.note||'gate opening');});}
-  if(d.ends!=null)document.getElementById('ends').value=d.ends;
-  if(d.corners!=null)document.getElementById('corners').value=d.corners;
-  if(d.walkGates!=null)document.getElementById('wg').value=d.walkGates;
-  if(d.driveGates!=null)document.getElementById('dg').value=d.driveGates;
-  if(d.otherGates!=null)document.getElementById('og').value=d.otherGates;
+  safeFill(document.getElementById('ht'), d.height_ft);
+  var fe=(d.fenceEdges||[]).filter(function(e){return Number(e.length)>0;});
+  if(fe.length&&!hasTypedRuns()){document.getElementById('edges-container').innerHTML='';edgeN=0;fe.forEach(function(e){addEdge('fence',e.length,e.note);});}
+  if(d.openingEdges&&d.openingEdges.length&&!hasTypedRuns()){d.openingEdges.filter(function(e){return Number(e.length)>0;}).forEach(function(e){addEdge('opening',e.length,e.note||'gate opening');});}
+  safeFill(document.getElementById('ends'), d.ends);
+  safeFill(document.getElementById('corners'), d.corners);
+  safeFill(document.getElementById('wg'), d.walkGates);
+  safeFill(document.getElementById('dg'), d.driveGates);
+  safeFill(document.getElementById('og'), d.otherGates);
   liveUpdate();
 }
 
@@ -3208,34 +3297,27 @@ function closePicker(){
         confidence: (data.summary && data.summary.missing && data.summary.missing.length===0 && data.summary.needs_confirmation && data.summary.needs_confirmation.length===0) ? 'high'
                   : (data.summary && data.summary.missing && data.summary.missing.length>2) ? 'low' : 'medium'
       };
-      if(fp.edges && fp.edges.length){
+      // FIX 10/13 (Forge, 9aa57e05 / dbd5efcf class): the reader used to wipe typed runs and write its guesses
+      // (including 0 / undefined) over what Nate typed - Base44 turned a typed 490 into 0 on 10/13. Now: runs are
+      // only added when there are NO runs yet, only positive lengths are used, and each field is filled only if the
+      // user has not typed in it. Anything the reader saw but did not apply is listed in the ASSIST note.
+      var kept = [];
+      var goodEdges = (fp.edges || []).filter(function(e){ return Number(e.length) > 0; });
+      if(hasTypedRuns()){
+        if(goodEdges.length || Number(parsed.total_lf) > 0) kept.push('fence runs (reader saw ' + (goodEdges.length ? goodEdges.map(function(e){return e.length;}).join('+') : parsed.total_lf) + ' ft)');
+      } else if(goodEdges.length){
         document.getElementById('edges-container').innerHTML=''; edgeN=0;
-        fp.edges.forEach(function(e){ addEdge(e.kind==='opening'?'opening':'fence', e.length, e.kind==='opening'?'gate opening':''); });
-      } else if(parsed.total_lf){
-        var runInputs = document.querySelectorAll('.edge-len');
+        goodEdges.forEach(function(e){ addEdge(e.kind==='opening'?'opening':'fence', e.length, e.kind==='opening'?'gate opening':''); });
+      } else if(Number(parsed.total_lf) > 0){
+        var runInputs = document.querySelectorAll('#edges-container .edge-len');
         if(runInputs.length > 0) runInputs[0].value = parsed.total_lf;
         else addEdge('fence', parsed.total_lf, '');
       }
-      if(parsed.height_ft){
-        var htSel = document.getElementById('ht');
-        if(htSel) htSel.value = parsed.height_ft;
-      }
-      if(parsed.end_posts != null){
-        var epEl = document.getElementById('ends');
-        if(epEl) epEl.value = parsed.end_posts;
-      }
-      if(parsed.corners != null){
-        var cornEl = document.getElementById('corners');
-        if(cornEl) cornEl.value = parsed.corners;
-      }
-      if(parsed.walk_gates != null){
-        var wgEl = document.getElementById('wg');
-        if(wgEl) wgEl.value = parsed.walk_gates;
-      }
-      if(parsed.drive_gates != null){
-        var dgEl = document.getElementById('dg');
-        if(dgEl) dgEl.value = parsed.drive_gates;
-      }
+      [['ht', parsed.height_ft, 'height'], ['ends', parsed.end_posts, 'end posts'], ['corners', parsed.corners, 'corners'],
+       ['wg', parsed.walk_gates, 'walk gates'], ['dg', parsed.drive_gates, 'drive gates']].forEach(function(f){
+        var r = safeFill(document.getElementById(f[0]), f[1]);
+        if(r === 'kept') kept.push(f[2] + ' (reader saw ' + f[1] + ')');
+      });
       liveUpdate();
       // Auto-select fence family if detected
       if(parsed.fence_type){
@@ -3264,8 +3346,9 @@ function closePicker(){
       }
       if(btn){ btn.textContent = '✓ EXTRACTED — REVIEW & CALCULATE'; btn.disabled = false; }
       // Show assist prompt if confidence is low or fields missing
-      if(confidence !== 'high' || !parsed.total_lf){
+      if(confidence !== 'high' || !parsed.total_lf || kept.length){
         var assistMsg = 'I extracted what I could from your sketch. ';
+        if(kept.length) assistMsg += 'Kept what you typed: ' + kept.join('; ') + '. ';
         if(!parsed.total_lf) assistMsg += 'I couldn\'t read the total linear feet — please enter it manually. ';
         if(confidence === 'low') assistMsg += 'Confidence is low — please review all fields before calculating.';
         setTimeout(function(){ alert('ASSIST: ' + assistMsg); }, 300);
