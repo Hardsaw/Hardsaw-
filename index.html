@@ -2400,6 +2400,12 @@ function showCaptureGuide(){
 // A field counts as typed once a real user input/change event touches it.
 document.addEventListener('input',  function(e){ if(e.isTrusted && e.target && e.target.matches && e.target.matches('input,select')) e.target.dataset.typed='1'; }, true);
 document.addEventListener('change', function(e){ if(e.isTrusted && e.target && e.target.matches && e.target.matches('input,select')) e.target.dataset.typed='1'; }, true);
+// Fence family counts as chosen once the user clicks a family tab or picks from the style list.
+document.addEventListener('click', function(e){ if(e.isTrusted && e.target && e.target.closest && e.target.closest('.fam-tab')) document.body.dataset.famChosen='1'; }, true);
+function famChosen(){
+  var f = document.getElementById('fam');
+  return document.body.dataset.famChosen === '1' || (f && f.dataset.typed === '1');
+}
 function hasTypedRuns(){
   var any=false;
   document.querySelectorAll('#edges-container .edge-len').forEach(function(i){ if(parseFloat(i.value)>0) any=true; });
@@ -2515,8 +2521,8 @@ function renderExtracted(d){
 
 function applyExtracted(){
   if(!extracted)return;var d=extracted;
-  if(d.styleId){var s=document.getElementById('fam');for(var i=0;i<s.options.length;i++){if(s.options[i].value===d.styleId){s.selectedIndex=i;break;}}onStyleChange();}
-  if(!d.styleId&&d.styleHint){var famMap={'ornamental':'ornamental.steel.flat_top_3rail','chain_link':'chain_link.commercial.black','wood':'wood.tight_cedar.6ft','vinyl':'vinyl.privacy.6ft','farm':'farm.wire.4strand'};var sid=famMap[d.styleHint];if(sid){var s2=document.getElementById('fam');for(var i=0;i<s2.options.length;i++){if(s2.options[i].value===sid){s2.selectedIndex=i;break;}}onStyleChange();}}
+  if(d.styleId&&!famChosen()){var s=document.getElementById('fam');for(var i=0;i<s.options.length;i++){if(s.options[i].value===d.styleId){s.selectedIndex=i;break;}}onStyleChange();}
+  if(!d.styleId&&d.styleHint&&!famChosen()){var famMap={'ornamental':'ornamental.steel.flat_top_3rail','chain_link':'chain_link.commercial.black','wood':'wood.tight_cedar.6ft','vinyl':'vinyl.privacy.6ft','farm':'farm.wire.4strand'};var sid=famMap[d.styleHint];if(sid){var s2=document.getElementById('fam');for(var i=0;i<s2.options.length;i++){if(s2.options[i].value===sid){s2.selectedIndex=i;break;}}onStyleChange();}}
   safeFill(document.getElementById('ht'), d.height_ft);
   var fe=(d.fenceEdges||[]).filter(function(e){return Number(e.length)>0;});
   if(fe.length&&!hasTypedRuns()){document.getElementById('edges-container').innerHTML='';edgeN=0;fe.forEach(function(e){addEdge('fence',e.length,e.note);});}
@@ -3320,7 +3326,7 @@ function closePicker(){
       });
       liveUpdate();
       // Auto-select fence family if detected
-      if(parsed.fence_type){
+      if(parsed.fence_type && !famChosen()){
         var famBtns = document.querySelectorAll('.fam-btn');
         famBtns.forEach(function(b){
           if(b.dataset.fam && parsed.fence_type.indexOf(b.dataset.fam) > -1){

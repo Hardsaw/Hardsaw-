@@ -77,6 +77,15 @@ with sync_playwright() as p:
     # F: PDF refused politely
     pg.evaluate("storeEvidencePhoto(new File(['x'],'q.pdf',{type:'application/pdf'}))"); pg.wait_for_timeout(200)
     check("F pdf not sent", "images only" in pg.inner_text("#ev-store-st"))
+    # H: family not overwritten once chosen (old APPLY TO JOB path)
+    before_untouched = pg.evaluate("document.getElementById('fam').value")
+    pg.evaluate("extracted={styleHint:'chain_link'}; applyExtracted()")
+    after_untouched = pg.evaluate("document.getElementById('fam').value")
+    check("H untouched family can be set by reader", after_untouched != before_untouched, (before_untouched, after_untouched))
+    pg.locator(".fam-tab[data-fam='ornamental']").click(); pg.wait_for_timeout(200)
+    chosen = pg.evaluate("document.getElementById('fam').value")
+    pg.evaluate("extracted={styleId:'chain_link.commercial.black'}; applyExtracted()")
+    check("H chosen family kept", pg.evaluate("document.getElementById('fam').value") == chosen, chosen)
     # G: handleImg never blocks: store failing does not stop upload status
     check("G no page errors overall", not errs, errs[:3])
     pg.screenshot(path="calc_store.png", full_page=False)
