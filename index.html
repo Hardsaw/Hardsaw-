@@ -903,6 +903,32 @@ textarea,input{outline:none}
           <span class="flag-label">NO CONCRETE</span>
         </button>
       </div>
+      <!-- CL COMMERCIAL OPTIONS (10/14, KAN008084 / 0414a7d4): bom-calc v1.3.17 already implements
+           tension_wire, barb_wire, truss_spec and cantilever for chain_link_commercial; /calc never sent
+           them. UI only - no engine change. Shown and sendable ONLY for commercial chain link; hidden
+           buttons are switched off so no other family ever sends these flags. -->
+      <div id="cl-com-flags" style="display:none;margin-top:8px">
+        <label class="lbl">COMMERCIAL CHAIN LINK OPTIONS</label>
+        <div class="flag-grid">
+          <button class="flag-btn cl-com-flag" data-flag="tension_wire" onclick="this.classList.toggle('on');updateGov()">
+            <span class="flag-icon">&#12336;</span>
+            <span class="flag-label">TENSION WIRE</span>
+          </button>
+          <button class="flag-btn cl-com-flag" data-flag="barb_wire" onclick="this.classList.toggle('on');updateGov()">
+            <span class="flag-icon">&#10035;</span>
+            <span class="flag-label">BARB WIRE 3-STRAND</span>
+          </button>
+          <button class="flag-btn cl-com-flag" data-flag="truss_spec" onclick="this.classList.toggle('on');updateGov()">
+            <span class="flag-icon">&#9651;</span>
+            <span class="flag-label">TRUSS RODS</span>
+          </button>
+          <button class="flag-btn cl-com-flag" data-flag="cantilever" onclick="this.classList.toggle('on');updateGov()">
+            <span class="flag-icon">&#8644;</span>
+            <span class="flag-label">CANTILEVER</span>
+          </button>
+        </div>
+        <div style="font-size:9px;color:var(--muted);margin-top:4px;line-height:1.5">Cantilever: enter the number of cantilever gates in OTHER OPENINGS. Barb arm count is provisional. Middle rail is not in the engine yet - add it by hand.</div>
+      </div>
     </div>
   </div>
 
@@ -2238,12 +2264,20 @@ function onStyleChange(){
   document.getElementById('tb-ruleset').textContent=sv.v;
   document.getElementById('tb-vendor').textContent='AmeriFence';
   document.getElementById('tb-spacing').textContent=style.rp.S+'ft O.C.';
+  updateClComFlags(styleId);
   renderMatToggle(styleId);
   renderVersionGrid(styleId);
   renderStyleCards(styleId);
   liveUpdate();
 }
 
+// Commercial chain-link options are visible and sendable only for that family; leaving it turns them off.
+function updateClComFlags(styleId){
+  var box=document.getElementById('cl-com-flags'); if(!box)return;
+  var st=STYLES[styleId]; var isCom=!!(st&&st.family==='chain_link_commercial');
+  box.style.display=isCom?'block':'none';
+  if(!isCom)box.querySelectorAll('.cl-com-flag.on').forEach(function(b){b.classList.remove('on');});
+}
 function renderVersionGrid(styleId){
   var grid=document.getElementById('version-grid');
   if(!grid)return;
