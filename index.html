@@ -898,10 +898,17 @@ textarea,input{outline:none}
              KAN006065 billed none - so concrete is the exception, not the rule. Engine needs no
              change; it already honors concrete:false exactly. Icon is an HTML numeric entity, not a
              raw emoji, because this file has a known mojibake/UTF-8 problem worth not feeding. -->
-        <button class="flag-btn" data-flag="noconcrete" onclick="this.classList.toggle('on');updateGov()">
-          <span class="flag-icon">&#8856;</span>
-          <span class="flag-label">NO CONCRETE</span>
-        </button>
+      </div>
+      <!-- INSTALL METHOD (10/14, Nate 13:22 "Always calculate concrete" + 93a62e59): replaces the old NO CONCRETE
+           flag, which wrongly told the engine to leave concrete off. Concrete is computed for every set post;
+           only driven or plated posts carry none. bom-calc v1.3.19 reads install_method for every family. -->
+      <div style="margin-top:8px">
+        <label class="lbl" for="install">INSTALL METHOD</label>
+        <select class="sel" id="install" onchange="updateGov();liveUpdate()">
+          <option value="concrete" selected>Set in concrete (default)</option>
+          <option value="driven">Driven posts (no concrete)</option>
+          <option value="plated">Plated / surface mount (no concrete)</option>
+        </select>
       </div>
       <!-- CL COMMERCIAL OPTIONS (10/14, KAN008084 / 0414a7d4): bom-calc v1.3.17 already implements
            tension_wire, barb_wire, truss_spec and cantilever for chain_link_commercial; /calc never sent
@@ -2631,7 +2638,10 @@ async function fetchBOM(styleId,edges,ht,ends,corners,walks,drives,others,flags,
   // yields zero bags and clean readiness, so no engine change is needed. Always sending an explicit
   // boolean means the engine never has to guess, which is the actual fix - the toggle is just how
   // a human expresses it.
-  body.concrete = ((flags||[]).indexOf('noconcrete') < 0);
+  // v1.3.19 (10/14): concrete is no longer a yes/no the page sends. Nate 13:22 "Always calculate concrete"
+  // (93a62e59): the engine computes concrete for every set post and none for driven or plated posts.
+  var instSel=document.getElementById('install');
+  body.install_method=(instSel&&instSel.value)||'concrete';
   // v1.3.0: ornamental steel styles are decomposed into orthogonal (family, rails, pool_code).
   // Family = silhouette only (no rail count); rails from the RAILS selector; pool_code driven by
   // the POOL site flag (rewired from cosmetic-only to actually toggling pool code in the payload).
@@ -3124,7 +3134,7 @@ function reset(){
   ['ends','corners','wg','dg','og'].forEach(function(id){
     var el=document.getElementById(id);if(el)el.value=id==='ends'?'2':'0';
   });
-  document.querySelectorAll('.flag-btn.on').forEach(function(b){b.classList.remove('on');});
+  document.querySelectorAll('.flag-btn.on').forEach(function(b){b.classList.remove('on');});var _ins=document.getElementById('install');if(_ins)_ins.value='concrete';
   document.getElementById('lc').classList.add('hidden');
   document.getElementById('up-wrap').classList.add('hidden');
   document.getElementById('ext-box').classList.add('hidden');
