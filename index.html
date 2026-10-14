@@ -1868,7 +1868,7 @@ function hardsawInputSig(){
   function v(id){var e=document.getElementById(id);return e?e.value:'';}
   var flags=Array.from(document.querySelectorAll('.flag-btn.on')).map(function(b){return b.dataset.flag;}).sort();
   var edges;try{edges=getEdges();}catch(e){edges=[];}
-  return H(JSON.stringify({fam:v('fam'),ht:v('ht'),ends:v('ends'),corners:v('corners'),wg:v('wg'),dg:v('dg'),og:v('og'),sp:v('sp'),rails:v('rails'),flags:flags,edges:edges}));
+  return H(JSON.stringify({fam:v('fam'),ht:v('ht'),ends:v('ends'),corners:v('corners'),wg:v('wg'),dg:v('dg'),og:v('og'),sp:v('sp'),rails:v('rails'),install:v('install'),flags:flags,edges:edges}));
 }
 function hardsawMarkStale(){
   var b=document.getElementById('btn-save-job');
