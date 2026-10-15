@@ -2560,6 +2560,7 @@ async function storeEvidencePhoto(file, fromQueue){
     window._storedCount = (window._storedCount||0) + 1;
     storeChip('STORED ' + kan + ' · ' + window._storedCount + ' photo(s) · last ' + res.sha256.slice(0,12), 'ok');
     var box = document.getElementById('ev-store'); if(box) box.style.borderColor = '';
+    if(!fromQueue){ var qi = window._pendingStore.indexOf(file); if(qi >= 0) window._pendingStore.splice(qi, 1); }   // manual STORE: no double store later
     return true;
   } catch(e){
     if(/pin/i.test(e.message)) _badPin = pin;      // rejected PIN: no more tries until the PIN field changes

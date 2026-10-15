@@ -55,6 +55,10 @@ with sync_playwright() as p:
     mode["fail"]=None
     pg.fill("#ev-pin","goodpin22"); pg.press("#ev-pin","Tab"); pg.wait_for_timeout(1500)
     check("new PIN stores the held photo", pg.evaluate("window._pendingStore.length")==0 and "STORED" in pg.inner_text("#ev-store-chip"), pg.inner_text("#ev-store-chip"))
+    # Manual STORE after a failure must not leave a duplicate in the queue
+    mode["fail"]="no connection"; pg.set_input_files("#fi-cam", files=[{"name":"s5.png","mimeType":"image/png","buffer":PNG}]); pg.wait_for_timeout(800)
+    mode["fail"]=None; pg.evaluate("storeEvidencePhoto(window._lastEvidenceFile)"); pg.wait_for_timeout(800)
+    check("manual STORE clears the held copy", pg.evaluate("window._pendingStore.length")==0)
     check("no page errors", not errs, errs[:3])
     b.close()
 print("FAILS:",fails); sys.exit(1 if fails else 0)
