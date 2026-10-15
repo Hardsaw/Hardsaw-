@@ -2554,13 +2554,13 @@ async function storeEvidencePhoto(file, fromQueue){
       localStorage.setItem('hs_evidence_paths', JSON.stringify(list.slice(-50)));
     } catch(e){}
     var msg = '✓ Stored ' + res.path + ' · fingerprint ' + res.sha256.slice(0,12);
+    if(!fromQueue){ var qi = window._pendingStore.indexOf(file); if(qi >= 0) window._pendingStore.splice(qi, 1); }   // manual STORE: no double store later
     if(res.link_error) { storeStatus(msg + ' · NOT linked to run: ' + res.link_error, 'bad', false); return true; }   // Spider: show link_error, not ok alone
     if(res.loop_run_id) msg += ' · linked to run ' + res.loop_run_id.slice(0,8);
     storeStatus(msg, 'ok', false);
     window._storedCount = (window._storedCount||0) + 1;
     storeChip('STORED ' + kan + ' · ' + window._storedCount + ' photo(s) · last ' + res.sha256.slice(0,12), 'ok');
     var box = document.getElementById('ev-store'); if(box) box.style.borderColor = '';
-    if(!fromQueue){ var qi = window._pendingStore.indexOf(file); if(qi >= 0) window._pendingStore.splice(qi, 1); }   // manual STORE: no double store later
     return true;
   } catch(e){
     if(/pin/i.test(e.message)) _badPin = pin;      // rejected PIN: no more tries until the PIN field changes
