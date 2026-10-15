@@ -2492,26 +2492,38 @@ function storeChip(text, cls){
   c.style.display = 'block'; c.textContent = text;
   c.style.color = cls==='ok' ? 'var(--green)' : 'var(--red)';
 }
-var _flushing = false;
+var _flushing = false, _badPin = null;
+// Spider 36efe0b9: flush only on change/blur/Enter (a PIN typed key by key must never hit the server: 5 bad PINs
+// lock the IP), keep a held photo until it is actually stored, and after a rejected PIN wait for the PIN to change.
 async function flushPendingStore(){
   if(_flushing || !window._pendingStore.length) return;
   var kan = (document.getElementById('ev-kan').value || '').trim().toUpperCase();
   var pin = (document.getElementById('ev-pin').value || '').trim();
-  if(!/^KAN[0-9]{6}$/.test(kan) || !pin) return;
+  if(!/^KAN[0-9]{6}$/.test(kan) || !pin || pin === _badPin) return;
   _flushing = true;
-  try { while(window._pendingStore.length){ var f = window._pendingStore.shift(); await storeEvidencePhoto(f); } }
-  finally { _flushing = false; }
+  try {
+    while(window._pendingStore.length){
+      var f = window._pendingStore[0];
+      var r = await storeEvidencePhoto(f, true);
+      if(r !== true) break;                          // failed: photo stays held, stop the loop
+      window._pendingStore.shift();
+    }
+  } finally { _flushing = false; }
+  var left = window._pendingStore.length;
+  if(left) storeChip('NOT STORED · ' + left + ' waiting', 'bad');
 }
 ['ev-kan','ev-pin'].forEach(function(id){
-  var el = document.getElementById(id);
-  if(el) ['change','blur','keyup'].forEach(function(ev){ el.addEventListener(ev, function(){ flushPendingStore(); }); });
+  var el = document.getElementById(id); if(!el) return;
+  el.addEventListener('change', function(){ flushPendingStore(); });
+  el.addEventListener('blur', function(){ flushPendingStore(); });
+  el.addEventListener('keyup', function(e){ if(e.key === 'Enter') flushPendingStore(); });
 });
-async function storeEvidencePhoto(file){
-  if(!file) return;
-  if(!/^image\//.test(file.type || '')) { storeStatus('Not stored: the photo store takes images only (' + (file.type||'unknown') + ').', 'bad', false); return; }
+async function storeEvidencePhoto(file, fromQueue){
+  if(!file) return false;
+  if(!/^image\//.test(file.type || '')) { storeStatus('Not stored: the photo store takes images only (' + (file.type||'unknown') + ').', 'bad', false); return false; }
   var kan = (document.getElementById('ev-kan').value || '').trim().toUpperCase();
   var pin = (document.getElementById('ev-pin').value || '').trim();
-  if(!/^KAN[0-9]{6}$/.test(kan) || !pin){
+  if(!/^KAN[0-9]{6}$/.test(kan) || !pin || pin === _badPin){
     // U1 STORE-FIRST (10/15, AEGIS cbad3842 / Spider c67b5f1b): 9 sketch photos were read but never stored because
     // the KAN # / PIN were empty. Hold the photo, say so loudly, and store it the moment both are filled in.
     if(window._pendingStore.indexOf(file) < 0) window._pendingStore.push(file);
@@ -2520,7 +2532,7 @@ async function storeEvidencePhoto(file){
     storeChip('NOT STORED · ' + n + ' waiting', 'bad');
     var box = document.getElementById('ev-store'); if(box){ box.style.borderColor = 'var(--red)'; try{ box.scrollIntoView({block:'center'}); }catch(e){} }
     var f = !/^KAN[0-9]{6}$/.test(kan) ? document.getElementById('ev-kan') : document.getElementById('ev-pin'); if(f) try{ f.focus(); }catch(e){}
-    return;
+    return false;
   }
   try { localStorage.setItem('hs_photo_pin', pin); localStorage.setItem('hs_evidence_kan', kan); } catch(e){}
   storeStatus('Storing ' + kan + ' photo…', '', false);
@@ -2542,14 +2554,19 @@ async function storeEvidencePhoto(file){
       localStorage.setItem('hs_evidence_paths', JSON.stringify(list.slice(-50)));
     } catch(e){}
     var msg = '✓ Stored ' + res.path + ' · fingerprint ' + res.sha256.slice(0,12);
-    if(res.link_error) { storeStatus(msg + ' · NOT linked to run: ' + res.link_error, 'bad', false); return; }   // Spider: show link_error, not ok alone
+    if(res.link_error) { storeStatus(msg + ' · NOT linked to run: ' + res.link_error, 'bad', false); return true; }   // Spider: show link_error, not ok alone
     if(res.loop_run_id) msg += ' · linked to run ' + res.loop_run_id.slice(0,8);
     storeStatus(msg, 'ok', false);
     window._storedCount = (window._storedCount||0) + 1;
     storeChip('STORED ' + kan + ' · ' + window._storedCount + ' photo(s) · last ' + res.sha256.slice(0,12), 'ok');
     var box = document.getElementById('ev-store'); if(box) box.style.borderColor = '';
+    return true;
   } catch(e){
+    if(/pin/i.test(e.message)) _badPin = pin;      // rejected PIN: no more tries until the PIN field changes
+    if(!fromQueue && window._pendingStore.indexOf(file) < 0) window._pendingStore.push(file);   // keep it held
     storeStatus('✗ Not stored: ' + e.message, 'bad', true);
+    storeChip('NOT STORED · ' + window._pendingStore.length + ' waiting · ' + e.message, 'bad');
+    return false;
   }
 }
 

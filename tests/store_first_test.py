@@ -8,11 +8,13 @@ PNG=base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42m
 with sync_playwright() as p:
     b=p.chromium.launch(); pg=b.new_page(**p.devices['iPhone 13'])
     errs=[]; pg.on("pageerror", lambda e: errs.append(str(e))); pg.on("dialog", lambda d: d.dismiss())
-    calls=[]
+    calls=[]; mode={"fail":None}
     def route(r):
         u=r.request.url
         if "quote-photo-intake" in u:
             body=json.loads(r.request.post_data or "{}"); calls.append((body.get("action"), r.request.headers.get("x-upload-pin")))
+            if mode["fail"]:
+                return r.fulfill(status=401, content_type="application/json", body=json.dumps({"error":mode["fail"]}))
             if body["action"]=="issue":
                 return r.fulfill(status=200, content_type="application/json", body=json.dumps({"uploads":[{"signedUrl":"https://example.test/up","path":body["quote_no"]+"/"+body["quote_no"]+"_1.png"}]}))
             return r.fulfill(status=200, content_type="application/json", body=json.dumps({"results":[{"ok":True,"path":body["paths"][0],"sha256":"ab"*32}]}))
@@ -30,7 +32,9 @@ with sync_playwright() as p:
     check("no upload attempted without KAN/PIN", not any(c[0]=="issue" for c in calls), calls)
     pg.fill("#ev-kan","KAN004659"); pg.wait_for_timeout(300)
     check("KAN alone does not upload", not any(c[0]=="issue" for c in calls))
-    pg.fill("#ev-pin","testpin123"); pg.press("#ev-pin","Tab"); pg.wait_for_timeout(2000)
+    pg.click("#ev-pin"); pg.keyboard.type("testpin123", delay=30); pg.wait_for_timeout(400)
+    check("typing the PIN key by key sends nothing (Spider 36efe0b9)", not any(c[0]=="issue" for c in calls), calls)
+    pg.press("#ev-pin","Tab"); pg.wait_for_timeout(2000)
     issues=[c for c in calls if c[0]=="issue"]; fins=[c for c in calls if c[0]=="finalize"]
     check("both held photos stored once PIN entered", len(issues)==2 and len(fins)==2, calls)
     check("PIN sent as header only", all(c[1]=="testpin123" for c in issues))
@@ -38,6 +42,19 @@ with sync_playwright() as p:
     check("chip shows STORED with count + fingerprint", "STORED KAN004659" in chip and "2 photo(s)" in chip and "abababababab" in chip, chip)
     n=len(calls); pg.set_input_files("#fi-cam", files=[{"name":"s3.png","mimeType":"image/png","buffer":PNG}]); pg.wait_for_timeout(1500)
     check("next photo stores immediately", len([c for c in calls[n:] if c[0]=="finalize"])==1)
+    # Failure keeps the photo and a bad PIN stops retries until the PIN changes
+    mode["fail"]="bad pin"
+    pg.evaluate("window._pendingStore=[];window._badPin=null")
+    pg.fill("#ev-pin",""); pg.evaluate("document.getElementById('ev-pin').value=''")
+    pg.set_input_files("#fi-cam", files=[{"name":"s4.png","mimeType":"image/png","buffer":PNG}]); pg.wait_for_timeout(500)
+    n=len(calls); pg.fill("#ev-pin","wrongpin1"); pg.press("#ev-pin","Tab"); pg.wait_for_timeout(1200)
+    check("rejected PIN keeps the photo held", pg.evaluate("window._pendingStore.length")==1, pg.inner_text("#ev-store-chip"))
+    tries=len([c for c in calls[n:] if c[0]=="issue"])
+    pg.press("#ev-pin","Enter"); pg.evaluate("document.getElementById('ev-pin').dispatchEvent(new Event('change'))"); pg.wait_for_timeout(800)
+    check("same bad PIN is not retried", len([c for c in calls[n:] if c[0]=="issue"])==tries, (tries, calls[n:]))
+    mode["fail"]=None
+    pg.fill("#ev-pin","goodpin22"); pg.press("#ev-pin","Tab"); pg.wait_for_timeout(1500)
+    check("new PIN stores the held photo", pg.evaluate("window._pendingStore.length")==0 and "STORED" in pg.inner_text("#ev-store-chip"), pg.inner_text("#ev-store-chip"))
     check("no page errors", not errs, errs[:3])
     b.close()
 print("FAILS:",fails); sys.exit(1 if fails else 0)
