@@ -2596,6 +2596,27 @@ function addEdge(kind,len,note){
   liveUpdate();
 }
 function delEdge(id){var el=document.getElementById(id);if(el)el.remove();liveUpdate();}
+// INPUT GUARDS (10/14, AEGIS 97e5b9e7: 7 of 8 phone loop runs saved with wrong inputs). Warn-only, never block:
+// the user can always choose to build anyway. Reader-filled runs are marked so an unedited low/medium-confidence
+// footage is visible before BUILD IT; an edit clears the mark.
+function markReaderEdges(conf){
+  window.__readerConf=conf||'low';
+  document.querySelectorAll('#edges-container .edge-len').forEach(function(i){
+    i.dataset.src='reader';i.dataset.orig=i.value;
+  });
+}
+function inputGuards(){
+  var w=[];
+  var conf=window.__readerConf||'high';
+  var unedited=Array.from(document.querySelectorAll('#edges-container .edge-len')).filter(function(i){
+    return i.dataset.src==='reader'&&i.value!==''&&i.value===i.dataset.orig;}).length;
+  if(unedited>0&&conf!=='high')w.push(unedited+' run length(s) came from the sketch reader ('+conf.toUpperCase()+' confidence) and were never checked. Compare each one to the sketch.');
+  var openings=getEdges().filter(function(e){return e.kind==='opening';});
+  openings.forEach(function(e){if(e.length>30)w.push('Gate opening '+e.length+' ft is over 30 ft. Was it typed in inches? (Cantilever openings can be 30-40 ft.)');});
+  var gates=(parseInt(document.getElementById('wg').value)||0)+(parseInt(document.getElementById('dg').value)||0)+(parseInt(document.getElementById('og').value)||0);
+  if(openings.length>0&&gates===0)w.push(openings.length+' gate opening(s) entered but WALK, DRIVE and OTHER gates are all 0, so no gate or gate hardware will be on the list.');
+  return w;
+}
 function getEdges(){
   var out=[];
   document.querySelectorAll('#edges-container .edge-card').forEach(function(c){
@@ -2684,6 +2705,8 @@ function localFlagWarnings(flags,ht,geo,rp){
 async function runJob(){
   var edges=getEdges();
   if(!edges.filter(function(e){return e.kind==='fence';}).length){alert('Add at least one fence run.');return;}
+  var _g=inputGuards();
+  if(_g.length&&!confirm('CHECK BEFORE BUILD\n\n- '+_g.join('\n- ')+'\n\nOK = build anyway.  Cancel = fix the inputs.'))return;
   var styleId=document.getElementById('fam').value;
   var ht=parseInt(document.getElementById('ht').value);
   var _e=parseInt(document.getElementById('ends').value);var ends=Number.isNaN(_e)?2:_e;
@@ -3363,6 +3386,7 @@ function closePicker(){
         if(runInputs.length > 0) runInputs[0].value = parsed.total_lf;
         else addEdge('fence', parsed.total_lf, '');
       }
+      if(!kept.length && (goodEdges.length || Number(parsed.total_lf) > 0)) markReaderEdges(parsed.confidence); // reader filled the runs: flag them until edited
       [['ht', parsed.height_ft, 'height'], ['ends', parsed.end_posts, 'end posts'], ['corners', parsed.corners, 'corners'],
        ['wg', parsed.walk_gates, 'walk gates'], ['dg', parsed.drive_gates, 'drive gates']].forEach(function(f){
         var r = safeFill(document.getElementById(f[0]), f[1]);
