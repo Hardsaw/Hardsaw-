@@ -62,7 +62,7 @@ with sync_playwright() as p:
     pg.evaluate("document.getElementById('ev-kan').value=''; document.getElementById('ev-pin').value='';")
     pg.evaluate("storeEvidencePhoto(new File([new Uint8Array([255,216,255])],'s.jpg',{type:'image/jpeg'}))"); pg.wait_for_timeout(300)
     st = pg.inner_text("#ev-store-st")
-    check("D no KAN -> not stored + button", "Not stored yet" in st and pg.is_visible("#ev-store-btn"), st)
+    check("D no KAN -> held as NOT STORED (store-first U1)", "NOT STORED" in st and "waiting" in st, st)
     pg.fill("#ev-kan", "kan004659"); pg.fill("#ev-pin", "Abc12345xy")
     pg.evaluate("storeEvidencePhoto(new File([new Uint8Array([255,216,255])],'s.jpg',{type:'image/jpeg'}))"); pg.wait_for_timeout(600)
     st = pg.inner_text("#ev-store-st")

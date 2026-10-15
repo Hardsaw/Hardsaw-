@@ -765,6 +765,7 @@ textarea,input{outline:none}
       <input class="inp" id="ev-kan" type="text" placeholder="KAN quote # (KAN004659)" autocapitalize="characters" autocomplete="off" style="font-size:12px;padding:6px 8px">
       <input class="inp" id="ev-pin" type="password" placeholder="upload PIN" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false" style="font-size:12px;padding:6px 8px">
     </div>
+    <div id="ev-store-chip" style="display:none;margin-top:6px;font-weight:bold;letter-spacing:1px"></div>
     <div id="ev-store-st" style="margin-top:6px;color:var(--muted)">Photos you add above are stored here once a KAN # and PIN are set.</div>
     <button id="ev-store-btn" onclick="storeEvidencePhoto(window._lastEvidenceFile)" style="display:none;margin-top:6px;width:100%;background:transparent;border:1px solid var(--amber);color:var(--amber);padding:6px;font-size:8px;letter-spacing:2px;cursor:pointer">STORE THIS PHOTO NOW</button>
   </div>
@@ -2485,12 +2486,42 @@ async function photoCall(body, pin){
   if(!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
   return j;
 }
+window._pendingStore = [];
+function storeChip(text, cls){
+  var c = document.getElementById('ev-store-chip'); if(!c) return;
+  c.style.display = 'block'; c.textContent = text;
+  c.style.color = cls==='ok' ? 'var(--green)' : 'var(--red)';
+}
+var _flushing = false;
+async function flushPendingStore(){
+  if(_flushing || !window._pendingStore.length) return;
+  var kan = (document.getElementById('ev-kan').value || '').trim().toUpperCase();
+  var pin = (document.getElementById('ev-pin').value || '').trim();
+  if(!/^KAN[0-9]{6}$/.test(kan) || !pin) return;
+  _flushing = true;
+  try { while(window._pendingStore.length){ var f = window._pendingStore.shift(); await storeEvidencePhoto(f); } }
+  finally { _flushing = false; }
+}
+['ev-kan','ev-pin'].forEach(function(id){
+  var el = document.getElementById(id);
+  if(el) ['change','blur','keyup'].forEach(function(ev){ el.addEventListener(ev, function(){ flushPendingStore(); }); });
+});
 async function storeEvidencePhoto(file){
   if(!file) return;
   if(!/^image\//.test(file.type || '')) { storeStatus('Not stored: the photo store takes images only (' + (file.type||'unknown') + ').', 'bad', false); return; }
   var kan = (document.getElementById('ev-kan').value || '').trim().toUpperCase();
   var pin = (document.getElementById('ev-pin').value || '').trim();
-  if(!/^KAN[0-9]{6}$/.test(kan) || !pin){ storeStatus('Not stored yet: enter the KAN quote # and PIN, then tap STORE.', 'bad', true); return; }
+  if(!/^KAN[0-9]{6}$/.test(kan) || !pin){
+    // U1 STORE-FIRST (10/15, AEGIS cbad3842 / Spider c67b5f1b): 9 sketch photos were read but never stored because
+    // the KAN # / PIN were empty. Hold the photo, say so loudly, and store it the moment both are filled in.
+    if(window._pendingStore.indexOf(file) < 0) window._pendingStore.push(file);
+    var n = window._pendingStore.length;
+    storeStatus('NOT STORED: ' + n + ' photo(s) waiting. Enter the KAN quote # and PIN; they store automatically.', 'bad', false);
+    storeChip('NOT STORED · ' + n + ' waiting', 'bad');
+    var box = document.getElementById('ev-store'); if(box){ box.style.borderColor = 'var(--red)'; try{ box.scrollIntoView({block:'center'}); }catch(e){} }
+    var f = !/^KAN[0-9]{6}$/.test(kan) ? document.getElementById('ev-kan') : document.getElementById('ev-pin'); if(f) try{ f.focus(); }catch(e){}
+    return;
+  }
   try { localStorage.setItem('hs_photo_pin', pin); localStorage.setItem('hs_evidence_kan', kan); } catch(e){}
   storeStatus('Storing ' + kan + ' photo…', '', false);
   try {
@@ -2514,6 +2545,9 @@ async function storeEvidencePhoto(file){
     if(res.link_error) { storeStatus(msg + ' · NOT linked to run: ' + res.link_error, 'bad', false); return; }   // Spider: show link_error, not ok alone
     if(res.loop_run_id) msg += ' · linked to run ' + res.loop_run_id.slice(0,8);
     storeStatus(msg, 'ok', false);
+    window._storedCount = (window._storedCount||0) + 1;
+    storeChip('STORED ' + kan + ' · ' + window._storedCount + ' photo(s) · last ' + res.sha256.slice(0,12), 'ok');
+    var box = document.getElementById('ev-store'); if(box) box.style.borderColor = '';
   } catch(e){
     storeStatus('✗ Not stored: ' + e.message, 'bad', true);
   }
