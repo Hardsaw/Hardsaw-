@@ -506,13 +506,41 @@ function goToLead(){
   document.getElementById('panel-lead').classList.remove('hidden');
   setStep(4);
 }
+// one-app-1 (Forge 2026-11-08, ALERT 35083ef8): SEND MY PROJECT used to show SUCCESS and send nothing.
+// Now posts the drawn job to lead-capture (browser path: rate-limited, no secret) and shows SUCCESS only
+// when the function reports lead_saved=true; otherwise the visitor sees the phone number and can retry.
+var LEAD_CAPTURE_URL='https://unddklhbrmqvyqagomtn.supabase.co/functions/v1/lead-capture';
+function leadPayload(name,phone){
+  var walks=EST.gates.filter(function(g){return g.type==='walk';}).length;
+  var drives=EST.gates.filter(function(g){return g.type==='drive';}).length;
+  var email=(document.getElementById('lead-email')||{}).value||'';
+  return {
+    name:name, phone:phone, email:email.trim()||null, address:EST.address||null,
+    family:EST.style, height_ft:EST.height, lf:Math.round(EST.totalLF||0),
+    walk_gates:walks, drive_gates:drives,
+    notes:(EST.removal?'existing fence removal requested; ':'')+'web estimator draw, '+EST.points.length+' points',
+    source:'web', submitted_at:new Date().toISOString()
+  };
+}
 function submitLead(){
   var name=document.getElementById('lead-name').value.trim();
   var phone=document.getElementById('lead-phone').value.trim();
   if(!name||!phone){alert('Name and phone required.');return;}
   var btn=document.getElementById('submit-btn');
   btn.disabled=true;btn.textContent='SENDING...';
-  showSuccess();
+  fetch(LEAD_CAPTURE_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(leadPayload(name,phone))})
+  .then(function(r){return r.json().catch(function(){return {};}).then(function(d){d.__status=r.status;return d;});})
+  .then(function(d){
+    if(d&&d.lead_saved===true){showSuccess();return;}
+    console.warn('[estimate] lead not saved',d);
+    leadFailed(d&&d.__status===429?'Too many requests from this network. Please call or text 816-852-FENCE.':'Could not send right now. Please call or text 816-852-FENCE, or try again.');
+  })
+  .catch(function(e){console.warn('[estimate] lead send error',e);leadFailed('Could not send right now. Please call or text 816-852-FENCE, or try again.');});
+}
+function leadFailed(msg){
+  var btn=document.getElementById('submit-btn');
+  btn.disabled=false;btn.textContent='SEND MY PROJECT TO HARDSAW';
+  alert(msg);
 }
 function showSuccess(){
   document.getElementById('panel-lead').classList.add('hidden');
