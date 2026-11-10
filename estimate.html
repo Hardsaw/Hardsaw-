@@ -121,24 +121,24 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
   <div class="section-hdr">SELECT FENCE TYPE</div>
   <div class="style-grid">
     <div class="style-card active" onclick="selectStyle(this,'ornamental_dm')" data-style="ornamental_dm">
-      <span class="style-card-icon">â¦</span>
+      <span class="style-card-icon">✦</span>
       <div class="style-card-name">Ornamental Iron</div>
-      <div class="style-card-sub">Steel DM series Â· 8ft bays Â· 4-6ft</div>
+      <div class="style-card-sub">Steel DM series · 8ft bays · 4-6ft</div>
     </div>
     <div class="style-card" onclick="selectStyle(this,'wood')" data-style="wood">
-      <span class="style-card-icon">ðªµ</span>
+      <span class="style-card-icon">🪵</span>
       <div class="style-card-name">Wood Privacy</div>
-      <div class="style-card-sub">Cedar Â· 6ft Â· board on board</div>
+      <div class="style-card-sub">Cedar · 6ft · board on board</div>
     </div>
     <div class="style-card" onclick="selectStyle(this,'chain_link_galv')" data-style="chain_link_galv">
-      <span class="style-card-icon">ð</span>
+      <span class="style-card-icon">🔗</span>
       <div class="style-card-name">Chain Link</div>
-      <div class="style-card-sub">Galvanized or black Â· 4-6ft</div>
+      <div class="style-card-sub">Galvanized or black · 4-6ft</div>
     </div>
     <div class="style-card" onclick="selectStyle(this,'vinyl')" data-style="vinyl" style="display:none">
-      <span class="style-card-icon">â­</span>
+      <span class="style-card-icon">▭</span>
       <div class="style-card-name">Vinyl Privacy</div>
-      <div class="style-card-sub">White Â· tongue and groove Â· 6ft</div>
+      <div class="style-card-sub">White · tongue and groove · 6ft</div>
     </div>
   </div>
   <div class="section-hdr" style="margin-top:16px">FENCE HEIGHT</div>
@@ -149,7 +149,7 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
   </div>
   <div class="removal-row" onclick="this.querySelector('input').click()">
     <input type="checkbox" id="removal-chk" onchange="EST.removal=this.checked" onclick="event.stopPropagation()">
-    <div><div class="removal-row-label">REMOVE EXISTING FENCE</div><div class="removal-row-sub">+$6/LF Â· Demo &amp; haul away</div></div>
+    <div><div class="removal-row-label">REMOVE EXISTING FENCE</div><div class="removal-row-sub">+$6/LF · Demo &amp; haul away</div></div>
   </div>
   <button class="go-btn" style="width:100%;padding:14px;font-size:11px;letter-spacing:3px" onclick="goToResult()">CALCULATE ESTIMATE</button>
 </div>
@@ -161,7 +161,7 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
     <div class="result-lf" id="res-lf">-- LF</div>
     <div class="result-range-label">ESTIMATED MATERIAL RANGE</div>
     <div class="result-range" id="res-range">$-- - $--</div>
-    <div class="result-disclaimer" id="res-note">Installed price estimate Â· Final price after site visit.</div>
+    <div class="result-disclaimer" id="res-note">Installed price estimate · Final price after site visit.</div>
   </div>
   <button class="go-btn" style="width:100%;padding:14px;font-size:11px;letter-spacing:3px" onclick="goToLead()">GET A FIRM QUOTE</button>
 </div>
@@ -179,7 +179,7 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
 </div>
 <div id="panel-success" class="section hidden">
   <div class="success-card">
-    <div class="success-icon">ð¡</div>
+    <div class="success-icon">🛡</div>
     <div class="success-title">You are In The Queue</div>
     <div class="success-sub">Jilly received your project details and Nate has been notified.<br><br>Expect a call or text within a few hours.<br><br><strong style="color:var(--amber)">816-852-FENCE</strong></div>
   </div>
@@ -441,9 +441,9 @@ function goToResult(){
     var parts=[];
     if(walks>0)parts.push(walks+' walk gate'+(walks>1?'s':''));
     if(drives>0)parts.push(drives+' drive gate'+(drives>1?'s':''));
-    gateNote=' Â· '+parts.join(', ')+' quoted separately';
+    gateNote=' · '+parts.join(', ')+' quoted separately';
   }
-  document.getElementById('res-note').textContent='Installed price estimate Â· '+EST.height+'ft Â· '+Math.round(r.base_per_lf*r.multiplier)+'$/LF base'+gateNote+' Â· Final price after site visit';
+  document.getElementById('res-note').textContent='Installed price estimate · '+EST.height+'ft · '+Math.round(r.base_per_lf*r.multiplier)+'$/LF base'+gateNote+' · Final price after site visit';
   document.getElementById('panel-style').classList.add('hidden');
   document.getElementById('panel-result').classList.remove('hidden');
   setStep(3);
@@ -490,7 +490,7 @@ function placeGate(type){
     position:latLng,map:EST.map,
     icon:{path:google.maps.SymbolPath.CIRCLE,scale:12,fillColor:color,fillOpacity:0.9,strokeColor:'#fff',strokeWeight:2},
     label:{text:label,color:'#fff',fontSize:'11px',fontWeight:'bold'},
-    title:(type==='walk'?'Walk':'Drive')+' Gate ('+lf+'ft) â tap to remove'
+    title:(type==='walk'?'Walk':'Drive')+' Gate ('+lf+'ft) — tap to remove'
   });
   google.maps.event.addListener(marker,'click',function(){
     marker.setMap(null);
@@ -552,10 +552,10 @@ function showSuccess(){
   <div style="font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:14px;text-align:center">SELECT GATE TYPE</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
     <button onclick="placeGate('walk')" style="background:#00C85318;border:1px solid #00C853;color:#00C853;padding:14px 8px;font-family:var(--mono);font-size:8px;letter-spacing:1px;cursor:pointer;border-radius:4px;line-height:1.6">
-      ð¶<br>WALK GATE<br><span style="font-size:8px;opacity:0.6">4ft Â· tap to remove</span>
+      🚶<br>WALK GATE<br><span style="font-size:8px;opacity:0.6">4ft · tap to remove</span>
     </button>
     <button onclick="placeGate('drive')" style="background:#FF3B3B18;border:1px solid #FF3B3B;color:#FF3B3B;padding:14px 8px;font-family:var(--mono);font-size:8px;letter-spacing:1px;cursor:pointer;border-radius:4px;line-height:1.6">
-      ð<br>DRIVE GATE<br><span style="font-size:8px;opacity:0.6">10ft Â· tap to remove</span>
+      🚗<br>DRIVE GATE<br><span style="font-size:8px;opacity:0.6">10ft · tap to remove</span>
     </button>
   </div>
   <button onclick="hideGatePopup()" style="width:100%;background:transparent;border:1px solid var(--muted);color:var(--muted);padding:9px;font-family:var(--mono);font-size:8px;letter-spacing:2px;cursor:pointer;border-radius:4px">CANCEL</button>
