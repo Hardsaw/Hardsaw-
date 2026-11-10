@@ -16,6 +16,7 @@
     { "src": "/pro-center.html", "dest": "/pro-center.html" },
     { "src": "/photos", "dest": "/photos.html" },
     { "src": "/photos.html", "dest": "/photos.html" },
+    { "src": "/img/([a-z0-9-]+\\.webp)", "dest": "/img/$1", "headers": { "cache-control": "public, max-age=86400" } },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }

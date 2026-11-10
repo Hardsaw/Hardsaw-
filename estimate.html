@@ -46,6 +46,10 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
 .style-card{background:var(--panel2);border:2px solid var(--border2);border-radius:2px;padding:14px 12px;cursor:pointer;transition:border-color 0.2s}
 .style-card.active{border-color:var(--amber);background:#FFB80008}
 .style-card-icon{font-size:28px;margin-bottom:8px;display:block}
+/* one-app-1e: photo cards; emoji stays underneath as the fallback if the image fails */
+.style-card-media{position:relative;padding-top:75%;margin-bottom:8px;border-radius:2px;overflow:hidden;background:var(--panel2)}
+.style-card-media .style-card-icon{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;margin:0}
+.style-card-media img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block}
 .style-card-name{font-size:11px;font-weight:bold;color:var(--text);margin-bottom:3px}
 .style-card.active .style-card-name{color:var(--amber)}
 .style-card-sub{font-size:9px;color:var(--dim);line-height:1.4}
@@ -121,22 +125,22 @@ body{background:var(--black);color:var(--text);font-family:var(--sans);min-heigh
   <div class="section-hdr">SELECT FENCE TYPE</div>
   <div class="style-grid">
     <div class="style-card active" onclick="selectStyle(this,'ornamental_dm')" data-style="ornamental_dm">
-      <span class="style-card-icon">✦</span>
+      <div class="style-card-media"><span class="style-card-icon">✦</span><img src="/img/style-ornamental.webp" alt="Black steel ornamental fence with spear tops" width="480" height="360" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
       <div class="style-card-name">Ornamental Iron</div>
       <div class="style-card-sub">Steel DM series · 8ft bays · 4-6ft</div>
     </div>
     <div class="style-card" onclick="selectStyle(this,'wood')" data-style="wood">
-      <span class="style-card-icon">🪵</span>
+      <div class="style-card-media"><span class="style-card-icon">🪵</span><img src="/img/style-wood.webp" alt="Cedar wood privacy fence with post cap" width="480" height="360" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
       <div class="style-card-name">Wood Privacy</div>
       <div class="style-card-sub">Cedar · 6ft · board on board</div>
     </div>
     <div class="style-card" onclick="selectStyle(this,'chain_link_galv')" data-style="chain_link_galv">
-      <span class="style-card-icon">🔗</span>
+      <div class="style-card-media"><span class="style-card-icon">🔗</span><img src="/img/style-chainlink.webp" alt="Galvanized chain link fence and post" width="480" height="360" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
       <div class="style-card-name">Chain Link</div>
       <div class="style-card-sub">Galvanized or black · 4-6ft</div>
     </div>
     <div class="style-card" onclick="selectStyle(this,'vinyl')" data-style="vinyl" style="display:none">
-      <span class="style-card-icon">▭</span>
+      <div class="style-card-media"><span class="style-card-icon">▭</span><img src="/img/style-vinyl.webp" alt="White vinyl privacy fence" width="480" height="360" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
       <div class="style-card-name">Vinyl Privacy</div>
       <div class="style-card-sub">White · tongue and groove · 6ft</div>
     </div>
